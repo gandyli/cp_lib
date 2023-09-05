@@ -296,8 +296,7 @@ public:
     IO& read(tupleLike auto& t) {
         return std::apply([&](auto&... t) { (read(t), ...); }, t), *this;
     }
-    template <forward_range R>
-    IO& read(R&& r) { return readArray(std::forward<R>(r)); }
+    IO& read(forward_range auto&& r) { return readArray(FORWARD(r)); }
     template <typename T>
         requires requires (T t, IO& io) { t.read(io); }
     IO& read(T& t) { return t.read(*this), *this; }
@@ -420,8 +419,7 @@ public:
     template <typename T>
         requires requires (T t, IO& io) { t.write(io); }
     void write(T&& t) { t.write(*this); }
-    template <typename... Args>
-    void writeln(Args&&... x) { write(std::forward<Args>(x)...), putch('\n'); }
+    void writeln(auto&&... x) { write(FORWARD(x)...), putch('\n'); }
     template <std::forward_iterator I>
     IO& readArray(I f, I l) {
         for (; f != l; ++f)
@@ -463,8 +461,7 @@ void multipleTests(auto&& f, IO& io = ::io) {
     _for (q)
         f();
 }
-template <typename... Args>
-void writeln(Args&&... x) { io.writeln(std::forward<Args>(x)...); }
+void writeln(auto&&... x) { io.writeln(FORWARD(x)...); }
 template <typename T>
 void writeln(std::initializer_list<T> x) { io.writeln(x); }
 void YES(int v = 1) { return io.write(v ? "YES\n" : "NO\n"); }

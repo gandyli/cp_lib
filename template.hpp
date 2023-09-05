@@ -21,6 +21,16 @@ using namespace std::ranges;
     constexpr auto operator->*(auto&& f) const { return f(); }
 } blk;
 #define BLK blk->*[&]
+#define lowbit(x) ((x) & (-(x)))
+#define all(x) std::begin(x), std::end(x)
+#define rall(x) std::rbegin(x), std::rend(x)
+#define LB(c, x) std::distance(std::begin(c), std::lower_bound(all(c), (x)))
+#define UB(c, x) std::distance(std::begin(c), std::upper_bound(all(c), (x)))
+#define UNIQUE(c) sort(c), (c).erase(std::unique(all(c)), std::end(c))
+#define VEC(type, a, ...) auto a = vec<type>(__VA_ARGS__)
+#define VECI(a, ...) auto a = veci(__VA_ARGS__)
+#define FORWARD(x) std::forward<decltype(x)>(x)
+#define eb emplace_back
 // NOLINTEND
 
 constexpr auto ceil(auto&& x, auto&& y) { return x > 0 ? (x + y - 1) / y : x / y; }
@@ -70,17 +80,6 @@ auto veci(usize n, auto&&... s) {
     else
         return Vec(n, veci(s...));
 }
-
-#define lowbit(x) ((x) & (-(x)))
-#define all(x) std::begin(x), std::end(x)
-#define rall(x) std::rbegin(x), std::rend(x)
-#define LB(c, x) std::distance(std::begin(c), std::lower_bound(all(c), (x)))
-#define UB(c, x) std::distance(std::begin(c), std::upper_bound(all(c), (x)))
-#define UNIQUE(c) sort(c), (c).erase(std::unique(all(c)), std::end(c))
-#define VEC(type, a, ...) auto a = vec<type>(__VA_ARGS__)
-#define VECI(a, ...) auto a = veci(__VA_ARGS__)
-#define eb emplace_back
-
 template <typename T>
 vi argsort(Vec<T>& a) {
     vi p(len(a));
