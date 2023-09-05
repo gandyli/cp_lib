@@ -463,7 +463,9 @@ IO err(nullptr, stderr);
 #define dRV(type, a, ...)      \
     VEC(type, a, __VA_ARGS__); \
     io.read(a)
-#define STR(s, n) io.readstr(s, n)
+#define STR(s, n) \
+    str s;        \
+    io.readstr(s, n)
 template <typename F>
 void multipleTests(F&& f, IO& io = ::io) {
     dR(u32, q);
@@ -474,8 +476,7 @@ template <typename... Args>
 void writeln(Args&&... x) { io.writeln(std::forward<Args>(x)...); }
 template <typename T>
 void writeln(std::initializer_list<T> x) { io.writeln(x); }
-void YN(bool v, bool c = true) {
-    if (c)
-        return io.write(v ? "YES\n" : "NO\n");
-    return io.write(v ? "Yes\n" : "No\n");
-}
+void YES(int v = 1) { return io.write(v ? "YES\n" : "NO\n"); }
+void NO(int v = 1) { return YES(!v); }
+void Yes(int v = 1) { return io.write(v ? "Yes\n" : "No\n"); }
+void No(int v = 1) { return Yes(!v); }
