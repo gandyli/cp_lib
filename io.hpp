@@ -39,7 +39,6 @@
 
 constexpr usize bufSize = 1 << 20;
 
-class IO;
 class In {
     friend class IO;
 
@@ -119,7 +118,7 @@ public:
 #endif
     void input(const char* s) { input(fopen(s, "rb")); }
     void set(bool s = true) { status = s; }
-    bool get() const { return status; }
+    [[nodiscard]] bool get() const { return status; }
 };
 class Out {
     friend class IO;
@@ -207,8 +206,7 @@ public:
         x = sign ? (~t + 1) : t;
         return *this;
     }
-    template <Unsigned T>
-    IO& read(T& x) {
+    IO& read(Unsigned auto& x) {
         x = 0;
 #ifndef USE_MMAP
         int ch = getch();
@@ -229,8 +227,7 @@ public:
 #endif
         return *this;
     }
-    template <std::floating_point T>
-    IO& read(T& x) {
+    IO& read(std::floating_point auto& x) {
         static std::string s;
         read(s);
         std::from_chars(s.begin().base(), s.end().base(), x);
@@ -296,11 +293,10 @@ public:
             set(false);
         return *this;
     }
-    template <tupleLike T>
-    IO& read(T& t) {
+    IO& read(tupleLike auto& t) {
         return std::apply([&](auto&... t) { (read(t), ...); }, t), *this;
     }
-    template <input_range R>
+    template <forward_range R>
     IO& read(R&& r) { return readArray(std::forward<R>(r)); }
     template <typename T>
         requires requires (T t, IO& io) { t.read(io); }
@@ -319,8 +315,7 @@ public:
         else
             write(y);
     }
-    template <std::unsigned_integral T>
-    void write(T x) {
+    void write(std::unsigned_integral auto x) {
 #ifndef LX_DEBUG
         if (std::end(pbuf) - pp < 64) [[unlikely]]
             flush();
@@ -388,8 +383,7 @@ public:
             putch(s[--t] ^ 48);
     }
     void write(char c) { putch(c); }
-    template <std::floating_point T>
-    void write(T x) {
+    void write(std::floating_point auto x) {
         static char buf[512];
         writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, precision).ptr - buf);
     }
@@ -415,7 +409,7 @@ public:
     template <input_range R>
     void write(R&& r) {
         if constexpr (std::is_same_v<std::decay_t<R>, std::string>)
-            return write(r.data());
+            return writestr(r.data(), r.size());
         auto f = begin(r), l = end(r);
         if (f != l)
             for (write(*f++); f != l; ++f) {
@@ -428,14 +422,13 @@ public:
     void write(T&& t) { t.write(*this); }
     template <typename... Args>
     void writeln(Args&&... x) { write(std::forward<Args>(x)...), putch('\n'); }
-    template <std::input_iterator I>
+    template <std::forward_iterator I>
     IO& readArray(I f, I l) {
         for (; f != l; ++f)
             read(*f);
         return *this;
     }
-    template <input_range R>
-    IO& readArray(R&& r) { return readArray(begin(r), end(r)); }
+    IO& readArray(forward_range auto&& r) { return readArray(begin(r), end(r)); }
     template <std::input_iterator I>
     void displayArray(I f, I l, char d = ' ') {
         if (f != l)
@@ -445,8 +438,7 @@ public:
             }
         putch('\n');
     }
-    template <input_range R>
-    void displayArray(R&& r, char d = ' ') { return displayArray(begin(r), end(r), d); }
+    void displayArray(input_range auto&& r, char d = ' ') { return displayArray(begin(r), end(r), d); }
     operator bool() const { return get(); }
 } io;
 #ifdef LX_LOCAL
@@ -466,8 +458,7 @@ IO err(nullptr, stderr);
 #define STR(s, n) \
     str s;        \
     io.readstr(s, n)
-template <typename F>
-void multipleTests(F&& f, IO& io = ::io) {
+void multipleTests(auto&& f, IO& io = ::io) {
     dR(u32, q);
     _for (q)
         f();

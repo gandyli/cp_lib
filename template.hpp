@@ -23,25 +23,21 @@ using namespace std::ranges;
 #define BLK blk->*[&]
 // NOLINTEND
 
-template <typename T, typename U>
-constexpr auto ceil(T&& x, U&& y) { return x > 0 ? (x + y - 1) / y : x / y; }
-template <typename T, typename U>
-constexpr auto floor(T&& x, U&& y) { return x > 0 ? x / y : (x - y + 1) / y; }
-template <typename T, typename U>
-constexpr auto divmod(T&& x, U&& y) {
+constexpr auto ceil(auto&& x, auto&& y) { return x > 0 ? (x + y - 1) / y : x / y; }
+constexpr auto floor(auto&& x, auto&& y) { return x > 0 ? x / y : (x - y + 1) / y; }
+constexpr auto divmod(auto&& x, auto&& y) {
     auto&& q = floor(x, y);
     return std::pair{q, x - q * y};
 }
 constexpr u64 ten(int t) { return t == 0 ? 1 : ten(t - 1) * 10; }
-template <typename T, typename... Args>
-constexpr void chkmax(T& d, const Args&... x) { d = max({d, x...}); }
-template <typename T, typename... Args>
-constexpr void chkmin(T& d, const Args&... x) { d = min({d, x...}); }
-
-template <forward_range R>
-constexpr auto sum(R&& r) { return std::accumulate(begin(r), end(r), std::decay_t<decltype(*begin(r))>{}); }
-template <forward_range R, typename T>
-constexpr auto sum(R&& r, T init) { return std::accumulate(begin(r), end(r), init); }
+constexpr auto Max(const auto& x) { return x; }
+constexpr auto Min(const auto& x) { return x; }
+constexpr auto Max(const auto& x, const auto& y, const auto&... arg) { return x < y ? Max(y, arg...) : Max(x, arg...); }
+constexpr auto Min(const auto& x, const auto& y, const auto&... arg) { return x < y ? Min(x, arg...) : Min(y, arg...); }
+constexpr void chkmax(auto& d, const auto&... x) { d = Max(d, x...); }
+constexpr void chkmin(auto& d, const auto&... x) { d = Min(d, x...); }
+constexpr auto sum(input_range auto&& r) { return std::accumulate(begin(r), end(r), std::decay_t<decltype(*begin(r))>{}); }
+constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(begin(r), end(r), init); }
 constexpr int len(auto&& x) { return std::size(x); }
 
 template <typename T>
@@ -61,23 +57,20 @@ auto psum(auto&& a) {
     return b;
 }
 
-template <typename T, typename... Args>
-auto vec(usize n, Args&&... s) {
+template <typename T>
+auto vec(usize n, auto&&... s) {
     if constexpr (!sizeof...(s))
         return Vec<T>(n);
     else
         return Vec(n, vec<T>(s...));
 }
-template <typename... Args>
-auto veci(usize n, Args&&... s) {
+auto veci(usize n, auto&&... s) {
     if constexpr (sizeof...(s) == 1)
         return Vec(n, s...);
     else
         return Vec(n, veci(s...));
 }
 
-#define lc (o << 1)
-#define rc (o << 1 | 1)
 #define lowbit(x) ((x) & (-(x)))
 #define all(x) std::begin(x), std::end(x)
 #define rall(x) std::rbegin(x), std::rend(x)
