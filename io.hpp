@@ -228,7 +228,7 @@ public:
         return *this;
     }
     IO& read(std::floating_point auto& x) {
-        static std::string s;
+        static str s;
         read(s);
         std::from_chars(s.begin().base(), s.end().base(), x);
         return *this;
@@ -253,7 +253,7 @@ public:
         *s = 0;
         return *this;
     }
-    IO& read(std::string& s) {
+    IO& read(str& s) {
         skipws();
         int ch = getch();
         ECHK1
@@ -268,7 +268,7 @@ public:
         s[n] = '\0';
         return *this;
     }
-    IO& readstr(std::string& s, usize n) {
+    IO& readstr(str& s, usize n) {
         skipws();
         s.resize(n);
         In::readstr(s.data(), n);
@@ -284,7 +284,7 @@ public:
             set(false);
         return *this;
     }
-    IO& readline(std::string& s) {
+    IO& readline(str& s) {
         s.erase();
         int ch = getch();
         while (ch != '\n' && ch != EV)
@@ -303,7 +303,7 @@ public:
     void setprecision(u32 n = 6) { precision = n; }
     template <typename... Args>
         requires (sizeof...(Args) > 1)
-    void write(Args&&... x) { (write(std::forward<Args>(x)), ...); }
+    void write(Args&&... x) { (write(FORWARD(x)), ...); }
     void write() const {}
     template <Signed T>
     void write(T x) {
@@ -386,10 +386,7 @@ public:
         static char buf[512];
         writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, precision).ptr - buf);
     }
-    void write(bool x) { putch(x ^ 48); }
-    void write(char* s) { writestr(s, strlen(s)); }
-    void write(const char* s) { writestr(s, strlen(s)); }
-    void write(const std::string& s) { writestr(s.data(), len(s)); }
+    void write(std::string_view s) { writestr(s.data(), s.size()); }
     template <typename T>
     void write(std::initializer_list<T> t) {
         auto f = std::begin(t), l = std::end(t);
@@ -406,9 +403,8 @@ public:
         }(std::make_index_sequence<std::tuple_size_v<std::decay_t<T>>>());
     }
     template <input_range R>
+        requires (!std::is_same_v<std::decay_t<decltype(*begin(std::declval<R>()))>, char>)
     void write(R&& r) {
-        if constexpr (std::is_same_v<std::decay_t<R>, std::string>)
-            return writestr(r.data(), r.size());
         auto f = begin(r), l = end(r);
         if (f != l)
             for (write(*f++); f != l; ++f) {
