@@ -25,7 +25,7 @@ namespace impl {
         }
         return 0;
     }
-    static u32 prime_or_factor_32(u32 n) {
+    u32 prime_or_factor_32(u32 n) {
         if (n < 64)
             return 0x28208a20a08a28ac >> n & 1;
         if (n % 2 == 0)
@@ -46,7 +46,7 @@ namespace impl {
         return 1;
     }
 
-    static u64 prime_or_factor_64(u64 n) {
+    u64 prime_or_factor_64(u64 n) {
         if (n < 64)
             return 0x28208a20a08a28ac >> n & 1;
         if (n % 2 == 0)
@@ -67,8 +67,7 @@ namespace impl {
         return 1;
     }
 } // namespace impl
-template <std::unsigned_integral T>
-static u64 prime_or_factor(T n) {
+u64 prime_or_factor(Unsigned auto n) {
     if (n < (1 << 30))
         return impl::prime_or_factor_32(n);
     return impl::prime_or_factor_64(n);
@@ -304,8 +303,8 @@ namespace impl {
     }
 } // namespace impl
 
-template <std::unsigned_integral T>
-std::vector<T> factorize(T n) {
+template <Unsigned T>
+Vec<T> factorize(T n) {
     if (n <= 1)
         return {};
     int twos = std::countr_zero(n);
@@ -316,6 +315,6 @@ std::vector<T> factorize(T n) {
     result.factors.push_back(n >> twos);
     while (!result.factors.empty())
         impl::factorize_work(result);
-    std::sort(result.prime_factors.begin(), result.prime_factors.end());
+    sort(result.prime_factors);
     return result.prime_factors;
 }
