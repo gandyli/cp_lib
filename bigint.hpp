@@ -21,7 +21,7 @@ struct NTT {
         u32 _pr = 2;
         loop {
             int flg = 1;
-            for (int i = 0; i < idx; i++) {
+            _for (i, idx) {
                 u64 a = _pr, b = (mod - 1) / ds[i], r = 1;
                 while (b) {
                     if (b & 1)
@@ -72,7 +72,7 @@ struct NTT {
         }
         if (k & 1) {
             int v = 1 << (k - 1);
-            for (int j = 0; j < v; j++) {
+            _for (j, v) {
                 mint ajv = a[j + v];
                 a[j + v] = a[j] - ajv;
                 a[j] += ajv;
@@ -169,7 +169,7 @@ struct NTT {
         }
         if (k & 1) {
             u = 1 << (k - 1);
-            for (int j = 0; j < u; j++) {
+            _for (j, u) {
                 mint ajv = a[j] - a[j + u];
                 a[j] += a[j + u];
                 a[j + u] = ajv;
@@ -187,8 +187,8 @@ struct NTT {
         int l = len(a) + len(b) - 1;
         if (min(len(a), len(b)) <= 40) {
             Vec<mint> s(l);
-            for (int i = 0; i < len(a); i++)
-                for (int j = 0; j < len(b); j++)
+            _for (i, len(a))
+                _for (j, len(b))
                     s[i + j] += a[i] * b[j];
             return s;
         }
@@ -197,25 +197,25 @@ struct NTT {
             M <<= 1, k++;
         setwy(k);
         Vec<mint> s(M);
-        for (int i = 0; i < len(a); i++)
+        _for (i, len(a))
             s[i] = a[i];
         fft4(s, k);
         if (len(a) == len(b) && a == b) {
-            for (int i = 0; i < M; i++)
+            _for (i, M)
                 s[i] *= s[i];
         }
         else {
             Vec<mint> t(M);
-            for (int i = 0; i < len(b); i++)
+            _for (i, len(b))
                 t[i] = b[i];
             fft4(t, k);
-            for (int i = 0; i < M; i++)
+            _for (i, M)
                 s[i] *= t[i];
         }
         ifft4(s, k);
         s.resize(l);
         mint invm = mint(M).inv();
-        for (int i = 0; i < l; i++)
+        _for (i, l)
             s[i] *= invm;
         return s;
     }
@@ -239,9 +239,9 @@ namespace ArbitraryNTT {
     Vec<mint> mul(const vi& a, const vi& b) {
         static NTT<mint> ntt;
         Vec<mint> s(len(a)), t(len(b));
-        for (int i = 0; i < len(a); i++)
+        _for (i, len(a))
             s[i] = a[i] % mint::mod();
-        for (int i = 0; i < len(b); i++)
+        _for (i, len(b))
             t[i] = b[i] % mint::mod();
         return ntt.multiply(s, t);
     }
@@ -250,8 +250,8 @@ namespace ArbitraryNTT {
             return {};
         if (min(len(s), len(t)) < 128) {
             Vec<u128> ret(len(s) + len(t) - 1);
-            for (int i = 0; i < len(s); i++)
-                for (int j = 0; j < len(t); j++)
+            _for (i, len(s))
+                _for (j, len(t))
                     ret[i + j] += u128(i64(s[i]) * t[j]);
             return ret;
         }
@@ -260,7 +260,7 @@ namespace ArbitraryNTT {
         auto d2 = mul<mint2>(s, t);
         int n = len(d0);
         Vec<u128> ret(n);
-        for (int i = 0; i < n; i++) {
+        _for (i, n) {
             i64 n1 = d1[i].val(), n2 = d2[i].val();
             i64 a = d0[i].val();
             i64 b = (n1 + m1 - a) * r01 % m1;
@@ -274,17 +274,17 @@ namespace ArbitraryNTT {
 namespace bigintImpl {
     struct TENS {
         static constexpr int offset = 30;
-        constexpr TENS(): t() {
+        constexpr TENS() {
             t[offset] = 1;
             for (int i = 1; i <= offset; i++) {
                 t[offset + i] = t[offset + i - 1] * 10.0;
                 t[offset - i] = 1.0 / t[offset + i];
             }
         }
-        ld ten_ld(int n) const { return t[n + offset]; }
+        [[nodiscard]] ld ten_ld(int n) const { return t[n + offset]; }
 
     private:
-        ld t[offset * 2 + 1];
+        ld t[offset * 2 + 1]{};
     };
     // 0: neg = false, dat = {}
     struct bigint {
@@ -299,27 +299,25 @@ namespace bigintImpl {
         bigint() = default;
         bigint(bool n, vi d): neg(n), dat(std::move(d)) {}
 
-        template <typename I>
-            requires std::is_integral_v<I> || std::is_same_v<I, i128>
-        bigint(I x) {
-            if constexpr (std::is_signed_v<I>)
+        bigint(Integer auto x) {
+            if constexpr (Signed<decltype(x)>)
                 if (x < 0)
                     neg = true, x = -x;
             while (x)
                 dat.push_back(x % D), x /= D;
         }
 
-        bigint(const str& S) {
-            if (len(S) == 1 && S[0] == '0')
+        bigint(std::string_view s) {
+            if (len(s) == 1 && s[0] == '0')
                 return;
             int l = 0;
-            if (S[0] == '-')
+            if (s[0] == '-')
                 l++, neg = true;
-            for (int ie = len(S); l < ie; ie -= logD) {
+            for (int ie = len(s); l < ie; ie -= logD) {
                 int is = max(l, ie - logD);
                 i64 x = 0;
-                for (int i = is; i < ie; i++)
-                    x = x * 10 + S[i] - '0';
+                _for (i, is, ie)
+                    x = x * 10 + s[i] - '0';
                 dat.push_back(x);
             }
         }
@@ -336,7 +334,7 @@ namespace bigintImpl {
             }
             if (neg)
                 io.putch('-');
-            for (int i = _size() - 1; i >= 0; i--)
+            _for_r (i, _size())
                 io.write(_itos(dat[i], i != _size() - 1));
         }
 #endif
@@ -421,12 +419,12 @@ namespace bigintImpl {
                 return {};
             int l = max(0, _size() - 3);
             int b = logD * l;
-            str prefix{};
+            str prefix;
             for (int i = _size() - 1; i >= l; i--)
                 prefix += _itos(dat[i], i != _size() - 1);
             b += len(prefix) - 1;
             ld a = 0;
-            for (auto& c: prefix)
+            foreach (c, prefix)
                 a = a * 10.0 + (c - '0');
             a *= tens.ten_ld(-len(prefix) + 1);
             a = std::clamp<ld>(a, 1.0, nextafterl(10.0, 1.0));
@@ -440,7 +438,7 @@ namespace bigintImpl {
             str r;
             if (neg)
                 r.push_back('-');
-            for (int i = _size() - 1; i >= 0; i--)
+            _for_r (i, _size())
                 r += _itos(dat[i], i != _size() - 1);
             return r;
         }
@@ -464,7 +462,7 @@ namespace bigintImpl {
         static bool _lt(const vi& a, const vi& b) {
             if (len(a) != len(b))
                 return len(a) < len(b);
-            for (int i = len(a) - 1; i >= 0; i--)
+            _for_r (i, len(a))
                 if (a[i] != b[i])
                     return a[i] < b[i];
             return false;
@@ -485,11 +483,11 @@ namespace bigintImpl {
         }
         static vi _add(const vi& a, const vi& b) {
             vi c(max(len(a), len(b)) + 1);
-            for (int i = 0; i < len(a); i++)
+            _for (i, len(a))
                 c[i] += a[i];
-            for (int i = 0; i < len(b); i++)
+            _for (i, len(b))
                 c[i] += b[i];
-            for (int i = 0; i < len(c) - 1; i++)
+            _for (i, len(c) - 1)
                 if (c[i] >= D)
                     c[i] -= D, c[i + 1]++;
             _shrink(c);
@@ -498,7 +496,7 @@ namespace bigintImpl {
         static vi _sub(const vi& a, const vi& b) {
             vi c{a};
             int t = 0;
-            for (int i = 0; i < len(a); i++) {
+            _for (i, len(a)) {
                 if (i < len(b))
                     t += b[i];
                 c[i] -= t;
@@ -531,8 +529,8 @@ namespace bigintImpl {
             if (a.empty() || b.empty())
                 return {};
             Vec<i64> prod(len(a) + len(b));
-            for (int i = 0; i < len(a); i++) {
-                for (int j = 0; j < len(b); j++) {
+            _for (i, len(a)) {
+                _for (j, len(b)) {
                     i64 p = i64(a[i]) * b[j];
                     prod[i + j] += p;
                     if (prod[i + j] >= 4LL * D * D) {
@@ -579,7 +577,7 @@ namespace bigintImpl {
             vi quo(len(a));
             i64 d = 0;
             int b0 = b[0];
-            for (int i = len(a) - 1; i >= 0; i--) {
+            _for_r (i, len(a)) {
                 d = d * D + a[i];
                 int q = d / b0, r = d % b0;
                 quo[i] = q, d = r;
@@ -601,7 +599,7 @@ namespace bigintImpl {
             int yb = y.back();
             vi quo(len(x) - len(y) + 1);
             vi rem(x.end() - len(y), x.end());
-            for (int i = len(quo) - 1; i >= 0; i--) {
+            _for_r (i, len(quo)) {
                 if (len(rem) == len(y)) {
                     if (_leq(y, rem))
                         quo[i] = 1, rem = _sub(rem, y);
@@ -670,7 +668,7 @@ namespace bigintImpl {
         }
         static str _itos(int x, bool zero_padding) {
             str r;
-            for (int i = 0; i < logD; i++)
+            _for (i, logD)
                 r.push_back('0' + x % 10), x /= 10;
             if (!zero_padding)
                 while (!r.empty() && r.back() == '0')
@@ -678,8 +676,7 @@ namespace bigintImpl {
             reverse(r);
             return r;
         }
-        template <typename I>
-        static vi _integer_to_vec(I x) {
+        static vi _integer_to_vec(auto x) {
             vi r;
             while (x)
                 r.push_back(x % D), x /= D;
@@ -687,13 +684,13 @@ namespace bigintImpl {
         }
         static i64 _to_ll(const vi& a) {
             i64 r = 0;
-            for (int i = len(a) - 1; i >= 0; i--)
+            _for_r (i, len(a))
                 r = r * D + a[i];
             return r;
         }
         static i128 _to_i128(const vi& a) {
             i128 r = 0;
-            for (int i = len(a) - 1; i >= 0; i--)
+            _for_r (i, len(a))
                 r = r * D + a[i];
             return r;
         }
