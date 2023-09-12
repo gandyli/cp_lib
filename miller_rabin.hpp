@@ -57,8 +57,7 @@ namespace impl {
         return true;
     }
 } // namespace impl
-template <typename T>
-constexpr bool is_prime(T x) {
+constexpr bool is_prime(auto x) {
     if (x < (1 << 30))
         return impl::is_prime_32(x);
     return impl::is_prime_64(x);
