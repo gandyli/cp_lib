@@ -118,15 +118,13 @@ public:
 
     constexpr MontgomeryModInt(): _val(0) {}
 
-    template <std::signed_integral T>
-    constexpr MontgomeryModInt(T x) {
+    constexpr MontgomeryModInt(Signed auto x) {
         using signed_int_type = std::make_signed_t<int_type>;
         signed_int_type v = x % signed_int_type(mr().mod());
         _val = mr().reduce(mr().mbase2() * int_double_t(v < 0 ? v + mr().mod() : v));
     }
 
-    template <std::unsigned_integral T>
-    constexpr MontgomeryModInt(T x) {
+    constexpr MontgomeryModInt(Unsigned auto x) {
         _val = mr().reduce(mr().mbase2() * int_double_t(x % mr().mod()));
     }
     constexpr int_type val() const {
