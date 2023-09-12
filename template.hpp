@@ -49,7 +49,6 @@ constexpr void chkmin(auto& d, const auto&... x) { d = Min(d, x...); }
 constexpr auto sum(input_range auto&& r) { return std::accumulate(begin(r), end(r), std::decay_t<decltype(*begin(r))>{}); }
 constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(begin(r), end(r), init); }
 constexpr int len(auto&& x) { return std::size(x); }
-
 template <typename T>
 auto psum(const Vec<T>& a) {
     int n = len(a);
@@ -66,7 +65,6 @@ auto psum(auto&& a) {
         b[i + 1] = b[i] + a[i];
     return b;
 }
-
 template <typename T>
 auto vec(usize n, auto&&... s) {
     if constexpr (!sizeof...(s))
@@ -86,4 +84,10 @@ vi argsort(Vec<T>& a) {
     std::iota(all(p), 0);
     sort(p, [&](int i, int j) { return std::pair{a[i], i} < std::pair{a[j], j}; });
     return p;
+}
+vi sshift(const str& s, char c = 'a') {
+    vi a(len(s));
+    _for (i, len(s))
+        a[i] = s[i] - c;
+    return a;
 }
