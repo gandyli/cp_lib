@@ -68,7 +68,7 @@ namespace impl {
     };
     template <typename T>
     using make_double_width_t = make_double_width<T>::type;
-}  // namespace impl
+} // namespace impl
 template <typename T>
 class MontgomeryReduction {
 public:
@@ -195,7 +195,16 @@ public:
         ret._val = x;
         return ret;
     }
-
+#ifdef FASTIO
+    void read(IO& io) {
+        static int_type x;
+        io.read(x);
+        *this = x;
+    }
+    void write(IO& io) const {
+        io.write(val());
+    }
+#endif
 private:
     int_type _val;
 
