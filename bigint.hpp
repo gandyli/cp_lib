@@ -325,9 +325,9 @@ namespace bigintImpl {
         void read(IO& io) {
             static str s;
             io.read(s);
-            *this = s;
+            *this = bigint(s);
         }
-        void write(IO& io) {
+        void write(IO& io) const {
             if (is_zero()) {
                 io.putch('0');
                 return;
