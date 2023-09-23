@@ -116,7 +116,7 @@ public:
         }
     }
 #endif
-    void input(const char* s) { input(fopen(s, "rb")); }
+    void input(std::string_view s) { input(fopen(s.data(), "rb")); }
     void set(bool s = true) { status = s; }
     [[nodiscard]] bool get() const { return status; }
 };
@@ -157,7 +157,7 @@ public:
         return m;
     }();
 #endif
-    void output(const char* s) { output(fopen(s, "wb")); }
+    void output(std::string_view s) { output(fopen(s.data(), "wb")); }
     void output(FILE* f) { outFile = f; }
 };
 class IO: public In, public Out {
