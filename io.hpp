@@ -203,7 +203,7 @@ public:
         if (isdigit(*ptr))
             t = t * 10 + (*ptr++ ^ 48);
 #endif
-        x = sign ? (~t + 1) : t;
+        x = sign ? -t : t;
         return *this;
     }
     IO& read(Unsigned auto& x) {
@@ -310,7 +310,7 @@ public:
         static make_unsigned_t<T> y;
         y = x;
         if (x < 0)
-            putch('-'), write(~y + 1);
+            putch('-'), write(-y);
         else
             write(y);
     }
