@@ -138,9 +138,9 @@ public:
 #else
     void flush() { fwrite(pbuf, 1, pp - pbuf, outFile), pp = pbuf; }
     void putch_unchecked(char c) { *pp++ = c; }
-    void putch(char c) { ((pp - pbuf == bufSize) ? flush() : void()), putch_unchecked(c); }
+    void putch(char c) { (pp == end(pbuf) ? flush() : void()), putch_unchecked(c); }
     void writestr(const char* s, usize n) {
-        if (n >= bufSize - (pp - pbuf)) [[unlikely]]
+        if (n >= end(pbuf) - pp) [[unlikely]]
             flush(), fwrite(s, 1, n, outFile);
         else
             memcpy(pp, s, n), pp += n;
@@ -316,7 +316,7 @@ public:
     }
     void write(std::unsigned_integral auto x) {
 #ifndef LX_DEBUG
-        if (std::end(pbuf) - pp < 64) [[unlikely]]
+        if (end(pbuf) - pp < 64) [[unlikely]]
             flush();
 
         auto L = [&](int x) { return x == 1 ? 0 : ten(x - 1); };
