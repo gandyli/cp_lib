@@ -140,7 +140,7 @@ public:
     void putch_unchecked(char c) { *pp++ = c; }
     void putch(char c) { (pp == end(pbuf) ? flush() : void()), putch_unchecked(c); }
     void writestr(const char* s, usize n) {
-        if (n >= end(pbuf) - pp) [[unlikely]]
+        if (n >= usize(end(pbuf) - pp)) [[unlikely]]
             flush(), fwrite(s, 1, n, outFile);
         else
             memcpy(pp, s, n), pp += n;
@@ -326,7 +326,8 @@ public:
     case L(t)... R(t):                   \
         *(u32*)(pp) = D[x / ten((t)-4)]; \
         pp += 4;                         \
-        x %= ten((t)-4);
+        x %= ten((t)-4);                 \
+        [[fallthrough]]
 
         u64 y = x;
         switch (y) {
@@ -351,6 +352,7 @@ public:
             *(u32*)(pp) = D[x / ten(16)];
             pp += 4;
             x %= ten(16);
+            [[fallthrough]];
             de(16);
             de(12);
             de(8);
