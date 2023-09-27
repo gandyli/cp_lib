@@ -310,7 +310,7 @@ public:
         static make_unsigned_t<T> y;
         y = x;
         if (x < 0)
-            putch('-'), write(-y);
+            putch('-'), write(y = -y);
         else
             write(y);
     }
