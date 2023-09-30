@@ -1,46 +1,11 @@
 #pragma once
 #include "montgomery.hpp"
+#include "primitive_root.hpp"
 
 template <typename mint>
 struct NTT {
-    static constexpr u32 get_pr() {
-        u64 ds[32] = {};
-        int idx = 0;
-        u64 m = mod - 1;
-        for (u64 i = 2; i * i <= m; i++)
-            if (m % i == 0) {
-                ds[idx++] = i;
-                while (m % i == 0)
-                    m /= i;
-            }
-        if (m != 1)
-            ds[idx++] = m;
-
-        u32 _pr = 2;
-        loop {
-            int flg = 1;
-            _for (i, idx) {
-                u64 a = _pr, b = (mod - 1) / ds[i], r = 1;
-                while (b) {
-                    if (b & 1)
-                        r = r * a % mod;
-                    a = a * a % mod;
-                    b >>= 1;
-                }
-                if (r == 1) {
-                    flg = 0;
-                    break;
-                }
-            }
-            if (flg == 1)
-                break;
-            _pr++;
-        }
-        return _pr;
-    };
-
     static constexpr u32 mod = mint::mod();
-    static constexpr mint pr = get_pr();
+    static constexpr mint pr = get_pr(mod);
     static constexpr int lvl = __builtin_ctz(mod - 1);
     mint dw[lvl], dy[lvl];
 
@@ -190,6 +155,8 @@ struct NTT {
     }
 
     Vec<mint> multiply(const Vec<mint>& a, const Vec<mint>& b) {
+        if (a.empty() && b.empty())
+            return {};
         int l = len(a) + len(b) - 1;
         if (min(len(a), len(b)) <= 40) {
             Vec<mint> s(l);
