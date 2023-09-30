@@ -8,13 +8,12 @@ struct NTT {
         u64 ds[32] = {};
         int idx = 0;
         u64 m = mod - 1;
-        for (u64 i = 2; i * i <= m; i++) {
+        for (u64 i = 2; i * i <= m; i++)
             if (m % i == 0) {
                 ds[idx++] = i;
                 while (m % i == 0)
                     m /= i;
             }
-        }
         if (m != 1)
             ds[idx++] = m;
 
@@ -36,7 +35,7 @@ struct NTT {
             }
             if (flg == 1)
                 break;
-            ++_pr;
+            _pr++;
         }
         return _pr;
     };
@@ -46,20 +45,20 @@ struct NTT {
     static constexpr int lvl = __builtin_ctz(mod - 1);
     mint dw[lvl], dy[lvl];
 
-    void setwy(int k) {
+    constexpr void setwy(int k) {
         mint w[lvl], y[lvl];
         w[k - 1] = power(pr, (mod - 1) / (1 << k));
         y[k - 1] = w[k - 1].inv();
-        for (int i = k - 2; i > 0; --i)
+        _for_r (i, 1, k - 1)
             w[i] = w[i + 1] * w[i + 1], y[i] = y[i + 1] * y[i + 1];
         dw[1] = w[1], dy[1] = y[1], dw[2] = w[2], dy[2] = y[2];
-        for (int i = 3; i < k; i++) {
+        _for (i, 3, k) {
             dw[i] = dw[i - 1] * y[i - 2] * w[i];
             dy[i] = dy[i - 1] * w[i - 2] * y[i];
         }
     }
 
-    NTT() { setwy(lvl); }
+    constexpr NTT() { setwy(lvl); }
 
     void fft4(Vec<mint>& a, int k) {
         if (len(a) <= 1)
@@ -139,7 +138,7 @@ struct NTT {
                 int j1 = v;
                 int j2 = v + v;
                 int j3 = j2 + v;
-                for (; j0 < v; ++j0, ++j1, ++j2, ++j3) {
+                for (; j0 < v; j0++, j1++, j2++, j3++) {
                     mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
                     mint t0p1 = t0 + t1, t2p3 = t2 + t3;
                     mint t0m1 = t0 - t1, t2m3 = (t2 - t3) * imag;
@@ -155,7 +154,7 @@ struct NTT {
                 int j0 = jh * v;
                 int je = j0 + v;
                 int j2 = je + v;
-                for (; j0 < je; ++j0, ++j2) {
+                for (; j0 < je; j0++, j2++) {
                     mint t0 = a[j0], t1 = a[j0 + v], t2 = a[j2], t3 = a[j2 + v];
                     mint t0p1 = t0 + t1, t2p3 = t2 + t3;
                     mint t0m1 = (t0 - t1) * xx, t2m3 = (t2 - t3) * yy;
@@ -200,10 +199,9 @@ struct NTT {
         _for (i, len(a))
             s[i] = a[i];
         fft4(s, k);
-        if (len(a) == len(b) && a == b) {
+        if (a == b)
             _for (i, M)
                 s[i] *= s[i];
-        }
         else {
             Vec<mint> t(M);
             _for (i, len(b))
@@ -276,7 +274,7 @@ namespace bigintImpl {
         static constexpr int offset = 30;
         constexpr TENS() {
             t[offset] = 1;
-            for (int i = 1; i <= offset; i++) {
+            _for (i, 1, offset + 1) {
                 t[offset + i] = t[offset + i - 1] * 10.0;
                 t[offset - i] = 1.0 / t[offset + i];
             }
@@ -284,7 +282,7 @@ namespace bigintImpl {
         [[nodiscard]] ld ten_ld(int n) const { return t[n + offset]; }
 
     private:
-        ld t[offset * 2 + 1]{};
+        ld t[offset << 1 | 1]{};
     };
     // 0: neg = false, dat = {}
     struct bigint {
@@ -303,8 +301,7 @@ namespace bigintImpl {
             if constexpr (Signed<decltype(x)>)
                 if (x < 0)
                     neg = true, x = -x;
-            while (x)
-                dat.push_back(x % D), x /= D;
+            dat = _from_int(x);
         }
 
         bigint(std::string_view s) {
@@ -315,10 +312,10 @@ namespace bigintImpl {
                 l++, neg = true;
             for (int ie = len(s); l < ie; ie -= logD) {
                 int is = max(l, ie - logD);
-                i64 x = 0;
+                int x = 0;
                 _for (i, is, ie)
                     x = x * 10 + s[i] - '0';
-                dat.push_back(x);
+                dat.eb(x);
             }
         }
 #ifdef FASTIO
@@ -342,27 +339,39 @@ namespace bigintImpl {
             if (lhs.neg == rhs.neg)
                 return {lhs.neg, _add(lhs.dat, rhs.dat)};
             if (_leq(lhs.dat, rhs.dat)) {
-                // |l| <= |r|
                 auto c = _sub(rhs.dat, lhs.dat);
-                bool n = _is_zero(c) ? false : rhs.neg;
+                bool n = rhs.neg && !_is_zero(c);
                 return {n, c};
             }
             auto c = _sub(lhs.dat, rhs.dat);
-            bool n = _is_zero(c) ? false : lhs.neg;
-            return {n, c};
+            bool n = lhs.neg && !_is_zero(c);
+            return {n, std::move(c)};
         }
-        friend M operator-(const M& lhs, const M& rhs) { return lhs + (-rhs); }
+        friend M operator-(const M& lhs, const M& rhs) {
+            if (rhs.is_zero())
+                return lhs;
+            if (lhs.neg == !rhs.neg)
+                return {lhs.neg, _add(lhs.dat, rhs.dat)};
+            if (_leq(lhs.dat, rhs.dat)) {
+                auto c = _sub(rhs.dat, lhs.dat);
+                bool n = !rhs.neg && !_is_zero(c);
+                return {n, c};
+            }
+            auto c = _sub(lhs.dat, rhs.dat);
+            bool n = lhs.neg && !_is_zero(c);
+            return {n, std::move(c)};
+        }
 
         friend M operator*(const M& lhs, const M& rhs) {
             auto c = _mul(lhs.dat, rhs.dat);
-            bool n = _is_zero(c) ? false : (lhs.neg ^ rhs.neg);
-            return {n, c};
+            bool n = (lhs.neg ^ rhs.neg) && !_is_zero(c);
+            return {n, std::move(c)};
         }
         friend auto divmod(const M& lhs, const M& rhs) {
             auto dm = _divmod_newton(lhs.dat, rhs.dat);
-            bool dn = _is_zero(dm.first) ? false : lhs.neg != rhs.neg;
-            bool mn = _is_zero(dm.second) ? false : lhs.neg;
-            return std::pair{M{dn, dm.first}, M{mn, dm.second}};
+            bool dn = lhs.neg != rhs.neg && !_is_zero(dm.first);
+            bool mn = lhs.neg && !_is_zero(dm.second);
+            return std::pair{M{dn, std::move(dm.first)}, M{mn, std::move(dm.second)}};
         }
         friend M operator/(const M& lhs, const M& rhs) {
             return divmod(lhs, rhs).first;
@@ -386,46 +395,24 @@ namespace bigintImpl {
         friend M abs(const M& m) { return {false, m.dat}; }
         [[nodiscard]] bool is_zero() const { return _is_zero(dat); }
 
-        friend bool operator==(const M& lhs, const M& rhs) {
-            return lhs.neg == rhs.neg && lhs.dat == rhs.dat;
-        }
-        friend bool operator!=(const M& lhs, const M& rhs) {
-            return lhs.neg != rhs.neg || lhs.dat != rhs.dat;
-        }
-        friend bool operator<(const M& lhs, const M& rhs) {
-            if (lhs == rhs)
-                return false;
-            return _neq_lt(lhs, rhs);
-        }
-        friend bool operator<=(const M& lhs, const M& rhs) {
-            if (lhs == rhs)
-                return true;
-            return _neq_lt(lhs, rhs);
-        }
-        friend bool operator>(const M& lhs, const M& rhs) {
-            if (lhs == rhs)
-                return false;
-            return _neq_lt(rhs, lhs);
-        }
-        friend bool operator>=(const M& lhs, const M& rhs) {
-            if (lhs == rhs)
-                return true;
-            return _neq_lt(rhs, lhs);
-        }
+        friend bool operator==(const M& lhs, const M& rhs) = default;
+        friend bool operator<(const M& lhs, const M& rhs) { return lhs != rhs && _neq_lt(lhs, rhs); }
+        friend bool operator<=(const M& lhs, const M& rhs) { return !(rhs < lhs); }
+        friend bool operator>(const M& lhs, const M& rhs) { return rhs < lhs; }
+        friend bool operator>=(const M& lhs, const M& rhs) { return !(lhs < rhs); }
 
-        // a * 10^b (1 <= |a| < 10)
         [[nodiscard]] std::pair<ld, int> dfp() const {
             if (is_zero())
                 return {};
             int l = max(0, _size() - 3);
             int b = logD * l;
             str prefix;
-            for (int i = _size() - 1; i >= l; i--)
+            _for_r (i, l, _size())
                 prefix += _itos(dat[i], i != _size() - 1);
             b += len(prefix) - 1;
             ld a = 0;
             foreach (c, prefix)
-                a = a * 10.0 + (c - '0');
+                a = a * 10.L + (c - '0');
             a *= tens.ten_ld(-len(prefix) + 1);
             a = std::clamp<ld>(a, 1.0, nextafterl(10.0, 1.0));
             if (neg)
@@ -437,7 +424,7 @@ namespace bigintImpl {
                 return "0";
             str r;
             if (neg)
-                r.push_back('-');
+                r += '-';
             _for_r (i, _size())
                 r += _itos(dat[i], i != _size() - 1);
             return r;
@@ -448,12 +435,9 @@ namespace bigintImpl {
                 return a * tens.ten_ld(b);
             return a * powl(10, b);
         }
-        [[nodiscard]] i64 to_ll() const {
-            i64 r = _to_ll(dat);
-            return neg ? -r : r;
-        }
-        [[nodiscard]] i128 to_i128() const {
-            i128 r = _to_i128(dat);
+        template <typename T>
+        [[nodiscard]] T to_int() const {
+            T r = _to_int<T>(dat);
             return neg ? -r : r;
         }
 
@@ -478,7 +462,7 @@ namespace bigintImpl {
         static bool _is_zero(const vi& a) { return a.empty(); }
         static bool _is_one(const vi& a) { return len(a) == 1 && a[0] == 1; }
         static void _shrink(vi& a) {
-            while (len(a) && a.back() == 0)
+            while (!a.empty() && !a.back())
                 a.pop_back();
         }
         static vi _add(const vi& a, const vi& b) {
@@ -519,7 +503,7 @@ namespace bigintImpl {
                     break;
                 if (i < len(m))
                     x += m[i];
-                c.push_back(x % D);
+                c.eb(x % D);
                 x /= D;
             }
             _shrink(c);
@@ -529,16 +513,12 @@ namespace bigintImpl {
             if (a.empty() || b.empty())
                 return {};
             Vec<i64> prod(len(a) + len(b));
-            _for (i, len(a)) {
-                _for (j, len(b)) {
-                    i64 p = i64(a[i]) * b[j];
-                    prod[i + j] += p;
-                    if (prod[i + j] >= 4LL * D * D) {
+            _for (i, len(a))
+                _for (j, len(b))
+                    if (prod[i + j] += i64(a[i]) * b[j]; prod[i + j] >= 4LL * D * D) {
                         prod[i + j] -= 4LL * D * D;
                         prod[i + j + 1] += 4LL * D;
                     }
-                }
-            }
             vi c(len(prod) + 1);
             i64 x = 0;
             int i = 0;
@@ -561,13 +541,13 @@ namespace bigintImpl {
             return _mul_fft(a, b);
         }
         static auto _divmod_li(const vi& a, const vi& b) {
-            i64 va = _to_ll(a);
+            i64 va = _to_int<i64>(a);
             int vb = b[0];
-            return std::pair{_integer_to_vec(va / vb), _integer_to_vec(va % vb)};
+            return std::pair{_from_int(va / vb), _from_int(va % vb)};
         }
-        static auto _divmod_ll(const vi& a, const vi& b) {
-            i64 va = _to_ll(a), vb = _to_ll(b);
-            return std::pair{_integer_to_vec(va / vb), _integer_to_vec(va % vb)};
+        static auto _divmod_i64(const vi& a, const vi& b) {
+            i64 va = _to_int<i64>(a), vb = _to_int<i64>(b);
+            return std::pair{_from_int(va / vb), _from_int(va % vb)};
         }
         static auto _divmod_1e9(const vi& a, const vi& b) {
             if (b[0] == 1)
@@ -583,14 +563,14 @@ namespace bigintImpl {
                 quo[i] = q, d = r;
             }
             _shrink(quo);
-            return std::pair{quo, d ? vi{int(d)} : vi{}};
+            return std::pair{std::move(quo), d ? vi{int(d)} : vi{}};
         }
         static auto _divmod_naive(const vi& a, const vi& b) {
             assert(!_is_zero(b));
             if (len(b) == 1)
                 return _divmod_1e9(a, b);
             if (max(len(a), len(b)) <= 2)
-                return _divmod_ll(a, b);
+                return _divmod_i64(a, b);
             if (_lt(a, b))
                 return std::pair{vi{}, a};
             int norm = D / (b.back() + 1);
@@ -620,7 +600,7 @@ namespace bigintImpl {
             }
             _shrink(quo), _shrink(rem);
             auto [q2, r2] = _divmod_1e9(rem, {norm});
-            return std::pair{quo, q2};
+            return std::pair{std::move(quo), std::move(q2)};
         }
         static vi _calc_inv(const vi& a, int deg) {
             int k = deg, c = len(a);
@@ -636,7 +616,7 @@ namespace bigintImpl {
                 vi t(a.end() - d, a.end()), u = _mul(s, t);
                 u.erase(u.begin(), u.begin() + d);
                 vi w(k + 1), w2 = _add(z, z);
-                std::copy(all(w2), std::back_inserter(w));
+                copy(w2, back_inserter(w));
                 z = _sub(w, u);
                 z.erase(z.begin());
                 k *= 2;
@@ -664,32 +644,27 @@ namespace bigintImpl {
                 q = _add(q, {1}), r = _sub(r, y);
             _shrink(q), _shrink(r);
             auto [q2, r2] = _divmod_1e9(r, {norm});
-            return {q, q2};
+            return {std::move(q), std::move(q2)};
         }
         static str _itos(int x, bool zero_padding) {
             str r;
             _for (i, logD)
-                r.push_back('0' + x % 10), x /= 10;
+                r += '0' + x % 10, x /= 10;
             if (!zero_padding)
                 while (!r.empty() && r.back() == '0')
                     r.pop_back();
             reverse(r);
             return r;
         }
-        static vi _integer_to_vec(auto x) {
+        static vi _from_int(Integer auto x) {
             vi r;
             while (x)
-                r.push_back(x % D), x /= D;
+                r.eb(x % D), x /= D;
             return r;
         }
-        static i64 _to_ll(const vi& a) {
-            i64 r = 0;
-            _for_r (i, len(a))
-                r = r * D + a[i];
-            return r;
-        }
-        static i128 _to_i128(const vi& a) {
-            i128 r = 0;
+        template <typename T>
+        static T _to_int(const vi& a) {
+            T r{};
             _for_r (i, len(a))
                 r = r * D + a[i];
             return r;
