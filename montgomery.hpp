@@ -62,16 +62,15 @@ public:
     constexpr int_type strict_shrink(int_type x) const {
         return x >= _mod ? x - _mod : x;
     }
-
-private:
-    int_type _mod, _mod_neg_inv, _mbase, _mbase2, _mbase3;
-
     static constexpr int_type inv_base(int_type x) {
         int_type y = 1;
         for (int i = 1; i < base_width; i *= 2)
             y *= int_type(2) - x * y;
         return y;
     }
+
+private:
+    int_type _mod, _mod_neg_inv, _mbase, _mbase2, _mbase3;
 };
 template <typename Context>
 class MontgomeryModInt {
@@ -160,6 +159,9 @@ public:
         ret._val = x;
         return ret;
     }
+    constexpr int_type raw() const {
+        return _val;
+    }
 #ifdef FASTIO
     void read(IO& io) {
         static int_type x;
@@ -170,12 +172,12 @@ public:
         io.write(val());
     }
 #endif
-private:
-    int_type _val;
-
     static constexpr const mr_type& mr() {
         return Context::montgomery_reduction();
     }
+
+private:
+    int_type _val;
 };
 template <std::unsigned_integral T, T Mod>
 class StaticMontgomeryReductionContext {
