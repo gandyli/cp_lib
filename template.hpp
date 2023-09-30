@@ -35,7 +35,7 @@ using namespace std::ranges;
 
 constexpr auto ceil(auto&& x, auto&& y) { return x > 0 ? (x + y - 1) / y : x / y; }
 constexpr auto floor(auto&& x, auto&& y) { return x > 0 ? x / y : (x - y + 1) / y; }
-constexpr auto divmod(auto&& x, auto&& y) {
+constexpr auto divmod(auto x, auto y) {
     auto&& q = floor(x, y);
     return std::pair{q, x - q * y};
 }
