@@ -561,4 +561,9 @@ struct NTT {
             a[M + i] = buf1[i];
     }
 };
+template <typename mint>
+u32 NTT<mint>::_buf1[FFT_BUF_SIZE] __attribute__((aligned(64)));
+template <typename mint>
+u32 NTT<mint>::_buf2[FFT_BUF_SIZE] __attribute__((aligned(64)));
+
 #undef FFT_BUF_SIZE
