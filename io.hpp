@@ -405,7 +405,7 @@ public:
         }(std::make_index_sequence<std::tuple_size_v<std::decay_t<T>>>());
     }
     template <input_range R>
-        requires (!std::is_same_v<std::decay_t<decltype(*begin(std::declval<R>()))>, char>)
+        requires (!std::same_as<range_value_t<R>, char>)
     void write(R&& r) {
         auto f = begin(r), l = end(r);
         if (f != l)
