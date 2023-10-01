@@ -3,7 +3,7 @@
 #include "montgomery.hpp"
 
 namespace impl {
-#ifndef _IMPLCXX23_CONSTEXPR
+#ifndef IMPLCXX23_CONSTEXPR
 #if __cplusplus >= 202100L
 #define IMPLCXX23_CONSTEXPR constexpr
 #else
