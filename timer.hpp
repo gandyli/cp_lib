@@ -17,5 +17,5 @@ namespace Timer {
             fprintf(stderr, "\033[0m");
         }
     } _;
-} // namespace
+} // namespace Timer
 #endif
