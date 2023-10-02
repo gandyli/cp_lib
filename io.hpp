@@ -58,30 +58,30 @@ private:
 public:
 #ifdef LX_DEBUG
     int getch() { return fgetc(inFile); }
-    int peek() {
-        int c = fgetc(inFile);
-        ungetc(c, inFile);
-        return c;
-    }
+    int getch_unchecked() { return getch(); }
+    int unget(int c = 0) { return ungetc(c, inFile); }
+    int peek() { return unget(fgetc(inFile)); }
     void input(FILE* f) { inFile = f, set(); }
     void skipws() {
         int c = fgetc(inFile);
         while (blank(c))
             c = fgetc(inFile);
-        ungetc(c, inFile);
+        unget(c);
     }
     void readstr(char* s, usize n) { fread(s, 1, n, inFile); }
 #elif defined(USE_MMAP)
+    void skipws() {
+        while (blank(*ptr))
+            ptr++;
+    }
+    int unget(int = 0) = delete;
     int getch() { return ECHK0; }
+    int getch_unchecked() { return *ptr++; }
     int peek() { return ECHK5; }
     void input(FILE* f) {
         inFile = f;
         if (inFile)
             fd = fileno(inFile), fstat(fd, &st), ptr = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
-    }
-    void skipws() {
-        while (blank(*ptr))
-            ptr++;
     }
     void readstr(char* s, usize n) { memcpy(s, ptr, n), ptr += n; }
     static constexpr auto n = []() {
@@ -98,10 +98,12 @@ public:
     void skipws() {
         while (blank(getch()))
             ;
-        p1--;
+        unget();
     }
-    int getch() { return (p1 == p2 ? (p2 = (p1 = buf) + fread(buf, 1, bufSize, inFile)) : 0), p1 == p2 ? -1 : *p1++; }
-    int peek() { return (p1 == p2 ? (p2 = (p1 = buf) + fread(buf, 1, bufSize, inFile)) : 0), p1 == p2 ? -1 : *p1; }
+    int unget(int = 0) { return *p1--; }
+    int getch() { return (p1 == p2 ? (p2 = (p1 = buf) + fread(buf, 1, bufSize, inFile)) : nullptr), p1 == p2 ? -1 : *p1++; }
+    int getch_unchecked() { return *p1++; }
+    int peek() { return (p1 == p2 ? (p2 = (p1 = buf) + fread(buf, 1, bufSize, inFile)) : nullptr), p1 == p2 ? -1 : *p1; }
     void input(FILE* f) { inFile = f, p1 = p2 = buf, set(); }
     void readstr(char* s, usize n) {
         if (usize len = p2 - p1; n > len) [[unlikely]] {
@@ -192,7 +194,8 @@ public:
         ECHK1
         t = 0;
         while (isdigit(ch))
-            t = t * 10 + (ch ^ 48), ch = getch();
+            t = t * 10 + (ch ^ 48), ch = getch_unchecked();
+        unget(ch);
 #else
         while (!isdigit(*ptr) ECHK4)
             sign = *ptr++ == '-';
@@ -214,7 +217,8 @@ public:
             ch = getch();
         ECHK1
         while (isdigit(ch))
-            x = (x << 1) + (x << 3) + (ch ^ 48), ch = getch();
+            x = (x << 1) + (x << 3) + (ch ^ 48), ch = getch_unchecked();
+        unget(ch);
 #else
         while (!isdigit(*ptr) ECHK4)
             ptr++;
@@ -246,20 +250,20 @@ public:
     }
     IO& read(char* s) {
         skipws();
-        int ch = getch();
+        int ch = peek();
         ECHK1
         while (!blank(ch))
-            *s++ = ch, ch = getch();
+            *s++ = ch, getch_unchecked(), ch = peek();
         *s = 0;
         return *this;
     }
     IO& read(str& s) {
         skipws();
-        int ch = getch();
+        int ch = peek();
         ECHK1
         s.erase();
         while (!blank(ch))
-            s.append(1, ch), ch = getch();
+            s.append(1, ch), getch_unchecked(), ch = peek();
         return *this;
     }
     IO& readstr(char* s, usize n) {
@@ -376,12 +380,16 @@ public:
 #endif
     }
     void write(u128 x) {
+#ifndef LX_DEBUG
+        if (end(pbuf) - pp < 64) [[unlikely]]
+            flush();
+#endif
         static int s[40], t = 0;
         do
             s[t++] = x % 10, x /= 10;
         while (x);
         while (t)
-            putch(s[--t] ^ 48);
+            putch_unchecked(s[--t] ^ 48);
     }
     void write(char c) { putch(c); }
     void write(std::floating_point auto x) {
