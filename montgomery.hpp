@@ -1,6 +1,4 @@
 #pragma once
-
-#include "template.hpp"
 #include "mod_inverse.hpp"
 
 template <typename T, typename U>

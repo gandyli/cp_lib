@@ -1,5 +1,6 @@
 #pragma once
 #include "template.hpp"
+
 #if defined(LX_LOCAL) && !defined(CPH)
 namespace Timer {
     struct Timer {

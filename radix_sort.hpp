@@ -1,5 +1,4 @@
 #pragma once
-
 #include "template.hpp"
 
 namespace RadixSortImpl {
@@ -173,6 +172,6 @@ namespace RadixSortImpl {
         }
     }
     void radix_sort_compare_first(auto& v) { radix_sort_compare_first(v.size(), v.data()); }
-}  // namespace RadixSortImpl
+} // namespace RadixSortImpl
 
 using RadixSortImpl::radix_sort, RadixSortImpl::radix_sort_compare_first;

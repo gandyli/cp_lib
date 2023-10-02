@@ -1,5 +1,4 @@
 #pragma once
-
 #include <immintrin.h>
 
 __attribute__((target("sse4.2"))) inline __m128i my128_mullo_epu32(const __m128i& a, const __m128i& b) {

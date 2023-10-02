@@ -3,7 +3,7 @@
 
 Vec<str> split(const str& s, char sep = ' ') {
     Vec<str> ans{{}};
-    foreach(c, s)
+    foreach (c, s)
         if (c == sep)
             ans.eb();
         else
@@ -13,7 +13,7 @@ Vec<str> split(const str& s, char sep = ' ') {
 
 Vec<str> split(const str& s, str seps = " ,") {
     Vec<str> ans{{}};
-    foreach(c, s)
+    foreach (c, s)
         if (count(seps, c))
             ans.eb();
         else

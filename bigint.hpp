@@ -1,5 +1,4 @@
 #pragma once
-#include "template.hpp"
 #include "arbitrary-ntt.hpp"
 
 namespace impl {

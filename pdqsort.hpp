@@ -1,5 +1,4 @@
 #pragma once
-
 #include "template.hpp"
 
 namespace pdqsort_detail {

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ntt-avx2.hpp"
 
 namespace ArbitraryNTT {

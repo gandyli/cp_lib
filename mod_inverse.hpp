@@ -1,5 +1,4 @@
 #pragma once
-
 #include "template.hpp"
 
 template <std::unsigned_integral T>
