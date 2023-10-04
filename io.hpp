@@ -193,7 +193,7 @@ public:
         ECHK1
         t = 0;
         while (isdigit(ch))
-            t = t * 10 + (ch ^ 48), ch = getch_unchecked();
+            t = t * 10 + (ch ^ 48), ch = getch();
         unget(ch);
 #else
         while (!isdigit(*ptr) ECHK4)
@@ -216,7 +216,7 @@ public:
             ch = getch();
         ECHK1
         while (isdigit(ch))
-            x = (x << 1) + (x << 3) + (ch ^ 48), ch = getch_unchecked();
+            x = (x << 1) + (x << 3) + (ch ^ 48), ch = getch();
         unget(ch);
 #else
         while (!isdigit(*ptr) ECHK4)
