@@ -122,6 +122,19 @@ public:
     M& operator/=(const M& rhs) { return *this = *this / rhs; }
     M& operator%=(const M& rhs) { return *this = *this % rhs; }
 
+    M& operator++() { return *this += 1; }
+    M operator++(int) {
+        M t = *this;
+        ++*this;
+        return t;
+    }
+    M& operator--() { return *this -= 1; }
+    M operator--(int) {
+        M t = *this;
+        --*this;
+        return t;
+    }
+
     M operator-() const {
         if (is_zero())
             return *this;
