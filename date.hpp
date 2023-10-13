@@ -1,16 +1,17 @@
 #pragma once
 #include "template.hpp"
 
+template <typename T>
 struct Date {
     static constexpr int month_days[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    int year, month, day;
-    Date(int y, int m, int d): year(y), month(m), day(d) {}
-    Date(int x) {
-        year = x * 400 / 146097 + 1;
+    T year, month, day;
+    Date(T y, T m, T d): year(y), month(m), day(d) {}
+    Date(T x) {
+        year = x * 400LL / 146097 + 1;
         day = x - Date(year, 1, 1).to_int();
         month = 1;
         while (day >= 28) {
-            int k = month_days[month] + (month == 2 && is_leap_year(year) ? 1 : 0);
+            int k = month_days[month] + (month == 2 && is_leap_year(year));
             if (day < k)
                 break;
             month++;
@@ -22,7 +23,9 @@ struct Date {
         }
         day++;
     }
-    static bool is_leap_year(int y) { return (y % 4 == 0 && y % 100) || y % 400 == 0; }
+    static bool is_leap_year(T y) { return (y % 4 == 0 && y % 100) || y % 400 == 0; }
+    Date& operator+=(T x) { return *this = *this + x; }
+    Date operator+(T x) const { return {to_int() + x}; }
     Date& operator++() {
         int lim = month_days[month];
         if (is_leap_year(year) && month == 2)
@@ -55,10 +58,10 @@ struct Date {
         return y + sep + m + sep + d;
     }
     // {1, 1, 1} = 0
-    [[nodiscard]] int to_int() const {
-        int y = (month <= 2 ? year - 1 : year);
-        int m = (month <= 2 ? month + 12 : month);
-        int d = day;
+    [[nodiscard]] T to_int() const {
+        T y = (month <= 2 ? year - 1 : year);
+        T m = (month <= 2 ? month + 12 : month);
+        T d = day;
         return 365 * y + y / 4 - y / 100 + y / 400 + 306 * (m + 1) / 10 + d - 429;
     }
     [[nodiscard]] int weekday() const { return (to_int() + 1) % 7; }
