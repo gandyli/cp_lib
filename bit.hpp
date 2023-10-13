@@ -3,7 +3,7 @@
 
 template <typename T>
 struct BIT {
-    const int n;
+    int n;
     Vec<T> a;
     BIT(int n): n(n), a(n) {}
     void add(int x, T v) {
