@@ -91,3 +91,9 @@ vi sshift(const str& s, char c = 'a') {
         a[i] = s[i] - c;
     return a;
 }
+template <typename T>
+constexpr T inf = std::numeric_limits<T>::max() * 0.49;
+template <>
+constexpr f64 inf<f64> = inf<i64>;
+template <>
+constexpr ld inf<ld> = inf<i64>;
