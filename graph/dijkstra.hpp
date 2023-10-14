@@ -2,7 +2,7 @@
 
 template <typename T>
 std::pair<Vec<T>, vi> dijkstra_dense(WeightedGraph<T>& g, int s = 0) {
-    Vec dis(len(g), T(-1));
+    Vec dis(len(g), inf<T>);
     vi par(len(g), -1);
     Vec<bool> vis(len(g));
     dis[s] = 0;
@@ -15,7 +15,7 @@ std::pair<Vec<T>, vi> dijkstra_dense(WeightedGraph<T>& g, int s = 0) {
             break;
         vis[u] = true;
         foreach (v, g[u])
-            if (dis[v] == T(-1) || dis[u] + v.cost < dis[v]) {
+            if (dis[u] + v.cost < dis[v]) {
                 dis[v] = dis[u] + v.cost;
                 par[v] = u;
             }
@@ -24,7 +24,7 @@ std::pair<Vec<T>, vi> dijkstra_dense(WeightedGraph<T>& g, int s = 0) {
 }
 template <typename T>
 std::pair<Vec<T>, vi> dijkstra(WeightedGraph<T>& g, int s = 0) {
-    Vec dis(len(g), T(-1));
+    Vec dis(len(g), inf<T>);
     vi par(len(g), -1);
     std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
     dis[s] = 0;
@@ -35,7 +35,7 @@ std::pair<Vec<T>, vi> dijkstra(WeightedGraph<T>& g, int s = 0) {
         if (d > dis[u])
             continue;
         foreach (v, g[u])
-            if (dis[v] == T(-1) || dis[u] + v.cost < dis[v]) {
+            if (dis[u] + v.cost < dis[v]) {
                 dis[v] = dis[u] + v.cost;
                 par[v] = u;
                 q.emplace(dis[v], v);
@@ -45,7 +45,7 @@ std::pair<Vec<T>, vi> dijkstra(WeightedGraph<T>& g, int s = 0) {
 }
 template <typename T>
 std::tuple<Vec<T>, vi, vi> dijkstra(WeightedGraph<T>& g, const vi& s) {
-    Vec dis(len(g), T(-1));
+    Vec dis(len(g), inf<T>);
     vi par(len(g), -1);
     vi root(len(g), -1);
     std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
@@ -60,7 +60,7 @@ std::tuple<Vec<T>, vi, vi> dijkstra(WeightedGraph<T>& g, const vi& s) {
         if (d > dis[u])
             continue;
         foreach (v, g[u])
-            if (dis[v] == T(-1) || dis[u] + v.cost < dis[v]) {
+            if (dis[u] + v.cost < dis[v]) {
                 dis[v] = dis[u] + v.cost;
                 par[v] = u;
                 root[v] = root[u];
