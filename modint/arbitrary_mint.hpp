@@ -1,3 +1,4 @@
+#pragma once
 #include "barrett-reduction.hpp"
 
 template <int id>
