@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 vi zalgorithm(const auto& s) {
     int n = len(s);

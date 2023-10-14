@@ -1,7 +1,7 @@
 #pragma once
-#include "primitive_root.hpp"
-#include "montgomery.hpp"
-#include "simd-montgomery.hpp"
+#include "../math/primitive_root.hpp"
+#include "../modint/montgomery.hpp"
+#include "../modint/simd-montgomery.hpp"
 
 #ifndef FFT_BUF_SIZE
 #define FFT_BUF_SIZE (1 << 23)

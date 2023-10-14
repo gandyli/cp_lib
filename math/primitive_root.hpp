@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 constexpr u32 get_pr(u32 mod) {
     if (mod == 2)

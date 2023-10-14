@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 namespace pdqsort_detail {
     enum : u8 {

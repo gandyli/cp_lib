@@ -1,6 +1,6 @@
 #pragma once
-#include "montgomery.hpp"
-#include "primitive_root.hpp"
+#include "../modint/montgomery.hpp"
+#include "../math/primitive_root.hpp"
 
 template <typename mint>
 struct NTT {

@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 Vec<str> split(const str& s, char sep = ' ') {
     Vec<str> ans{{}};

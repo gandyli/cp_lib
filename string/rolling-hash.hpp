@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "../template.hpp"
 
 class Rollinghash {
     static constexpr u64 P = (1ULL << 61) - 1;

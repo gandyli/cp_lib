@@ -1,5 +1,5 @@
 #pragma once
-#include "montgomery.hpp"
+#include "../modint/montgomery.hpp"
 
 namespace impl {
 #ifndef IMPLCXX23_CONSTEXPR

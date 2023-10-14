@@ -1,6 +1,6 @@
 #pragma once
-#include "montgomery.hpp"
-#include "rng.hpp"
+#include "../modint/montgomery.hpp"
+#include "../rng.hpp"
 
 namespace impl {
     template <typename T>
