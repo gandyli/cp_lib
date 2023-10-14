@@ -121,5 +121,14 @@ public:
         }
         return id[dfn[x] - k];
     }
+    int jump(int x, int y, int k) {
+        int z = lca(x, y);
+        if (dep[x] - dep[z] >= k)
+            return k_ancestor(x, k);
+        k = (dep[x] + dep[y] - dep[z] * 2) - k;
+        if (k < 0)
+            return -1;
+        return k_ancestor(y, k);
+    }
     int dist(int a, int b) { return dep[a] + dep[b] - dep[lca(a, b)] * 2; }
 };
