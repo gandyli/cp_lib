@@ -14,6 +14,7 @@ using i16 = short;
 using i32 = int;
 using i64 = long long;
 using i128 = __int128;
+using f64 = double;
 using ld = long double;
 using vi = Vec<int>;
 using vvi = Vec<vi>;
