@@ -1,5 +1,5 @@
 #pragma once
-#include "barrett-reduction.hpp"
+#include "barrett_reduction.hpp"
 
 template <int id>
 struct ArbitraryModIntBase {

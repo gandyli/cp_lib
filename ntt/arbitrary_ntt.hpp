@@ -1,5 +1,5 @@
 #pragma once
-#include "ntt-avx2.hpp"
+#include "ntt_avx2.hpp"
 
 namespace ArbitraryNTT {
     constexpr int m0 = 167772161;
