@@ -121,6 +121,7 @@ public:
     void output(const char* s) { output(fopen(s, "wb")); }
     void output(FILE* f) { outFile = f; }
 };
+#ifndef LX_DEBUG
 const std::array<u32, 10000> Out::D = []() {
     constexpr u32 e0 = 0x1, e1 = 0x100, e2 = 0x10000, e3 = 0x1000000;
     std::array<u32, 10000> m{};
@@ -132,6 +133,7 @@ const std::array<u32, 10000> Out::D = []() {
                     m[x++] = c3;
     return m;
 }();
+#endif
 template <typename... Args>
 struct has_multiple_args {
     static constexpr bool value = sizeof...(Args) > 0;
