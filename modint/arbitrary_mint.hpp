@@ -8,21 +8,21 @@ struct ArbitraryModIntBase {
     ArbitraryModIntBase() = default;
 
     ArbitraryModIntBase(i64 y) {
-        int z = y % get_mod();
+        int z = y % mod();
         if (z < 0)
-            z += get_mod();
+            z += mod();
         x = z;
     }
     Z& operator+=(const Z& p) {
         x += p.x;
-        if (x >= get_mod())
-            x -= get_mod();
+        if (x >= mod())
+            x -= mod();
         return *this;
     }
     Z& operator-=(const Z& p) {
-        x += get_mod() - p.x;
-        if (x >= get_mod())
-            x -= get_mod();
+        x += mod() - p.x;
+        if (x >= mod())
+            x -= mod();
         return *this;
     }
     Z& operator*=(const Z& p) {
@@ -30,7 +30,7 @@ struct ArbitraryModIntBase {
         return *this;
     }
     Z& operator/=(const Z& p) {
-        return *this *= p.inverse();
+        return *this *= p.inv();
     }
     Z operator-() const { return Z(-x); }
     Z operator+() const { return *this; }
@@ -46,8 +46,8 @@ struct ArbitraryModIntBase {
     friend Z operator/(Z lhs, const Z& rhs) {
         return lhs /= rhs;
     }
-    Z inverse() const {
-        int a = x, b = get_mod(), u = 1, v = 0, t;
+    Z inv() const {
+        int a = x, b = mod(), u = 1, v = 0, t;
         while (b > 0) {
             t = a / b;
             swap(a -= t * b, b);
@@ -67,13 +67,13 @@ struct ArbitraryModIntBase {
     }
 
     [[nodiscard]] int val() const { return x; }
-    static int& get_mod() {
+    static int& mod() {
         static int mod = 0;
         return mod;
     }
     static void set_mod(int p) {
         assert(0 < p && p <= (1 << 30) - 1);
-        get_mod() = p;
+        mod() = p;
         barrett() = Barrett(p);
     }
 
