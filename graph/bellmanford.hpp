@@ -1,5 +1,5 @@
 #pragma once
-#include "../graph/base.hpp"
+#include "base.hpp"
 
 template <typename T>
 std::pair<Vec<T>, vi> BellmanFord(const auto& g, int s = 0) {

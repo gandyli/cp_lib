@@ -1,5 +1,5 @@
 #pragma once
-#include "../graph/bellmanford.hpp"
+#include "bellmanford.hpp"
 
 template <typename T>
 bool negative_cycle(const auto& g) {

@@ -1,4 +1,4 @@
-#include "../graph/base.hpp"
+#include "base.hpp"
 
 template <typename T>
 std::pair<Vec<T>, vi> bfs01(const auto& g, int s = 0) {
