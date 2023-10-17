@@ -1,14 +1,15 @@
 #include "../graph/base.hpp"
 
 template <typename T>
-std::pair<Vec<T>, vi> dijkstra_dense(const WeightedGraph<T>& g, int s = 0) {
-    Vec dis(len(g), inf<T>);
-    vi par(len(g), -1);
-    Vec<bool> vis(len(g));
+std::pair<Vec<T>, vi> dijkstra_dense(const auto& g, int s = 0) {
+    int n = g.n;
+    Vec dis(n, inf<T>);
+    vi par(n, -1);
+    Vec<bool> vis(n);
     dis[s] = 0;
     loop {
         int u = -1;
-        _for (i, len(g))
+        _for (i, n)
             if (!vis[i] && (u == -1 || dis[i] < dis[u]))
                 u = i;
         if (u == -1)
@@ -23,9 +24,10 @@ std::pair<Vec<T>, vi> dijkstra_dense(const WeightedGraph<T>& g, int s = 0) {
     return {std::move(dis), std::move(par)};
 }
 template <typename T>
-std::pair<Vec<T>, vi> dijkstra(const WeightedGraph<T>& g, int s = 0) {
-    Vec dis(len(g), inf<T>);
-    vi par(len(g), -1);
+std::pair<Vec<T>, vi> dijkstra(const auto& g, int s = 0) {
+    int n = g.n;
+    Vec dis(n, inf<T>);
+    vi par(n, -1);
     std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
     dis[s] = 0;
     q.emplace(0, s);
@@ -44,10 +46,11 @@ std::pair<Vec<T>, vi> dijkstra(const WeightedGraph<T>& g, int s = 0) {
     return {std::move(dis), std::move(par)};
 }
 template <typename T>
-std::tuple<Vec<T>, vi, vi> dijkstra(const WeightedGraph<T>& g, const vi& s) {
-    Vec dis(len(g), inf<T>);
-    vi par(len(g), -1);
-    vi root(len(g), -1);
+std::tuple<Vec<T>, vi, vi> dijkstra(const auto& g, const vi& s) {
+    int n = g.n;
+    Vec dis(n, inf<T>);
+    vi par(n, -1);
+    vi root(n, -1);
     std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
     foreach(s, s) {
         dis[s] = 0;

@@ -1,8 +1,8 @@
 #pragma once
 #include "base.hpp"
 
-vi topologicalSort(auto& g) {
-    int n = len(g);
+vi toposort(const auto& g) {
+    int n = g.n;
     Vec<bool> vis(n), ins(n);
     vi ret;
     auto dfs = [&](auto&& dfs, int u) {

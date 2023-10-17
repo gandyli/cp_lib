@@ -2,7 +2,7 @@
 #include "../graph/bellmanford.hpp"
 
 template <typename T>
-bool negative_cycle(const WeightedGraph<T>& g) {
-    auto [dis, par] = BellmanFord(g);
+bool negative_cycle(const auto& g) {
+    auto [dis, par] = BellmanFord<T>(g);
     return min(dis) == -inf<T>;
 }

@@ -2,21 +2,22 @@
 #include "../graph/base.hpp"
 
 template <typename T>
-std::pair<Vec<T>, vi> BellmanFord(const WeightedGraph<T>& g, int s = 0) {
-    Vec dis(len(g), inf<T>);
-    vi par(len(g), -1);
+std::pair<Vec<T>, vi> BellmanFord(const auto& g, int s = 0) {
+    int n = g.n;
+    Vec dis(n, inf<T>);
+    vi par(n, -1);
     dis[s] = 0;
-    int lop = 0;
+    int cnt = 0;
     loop {
-        lop++;
+        cnt++;
         bool upd = false;
-        _for (u, len(g))
+        _for (u, n)
             if (dis[u] != inf<T>)
                 foreach (v, g[u]) {
                     T t = dis[u] + v.cost;
                     chkmax(t, -inf<T>);
                     if (t < dis[v]) {
-                        if (lop >= len(g))
+                        if (cnt >= n)
                             t = -inf<T>;
                         dis[v] = t;
                         par[v] = u;

@@ -2,8 +2,8 @@
 #include "base.hpp"
 
 template <typename T>
-Vec<Vec<T>> floyd(const WeightedGraph<T>& g) {
-    const int n = len(g);
+Vec<Vec<T>> floyd(const auto& g) {
+    int n = g.n;
     VECI(dis, n, n, inf<T>);
     _for (i, n)
         dis[i][i] = 0;

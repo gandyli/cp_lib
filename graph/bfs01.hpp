@@ -1,12 +1,13 @@
 #include "../graph/base.hpp"
 
 template <typename T>
-std::pair<Vec<T>, vi> bfs01(const WeightedGraph<T>& g, int s = 0) {
-    Vec dis(len(g), inf<T>);
-    vi par(len(g), -1);
+std::pair<Vec<T>, vi> bfs01(const auto& g, int s = 0) {
+    int n = g.n;
+    Vec dis(n, inf<T>);
+    vi par(n, -1);
     std::deque<int> q;
     dis[s] = 0;
-    q.emplace_back(s);
+    q.eb(s);
     while (!q.empty()) {
         int u = q.front();
         q.pop_front();
@@ -23,15 +24,16 @@ std::pair<Vec<T>, vi> bfs01(const WeightedGraph<T>& g, int s = 0) {
     return {std::move(dis), std::move(par)};
 }
 template <typename T>
-std::tuple<Vec<T>, vi, vi> bfs01(const WeightedGraph<T>& g, const vi& s) {
-    Vec dis(len(g), inf<T>);
-    vi par(len(g), -1);
-    vi root(len(g), -1);
+std::tuple<Vec<T>, vi, vi> bfs01(const auto& g, const vi& s) {
+    int n = g.n;
+    Vec dis(n, inf<T>);
+    vi par(n, -1);
+    vi root(n, -1);
     std::deque<int> q;
-    foreach(s, s) {
+    foreach (s, s) {
         dis[s] = 0;
         root[s] = s;
-        q.emplace_back(s);
+        q.eb(s);
     }
     while (!q.empty()) {
         int u = q.front();
