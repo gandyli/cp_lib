@@ -44,8 +44,14 @@ constexpr auto Max(const auto& x) { return x; }
 constexpr auto Min(const auto& x) { return x; }
 constexpr auto Max(const auto& x, const auto& y, const auto&... arg) { return x < y ? Max(y, arg...) : Max(x, arg...); }
 constexpr auto Min(const auto& x, const auto& y, const auto&... arg) { return x < y ? Min(x, arg...) : Min(y, arg...); }
-constexpr void chkmax(auto& d, const auto&... x) { d = Max(d, x...); }
-constexpr void chkmin(auto& d, const auto&... x) { d = Min(d, x...); }
+constexpr bool chkmax(auto& d, const auto&... x) {
+    auto t = Max(x...);
+    return t > d ? d = t, true : false;
+}
+constexpr bool chkmin(auto& d, const auto&... x) {
+    auto t = Min(x...);
+    return t < d ? d = t, true : false;
+}
 constexpr auto sum(input_range auto&& r) { return std::accumulate(begin(r), end(r), std::decay_t<decltype(*begin(r))>{}); }
 constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(begin(r), end(r), init); }
 constexpr int len(auto&& x) { return std::size(x); }
