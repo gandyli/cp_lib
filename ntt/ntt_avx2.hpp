@@ -12,7 +12,7 @@ struct NTT {
     static u32 _buf1[FFT_BUF_SIZE] __attribute__((aligned(64)));
     static u32 _buf2[FFT_BUF_SIZE] __attribute__((aligned(64)));
     static constexpr u32 mod = mint::mod();
-    static constexpr mint pr = get_pr(mod);
+    static constexpr mint pr = primitive_root(mod);
     static constexpr int lvl = __builtin_ctz(mod - 1);
     mint dw[lvl], dy[lvl];
     mint *buf1, *buf2;

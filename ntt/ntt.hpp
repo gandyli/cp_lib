@@ -5,7 +5,7 @@
 template <typename mint>
 struct NTT {
     static constexpr u32 mod = mint::mod();
-    static constexpr mint pr = get_pr(mod);
+    static constexpr mint pr = primitive_root(mod);
     static constexpr int lvl = __builtin_ctz(mod - 1);
     mint dw[lvl], dy[lvl];
 
