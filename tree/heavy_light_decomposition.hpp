@@ -6,19 +6,23 @@ class HeavyLightDecomposition {
 private:
     void dfs1(int u) {
         size[u] = 1;
-        foreach (v, g[u]) {
-            if (v == fa[u]) {
-                if (len(g[u]) >= 2 && int(v) == int(g[u][0]))
-                    swap(g[u][0], g[u][1]);
-                else
-                    continue;
-            }
+        int l = g.indptr[u], r = g.indptr[u + 1];
+        auto& csr = g.csr_edges;
+        _for_r (i, l, r - 1)
+            if (!dep[csr[i + 1]])
+                swap(csr[i], csr[i + 1]);
+        int max = 0;
+        _for (i, l, r) {
+            auto& v = csr[i];
+            if (v == fa[u])
+                continue;
             dep[v] = dep[u] + 1;
             fa[v] = u;
             dfs1(v);
             size[u] += size[v];
-            if (size[v] > size[g[u][0]]) {
-                swap(v, g[u][0]);
+            if (size[v] > max) {
+                max = size[v];
+                swap(csr[l], csr[i]);
             }
         }
     }
@@ -27,9 +31,11 @@ private:
         static int _id = 0;
         dfn[u] = _id;
         id[_id++] = u;
+        bool heavy = true;
         foreach (v, g[u])
             if (v != fa[u]) {
-                top[v] = (int(v) == int(g[u][0]) ? top[u] : int(v));
+                top[v] = heavy ? top[u] : v;
+                heavy = false;
                 dfs2(v);
             }
     }
@@ -62,12 +68,12 @@ public:
     vi size, dep, dfn, top, fa, id;
     HeavyLightDecomposition(G& _g, int root = 0)
         : g(_g),
-          size(len(g)),
-          dep(len(g)),
-          dfn(len(g)),
-          top(len(g), root),
-          fa(len(g), root),
-          id(len(g)) {
+          size(g.n),
+          dep(g.n),
+          dfn(g.n),
+          top(g.n, root),
+          fa(g.n, root),
+          id(g.n) {
         build(root);
     }
 
