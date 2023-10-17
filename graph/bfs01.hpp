@@ -12,8 +12,7 @@ std::pair<Vec<T>, vi> bfs01(const auto& g, int s = 0) {
         int u = q.front();
         q.pop_front();
         foreach (v, g[u])
-            if (dis[u] + v.cost < dis[v]) {
-                dis[v] = dis[u] + v.cost;
+            if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;
                 if (v.cost)
                     q.emplace_back(v);
@@ -39,8 +38,7 @@ std::tuple<Vec<T>, vi, vi> bfs01(const auto& g, const vi& s) {
         int u = q.front();
         q.pop_front();
         foreach (v, g[u])
-            if (dis[u] + v.cost < dis[v]) {
-                dis[v] = dis[u] + v.cost;
+            if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;
                 root[v] = root[u];
                 if (v.cost)

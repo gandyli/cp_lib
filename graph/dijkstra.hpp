@@ -16,10 +16,8 @@ std::pair<Vec<T>, vi> dijkstra_dense(const auto& g, int s = 0) {
             break;
         vis[u] = true;
         foreach (v, g[u])
-            if (dis[u] + v.cost < dis[v]) {
-                dis[v] = dis[u] + v.cost;
+            if (chkmin(dis[v], dis[u] + v.cost))
                 par[v] = u;
-            }
     }
     return {std::move(dis), std::move(par)};
 }
@@ -37,8 +35,7 @@ std::pair<Vec<T>, vi> dijkstra(const auto& g, int s = 0) {
         if (d > dis[u])
             continue;
         foreach (v, g[u])
-            if (dis[u] + v.cost < dis[v]) {
-                dis[v] = dis[u] + v.cost;
+            if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;
                 q.emplace(dis[v], v);
             }
@@ -63,8 +60,7 @@ std::tuple<Vec<T>, vi, vi> dijkstra(const auto& g, const vi& s) {
         if (d > dis[u])
             continue;
         foreach (v, g[u])
-            if (dis[u] + v.cost < dis[v]) {
-                dis[v] = dis[u] + v.cost;
+            if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;
                 root[v] = root[u];
                 q.emplace(dis[v], v);
