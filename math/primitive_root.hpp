@@ -1,40 +1,58 @@
 #pragma once
 #include "../template.hpp"
+#include "../prime/pollard_rho.hpp"
 
-constexpr u32 get_pr(u32 mod) {
+template <Unsigned T>
+constexpr T primitive_root(T mod) {
     if (mod == 2)
         return 1;
-    u64 ds[32]{};
-    int idx = 0;
-    u64 m = mod - 1;
-    for (u64 i = 2; i * i <= m; i++)
-        if (m % i == 0) {
-            ds[idx++] = i;
-            while (m % i == 0)
-                m /= i;
-        }
-    if (m != 1)
-        ds[idx++] = m;
-
-    u32 pr = 2;
-    loop {
-        int flg = 1;
-        _for (i, idx) {
-            u64 a = pr, b = (mod - 1) / ds[i], r = 1;
-            while (b) {
-                if (b & 1)
-                    r = r * a % mod;
-                a = a * a % mod;
-                b >>= 1;
+    if constexpr (std::is_same_v<T, u32>) {
+        if (std::is_constant_evaluated()) {
+            u64 ds[32]{};
+            int idx = 0;
+            u64 m = mod - 1;
+            for (u64 i = 2; i * i <= m; i++)
+                if (m % i == 0) {
+                    ds[idx++] = i;
+                    while (m % i == 0)
+                        m /= i;
+                }
+            if (m != 1)
+                ds[idx++] = m;
+            T pr = 2;
+            loop {
+                int flg = 1;
+                _for (i, idx) {
+                    u64 a = pr, b = (mod - 1) / ds[i], r = 1;
+                    while (b) {
+                        if (b & 1)
+                            r = r * a % mod;
+                        a = a * a % mod;
+                        b >>= 1;
+                    }
+                    if (r == 1) {
+                        flg = 0;
+                        break;
+                    }
+                }
+                if (flg == 1)
+                    break;
+                pr++;
             }
-            if (r == 1) {
-                flg = 0;
-                break;
-            }
+            return pr;
         }
-        if (flg == 1)
-            break;
-        pr++;
     }
-    return pr;
-};
+    else {
+        auto pf = factorize(mod - 1);
+        std::uniform_int_distribution<T> uid(2, mod - 1);
+        using ctx = DynamicMontgomeryReductionContext<T>;
+        auto _guard = ctx::set_mod(mod);
+        using Z = MontgomeryModInt<ctx>;
+        loop if (T pr = uid(rnd64); BLK {
+                     foreach (p, pf)
+                         if (power(Z(pr), (mod - 1) / p) == 1)
+                             return false;
+                     return true;
+                 }) return pr;
+    }
+}
