@@ -26,6 +26,8 @@ struct Date {
     static bool is_leap_year(T y) { return (y % 4 == 0 && y % 100) || y % 400 == 0; }
     Date& operator+=(T x) { return *this = *this + x; }
     Date operator+(T x) const { return {to_int() + x}; }
+    Date& operator-=(T x) { return *this = *this - x; }
+    Date operator-(T x) const { return {to_int() - x}; }
     Date& operator++() {
         int lim = month_days[month];
         if (is_leap_year(year) && month == 2)
@@ -44,6 +46,13 @@ struct Date {
         ++*this;
         return tmp;
     }
+    Date& operator--() { return *this = *this - 1; }
+    Date operator--(int) {
+        Date tmp = *this;
+        --*this;
+        return tmp;
+    }
+    T operator-(const Date& x) const { return to_int() - x.to_int(); }
     auto operator<=>(const Date& rhs) const = default;
     [[nodiscard]] str to_string(const str& sep = "-") const {
         str y = std::to_string(year);
