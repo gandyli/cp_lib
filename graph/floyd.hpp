@@ -2,7 +2,7 @@
 #include "base.hpp"
 
 template <typename T>
-Vec<Vec<T>> floyd(const auto& g) {
+auto floyd(const auto& g) {
     int n = g.n;
     VECI(dis, n, n, inf<T>);
     _for (i, n)
@@ -12,7 +12,9 @@ Vec<Vec<T>> floyd(const auto& g) {
             chkmin(dis[u][v], v.cost);
     _for (k, n)
         _for (i, n)
-            _for (j, n)
-                chkmin(dis[i][j], dis[i][k] + dis[k][j]);
+            if (dis[i][k] != inf<T>)
+                _for (j, n)
+                    if (dis[k][j] != inf<T>)
+                        chkmin(dis[i][j], dis[i][k] + dis[k][j]);
     return dis;
 }
