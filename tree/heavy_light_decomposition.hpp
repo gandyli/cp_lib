@@ -28,7 +28,6 @@ private:
     }
 
     void dfs2(int u) {
-        static int _id = 0;
         dfn[u] = _id;
         id[_id++] = u;
         bool heavy = true;
@@ -66,6 +65,7 @@ private:
 public:
     G& g;
     vi size, dep, dfn, top, fa, id;
+    int _id{};
     HeavyLightDecomposition(G& _g, int root = 0)
         : g(_g),
           size(g.n),

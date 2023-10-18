@@ -7,15 +7,15 @@ struct Meldable_Heap: public Compare {
         T x;
         int s;
     }* pool{new Node[N]};
+    int id{};
 
     Meldable_Heap() = default;
     Meldable_Heap(const Compare& cmp): Compare(cmp) {}
-    [[nodiscard]] Node* new_node(const T& x) const {
-        static int id = 0;
+    [[nodiscard]] Node* new_node(const T& x) {
         pool[id] = {nullptr, nullptr, x, 1};
         return &pool[id++];
     }
-    Node* copy_node(Node* a) const {
+    Node* copy_node(Node* a) {
         if (!a || !PERSISTENT)
             return a;
         Node* b = new_node(a->x);
