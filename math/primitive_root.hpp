@@ -2,6 +2,22 @@
 #include "../template.hpp"
 #include "../prime/pollard_rho.hpp"
 
+namespace impl {
+    template <Unsigned T>
+    T primitive_root(T mod) {
+        auto pf = factorize(mod - 1);
+        std::uniform_int_distribution<T> uid(2, mod - 1);
+        using ctx = DynamicMontgomeryReductionContext<T>;
+        auto _guard = ctx::set_mod(mod);
+        using Z = MontgomeryModInt<ctx>;
+        loop if (T pr = uid(rnd64); BLK {
+                     foreach (p, pf)
+                         if (power(Z(pr), (mod - 1) / p) == 1)
+                             return false;
+                     return true;
+                 }) return pr;
+    }
+} // namespace impl
 template <Unsigned T>
 constexpr T primitive_root(T mod) {
     if (mod == 2)
@@ -42,17 +58,5 @@ constexpr T primitive_root(T mod) {
             return pr;
         }
     }
-    else {
-        auto pf = factorize(mod - 1);
-        std::uniform_int_distribution<T> uid(2, mod - 1);
-        using ctx = DynamicMontgomeryReductionContext<T>;
-        auto _guard = ctx::set_mod(mod);
-        using Z = MontgomeryModInt<ctx>;
-        loop if (T pr = uid(rnd64); BLK {
-                     foreach (p, pf)
-                         if (power(Z(pr), (mod - 1) / p) == 1)
-                             return false;
-                     return true;
-                 }) return pr;
-    }
+    return impl::primitive_root(mod);
 }
