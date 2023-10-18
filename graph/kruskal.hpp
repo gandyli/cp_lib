@@ -6,10 +6,8 @@ template <typename T>
 auto kruskal(Graph<T>& g) {
     int n = g.n, m = g.m;
     Vec<std::pair<T, int>> edges;
-    _for (i, m) {
-        auto& e = g.edges[i];
-        edges.eb(e.cost, i);
-    }
+    _for (i, m)
+        edges.eb(g.edges[i].cost, i);
     sort(edges);
     Vec<bool> in(m);
     DSU dsu(n);
