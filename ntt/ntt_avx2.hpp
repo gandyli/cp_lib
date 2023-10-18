@@ -463,7 +463,7 @@ struct NTT {
         const __m256i m0 = _mm256_set1_epi32(0);
         const __m256i m1 = _mm256_set1_epi32(mod);
         const __m256i r = _mm256_set1_epi32(mint::mr().inv_base(mint::mod()));
-        const __m256i N2 = _mm256_set1_epi32(mint::n2);
+        const __m256i N2 = _mm256_set1_epi32(mint::mr().mbase2());
         _for (i, 0, l1, 8) {
             __m256i a = _mm256_loadu_si256((__m256i*)(_buf1 + i));
             __m256i b = montgomery_mul_256(a, N2, r, m1);
