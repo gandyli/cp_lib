@@ -85,7 +85,7 @@ namespace RadixSortImpl {
             std::rotate(p, p + i, p + n);
         }
     }
-    void radix_sort(auto& v) { radix_sort(v.size(), v.data()); }
+    void radix_sort(auto& v) { radix_sort(len(v), v.data()); }
     template <typename T, typename U>
     void radix_sort_compare_first(int n, std::pair<T, U>* p) {
         static_assert(sizeof(T) == 4 || sizeof(T) == 8);
@@ -171,7 +171,7 @@ namespace RadixSortImpl {
             std::rotate(p, p + i, p + n);
         }
     }
-    void radix_sort_compare_first(auto& v) { radix_sort_compare_first(v.size(), v.data()); }
+    void radix_sort_compare_first(auto& v) { radix_sort_compare_first(len(v), v.data()); }
 } // namespace RadixSortImpl
 
 using RadixSortImpl::radix_sort, RadixSortImpl::radix_sort_compare_first;
