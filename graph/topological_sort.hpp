@@ -1,8 +1,7 @@
 #pragma once
 #include "base.hpp"
 
-vi toposort(const auto& g) {
-    assert(g.is_directed());
+vi toposort(const DirectedGraph auto& g) {
     int n = g.n;
     Vec<bool> vis(n), ins(n);
     vi ret;

@@ -1,7 +1,7 @@
 #pragma once
 #include "base.hpp"
 
-Graph<bool> block_cut_tree(const auto& g) {
+Graph<bool> block_cut_tree(const UndirectedGraph auto& g) {
     int n = g.n;
     vi low(n), dfn(n, -1), st;
     st.reserve(n);

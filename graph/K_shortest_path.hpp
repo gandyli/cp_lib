@@ -2,8 +2,7 @@
 #include "base.hpp"
 
 template <typename T>
-auto K_shortest_path(const auto& G, int s, int t, int K) {
-    assert(G.is_directed());
+auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
     const int n = G.n;
 
     struct Result {

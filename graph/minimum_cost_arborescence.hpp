@@ -116,7 +116,7 @@ namespace MinimumCostArborescenceImpl {
     };
 } // namespace MinimumCostArborescenceImpl
 template <int N>
-auto MinimumCostArborescence(auto& g, int root) {
+auto MinimumCostArborescence(const DirectedGraph auto& g, int root) {
     using G = std::decay_t<decltype(g)>;
     auto I = MinimumCostArborescenceImpl::Solver<G, N>{g}.calc(root);
     typename G::cost_type cost{};

@@ -1,8 +1,7 @@
 #pragma once
 #include "base.hpp"
 
-auto two_edge_component(const auto& g) {
-    assert(!g.is_directed());
+auto two_edge_component(const UndirectedGraph auto& g) {
     int n = g.n, m = g.m;
     vi par(n, -2), dp(n), V;
     V.reserve(n);

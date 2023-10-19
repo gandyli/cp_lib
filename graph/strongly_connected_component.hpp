@@ -1,8 +1,7 @@
 #pragma once
 #include "base.hpp"
 
-auto strongly_connected_component(const auto& g) {
-    assert(g.is_directed());
+auto strongly_connected_component(const DirectedGraph auto& g) {
     int n = g.n;
     vi comp(n), low(n), dfn(n, -1);
     vi st;
@@ -38,7 +37,7 @@ auto strongly_connected_component(const auto& g) {
     return std::pair{scc, std::move(comp)};
 }
 
-auto scc_dag(const auto& g, int scc, const vi& comp) {
+auto scc_dag(const DirectedGraph auto& g, int scc, const vi& comp) {
     vvi edges(scc);
     foreach (e, g.edges) {
         int u = comp[e.from], v = comp[e.to];
