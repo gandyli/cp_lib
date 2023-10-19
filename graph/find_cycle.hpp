@@ -63,7 +63,7 @@ FindCycleResult find_cycle(const DirectedGraph auto& g) {
     return {std::move(vs), std::move(es)};
 }
 
-FindCycleResult find_cycle(const UndirectedGraph auto& g) {
+FindCycleResult find_cycle(const UndirectedGraph auto& g, bool minimal = false) {
     const int n = g.n;
     const int m = g.m;
     vi dep(n, -1);
@@ -74,7 +74,7 @@ FindCycleResult find_cycle(const UndirectedGraph auto& g) {
         foreach (v, g[u])
             if (!vis[v.id]) {
                 if (dep[v] != -1)
-                    return u;
+                    return minimal ? u : v.id;
                 vis[v.id] = 1;
                 par[v] = v.id;
                 int t = dfs(dfs, v, d + 1);
@@ -89,22 +89,30 @@ FindCycleResult find_cycle(const UndirectedGraph auto& g) {
             int w = dfs(dfs, u, 0);
             if (w == -1)
                 continue;
-            int b = -1, back_e = -1;
-            loop {
-                foreach (v, g[w]) {
-                    if (vis[v.id])
-                        continue;
-                    if (dep[v] > dep[w] || dep[v] == -1)
-                        continue;
-                    b = w, back_e = v.id;
+            int a;
+            if (minimal) {
+                int b = -1, back_e = -1;
+                loop {
+                    foreach (v, g[w]) {
+                        if (vis[v.id])
+                            continue;
+                        if (dep[v] > dep[w] || dep[v] == -1)
+                            continue;
+                        b = w, back_e = v.id;
+                    }
+                    if (w == u)
+                        break;
+                    auto&& e = g.edges[par[w]];
+                    w = e.from + e.to - w;
                 }
-                if (w == u)
-                    break;
-                auto&& e = g.edges[par[w]];
-                w = e.from + e.to - w;
+                es.eb(back_e);
+                a = g.edges[back_e].from + g.edges[back_e].to - b;
             }
-            int a = g.edges[back_e].from + g.edges[back_e].to - b;
-            es.eb(back_e), vs.eb(a);
+            else {
+                es.eb(w);
+                a = dep[g.edges[w].from] > dep[g.edges[w].to] ? g.edges[w].to : g.edges[w].from;
+            }
+            vs.eb(a);
             loop {
                 int x = vs.back();
                 auto&& e = g.edges[es.back()];
