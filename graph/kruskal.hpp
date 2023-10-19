@@ -12,7 +12,7 @@ auto kruskal(Graph<T>& g) {
     Vec<bool> in(m);
     DSU dsu(n);
     T cost{};
-    Graph<T> mst(n);
+    Graph<T> mst(n, n - 1);
     for (auto&& [_, i]: edges)
         if (auto&& e = g.edges[i]; dsu.merge(e.from, e.to)) {
             in[i] = 1;

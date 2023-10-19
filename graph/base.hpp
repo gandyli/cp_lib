@@ -33,6 +33,7 @@ struct Graph {
     static constexpr bool is_directed() { return directed; }
     Graph() = default;
     Graph(int n): n(n) {}
+    Graph(int n, int m): n(n) { edges.reserve(m); }
     void add(int from, int to, cost_type cost = 1, int id = -1) {
         if (id == -1)
             id = m;

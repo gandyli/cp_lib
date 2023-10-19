@@ -40,7 +40,7 @@ Graph<bool> block_cut_tree(const auto& g) {
             m++;
             st.clear();
         }
-    Graph<bool> tree(m);
+    Graph<bool> tree(m, len(edges));
     for (auto&& [a, b]: edges)
         tree.add(a, b);
     tree.build();
