@@ -84,7 +84,7 @@ auto K_shortest_path(const auto& G, int s, int t, int K) {
         vi vs{s};
         foreach (x, es)
             vs.eb(G.edges[x].to);
-        res.eb(cost, vs, es);
+        res.eb(cost, std::move(vs), es);
 
         nodes.clear();
         _for (k, n, len(es)) {

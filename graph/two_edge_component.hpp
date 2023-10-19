@@ -32,5 +32,5 @@ auto two_edge_component(const auto& g) {
     vi comp(n);
     foreach (u, V)
         comp[u] = !dp[u] ? id++ : comp[par[u]];
-    return std::pair{id, comp};
+    return std::pair{id, std::move(comp)};
 }
