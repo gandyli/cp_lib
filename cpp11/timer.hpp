@@ -1,5 +1,6 @@
 #pragma once
 #include "template.hpp"
+
 #ifdef LX_LOCAL
 namespace {
     struct Timer {

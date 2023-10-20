@@ -1,3 +1,4 @@
+#pragma once
 #include "base.hpp"
 #include "../ds/dsu.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
-
 #include "template.hpp"
+
 template <typename T, typename U>
 T power(T a, U b) {
     T ans = 1;

@@ -1,5 +1,6 @@
 #pragma once
 #include "types.hpp"
+
 #define FOR _for
 #define FORIN foreach
 using ll = i64;

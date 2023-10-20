@@ -1,5 +1,4 @@
 #pragma once
-
 #include <bits/stdc++.h>
 
 #define Vec std::vector

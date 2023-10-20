@@ -1,3 +1,4 @@
+#pragma once
 #include "gcd.hpp"
 
 template <typename T, typename U>

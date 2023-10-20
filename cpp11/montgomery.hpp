@@ -1,5 +1,4 @@
 #pragma once
-
 #include "template.hpp"
 
 static_assert(__cplusplus >= 201703L);

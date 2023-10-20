@@ -1,3 +1,4 @@
+#pragma once
 #include "../template.hpp"
 
 template <typename T, bool PERSISTENT, int N, typename Compare = std::less<>>

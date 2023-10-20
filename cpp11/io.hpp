@@ -1,5 +1,4 @@
 #pragma once
-
 #include "template.hpp"
 
 #ifdef CHECK_EOF

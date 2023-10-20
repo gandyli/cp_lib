@@ -1,8 +1,6 @@
 #pragma once
 #include "types.hpp"
 
-#include <bits/stdc++.h>
-
 // NOLINTBEGIN
 #define FOR1(a) for (typename std::decay<decltype(a)>::type _ = 0; _ < (a); _++)
 #define FOR2(i, a) for (typename std::decay<decltype(a)>::type i = 0; i < (a); i++)
