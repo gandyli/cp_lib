@@ -43,7 +43,7 @@ auto scc_dag(const DirectedGraph auto& g, int scc, const vi& comp) {
         if (u != v)
             edges[u].eb(v);
     }
-    Graph<bool, true> dag(scc);
+    Graph<int, true> dag(scc);
     _for (i, scc) {
         UNIQUE(edges[i]);
         foreach (to, edges[i])

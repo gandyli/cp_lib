@@ -5,7 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph<bool, true> g(n);
+    Graph<int, true> g(n);
     g.read_graph(m, false, 0);
     auto [scc, comp] = strongly_connected_component(g);
     vvi ans(scc);

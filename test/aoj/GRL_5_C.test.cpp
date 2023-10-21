@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_5_C"
 
 #include "all.hpp"
-#include "tree/heavy_light_decomposition.hpp"
+#include "graph/tree.hpp"
 
 int main() {
     dR(int, n);
@@ -14,11 +14,11 @@ int main() {
         }
     }
     g.build();
-    HeavyLightDecomposition hld(g);
+    Tree tree(g);
     dR(int, q);
     _for (q) {
         dR(int, x, y);
-        writeln(hld.lca(x, y));
+        writeln(tree.lca(x, y));
     }
     return 0;
 }
