@@ -66,7 +66,7 @@ struct ArbitraryModIntBase {
         return ret;
     }
 
-    [[nodiscard]] int val() const { return x; }
+    int val() const { return x; }
     static int& mod() {
         static int mod = 0;
         return mod;

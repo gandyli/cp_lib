@@ -32,12 +32,12 @@ public:
             ans = ans * base + s[i];
         return ans;
     }
-    [[nodiscard]] auto query(u32 l, u32 r) const {
+    auto query(u32 l, u32 r) const {
         expand(r - l);
         return h[r] - h[l] * p[r - l];
     }
-    [[nodiscard]] auto query(u32 r) const { return h[r]; }
-    [[nodiscard]] auto query() const { return h.back(); }
+    auto query(u32 r) const { return h[r]; }
+    auto query() const { return h.back(); }
     static auto combine(mint h1, mint h2, u32 s) {
         expand(s);
         return h1 * p[s] + h2;

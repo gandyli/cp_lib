@@ -11,7 +11,7 @@ namespace impl {
                 t[offset - i] = 1.0 / t[offset + i];
             }
         }
-        [[nodiscard]] ld ten_ld(int n) const { return t[n + offset]; }
+        ld ten_ld(int n) const { return t[n + offset]; }
 
     private:
         ld t[offset << 1 | 1]{};
@@ -142,7 +142,7 @@ public:
     }
     M operator+() const { return *this; }
     friend M abs(const M& m) { return {false, m.dat}; }
-    [[nodiscard]] bool is_zero() const { return _is_zero(dat); }
+    bool is_zero() const { return _is_zero(dat); }
 
     friend bool operator==(const M& lhs, const M& rhs) = default;
     friend bool operator<(const M& lhs, const M& rhs) { return lhs != rhs && _neq_lt(lhs, rhs); }
@@ -150,7 +150,7 @@ public:
     friend bool operator>(const M& lhs, const M& rhs) { return rhs < lhs; }
     friend bool operator>=(const M& lhs, const M& rhs) { return !(lhs < rhs); }
 
-    [[nodiscard]] std::pair<ld, int> dfp() const {
+    std::pair<ld, int> dfp() const {
         if (is_zero())
             return {};
         int l = max(0, _size() - 3);
@@ -168,7 +168,7 @@ public:
             a = -a;
         return {a, b};
     }
-    [[nodiscard]] str to_string() const {
+    str to_string() const {
         if (is_zero())
             return "0";
         str r;
@@ -178,20 +178,20 @@ public:
             r += _itos(dat[i], i != _size() - 1);
         return r;
     }
-    [[nodiscard]] ld to_ld() const {
+    ld to_ld() const {
         auto [a, b] = dfp();
         if (-impl::TENS::offset <= b && b <= impl::TENS::offset)
             return a * tens.ten_ld(b);
         return a * powl(10, b);
     }
     template <typename T>
-    [[nodiscard]] T to_int() const {
+    T to_int() const {
         T r = _to_int<T>(dat);
         return neg ? -r : r;
     }
 
 private:
-    [[nodiscard]] int _size() const { return len(dat); }
+    int _size() const { return len(dat); }
     static bool _lt(const vi& a, const vi& b) {
         if (len(a) != len(b))
             return len(a) < len(b);

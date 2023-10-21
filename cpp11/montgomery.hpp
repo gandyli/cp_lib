@@ -244,7 +244,7 @@ public:
         friend DynamicMontgomeryReductionContext;
         Guard() {}
     };
-    [[nodiscard]] static Guard set_mod(T mod) {
+    static Guard set_mod(T mod) {
         assert(mod % 2 == 1 && mod <= std::numeric_limits<T>::max() / 4);
         _reduction_env.emplace_back(mod);
         return Guard();

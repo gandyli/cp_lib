@@ -54,7 +54,7 @@ struct Date {
     }
     T operator-(const Date& x) const { return to_int() - x.to_int(); }
     auto operator<=>(const Date& rhs) const = default;
-    [[nodiscard]] str to_string(const str& sep = "-") const {
+    str to_string(const str& sep = "-") const {
         str y = std::to_string(year);
         str m = std::to_string(month);
         str d = std::to_string(day);
@@ -67,11 +67,11 @@ struct Date {
         return y + sep + m + sep + d;
     }
     // {1, 1, 1} = 0
-    [[nodiscard]] T to_int() const {
+    T to_int() const {
         T y = (month <= 2 ? year - 1 : year);
         T m = (month <= 2 ? month + 12 : month);
         T d = day;
         return 365 * y + y / 4 - y / 100 + y / 400 + 306 * (m + 1) / 10 + d - 429;
     }
-    [[nodiscard]] int weekday() const { return (to_int() + 1) % 7; }
+    int weekday() const { return (to_int() + 1) % 7; }
 };

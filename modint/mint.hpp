@@ -72,7 +72,7 @@ struct mint {
         return r;
     }
     constexpr mint inv() const { return pow(P - 2); }
-    [[nodiscard]] constexpr u32 get() const {
+    constexpr u32 get() const {
         u32 r = reduce(a);
         return r >= P ? r - P : r;
     }

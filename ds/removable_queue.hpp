@@ -5,8 +5,8 @@ template <typename Q>
 struct RemovableQueue: private Q {
     using T = Q::value_type;
     Q rq;
-    [[nodiscard]] int size() const { return Q::size() - len(rq); }
-    [[nodiscard]] bool empty() const { return !size(); }
+    int size() const { return Q::size() - len(rq); }
+    bool empty() const { return !size(); }
 
     RemovableQueue() = default;
     RemovableQueue(const Vec<T>& a): Q(all(a)) {}

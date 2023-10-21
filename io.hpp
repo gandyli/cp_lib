@@ -119,7 +119,7 @@ public:
 #endif
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
     void set(bool s = true) { status = s; }
-    [[nodiscard]] bool get() const { return status; }
+    bool get() const { return status; }
 };
 class Out {
     friend class IO;

@@ -12,7 +12,7 @@ struct MMInt61 {
     constexpr MMInt61(Unsigned auto x) {
         _val = x % mod();
     }
-    [[nodiscard]] constexpr int_type val() const {
+    constexpr int_type val() const {
         return _val;
     }
     static constexpr int_type mod() {
@@ -74,7 +74,7 @@ struct MMInt61 {
     friend constexpr mint operator*(mint lhs, const mint& rhs) {
         return lhs *= rhs;
     }
-    [[nodiscard]] constexpr mint inv() const {
+    constexpr mint inv() const {
         return from_raw(mod_inverse(_val, mod()));
     }
     constexpr mint& operator/=(const mint& rhs) {
@@ -91,7 +91,7 @@ struct MMInt61 {
         ret._val = x;
         return ret;
     }
-    [[nodiscard]] constexpr u64 raw() const { return _val; }
+    constexpr u64 raw() const { return _val; }
 #ifdef FASTIO
     void read(IO& io) {
         static u64 x;

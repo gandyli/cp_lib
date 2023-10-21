@@ -12,7 +12,7 @@ struct Meldable_Heap: public Compare {
 
     Meldable_Heap() = default;
     Meldable_Heap(const Compare& cmp): Compare(cmp) {}
-    [[nodiscard]] Node* new_node(const T& x) {
+    Node* new_node(const T& x) {
         pool[id] = {nullptr, nullptr, x, 1};
         return &pool[id++];
     }
