@@ -36,7 +36,6 @@ auto strongly_connected_component(const DirectedGraph auto& g) {
         comp[u] = scc - comp[u] - 1;
     return std::pair{scc, std::move(comp)};
 }
-
 auto scc_dag(const DirectedGraph auto& g, int scc, const vi& comp) {
     vvi edges(scc);
     foreach (e, g.edges) {
@@ -49,6 +48,16 @@ auto scc_dag(const DirectedGraph auto& g, int scc, const vi& comp) {
         UNIQUE(edges[i]);
         foreach (to, edges[i])
             dag.add(i, to);
+    }
+    dag.build();
+    return dag;
+}
+auto scc_dag_weighted(const DirectedGraph auto& g, int scc, const vi& comp) {
+    std::decay_t<decltype(g)> dag(scc);
+    foreach (e, g.edges) {
+        int u = comp[e.from], v = comp[e.to];
+        if (u != v)
+            dag.add(u, v, e.cost);
     }
     dag.build();
     return dag;
