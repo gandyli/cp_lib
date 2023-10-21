@@ -78,7 +78,7 @@ public:
     using mr_type = typename Context::mr_type;
     using int_double_t = typename mr_type::int_double_t;
 
-    constexpr MontgomeryModInt(): _val(0) {}
+    constexpr MontgomeryModInt() = default;
 
     constexpr MontgomeryModInt(Signed auto x) {
         using signed_int_type = std::make_signed_t<int_type>;
@@ -175,7 +175,7 @@ public:
     }
 
 private:
-    int_type _val;
+    int_type _val{};
 };
 template <std::unsigned_integral T, T Mod>
 class StaticMontgomeryReductionContext {
