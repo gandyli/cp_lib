@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/enumerate_primes"
 
 #include "all.hpp"
-#include "prime/prime_sieve.hpp"
+#include "math/prime/sieve.hpp"
 
 int main() {
     dR(int, n, a, b);

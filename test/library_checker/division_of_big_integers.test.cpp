@@ -3,7 +3,6 @@
 #include "all.hpp"
 #include "math/bigint.hpp"
 
-
 int main() {
     multipleTests([&]{
         dR(bigint, a, b);

@@ -1,6 +1,6 @@
 #pragma once
 #include "../template.hpp"
-#include "../prime/pollard_rho.hpp"
+#include "factorize.hpp"
 
 namespace impl {
     template <Unsigned T>

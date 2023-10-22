@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/primality_test"
 
 #include "all.hpp"
-#include "prime/miller_rabin.hpp"
+#include "math/prime/test.hpp"
 
 int main() {
     multipleTests([&] {

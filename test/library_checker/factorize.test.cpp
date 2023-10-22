@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/factorize"
 
 #include "all.hpp"
-#include "prime/pollard_rho.hpp"
+#include "math/factorize.hpp"
 
 int main() {
     multipleTests([&]() {
