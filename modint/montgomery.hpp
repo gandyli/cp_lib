@@ -230,3 +230,8 @@ using MMInt64 = MontgomeryModInt<StaticMontgomeryReductionContext<u64, Mod>>;
 
 using MMInt998244353 = MontgomeryModInt<StaticMontgomeryReductionContext<u32, 998244353>>;
 using MMInt1000000007 = MontgomeryModInt<StaticMontgomeryReductionContext<u32, 1000000007>>;
+
+#define SetMod(T, mod)                                \
+    using ctx = DynamicMontgomeryReductionContext<T>; \
+    auto _guard = ctx::set_mod(mod);                  \
+    using mint = MontgomeryModInt<ctx>

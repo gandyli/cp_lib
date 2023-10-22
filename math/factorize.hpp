@@ -5,9 +5,8 @@
 namespace impl {
     template <typename T>
     struct FactorizationResult {
-        std::vector<T> factors, prime_factors;
+        Vec<T> f, pf;
     };
-
     template <typename mint, typename T>
     T miller_rabin(mint a, T d, int r) {
         const mint one(1), mone(-1);
@@ -32,9 +31,7 @@ namespace impl {
         u32 g = std::gcd(n, 0xc0cfd797);
         if (g != 1)
             return g != n ? g : 0;
-        using ctx = DynamicMontgomeryReductionContext<u32>;
-        auto _guard = ctx::set_mod(n);
-        using mint = MontgomeryModInt<ctx>;
+        SetMod(u32, n);
         int r = std::countr_zero(n - 1);
         u32 d = (n - 1) >> r;
         for (u32 a: {2, 7, 61}) {
@@ -44,7 +41,6 @@ namespace impl {
         }
         return 1;
     }
-
     u64 prime_or_factor_64(u64 n) {
         if (n < 64)
             return 0x28208a20a08a28ac >> n & 1;
@@ -53,9 +49,7 @@ namespace impl {
         u64 g = std::gcd(n, 0xe221f97c30e94e1d);
         if (g != 1)
             return g != n ? g : 0;
-        using ctx = DynamicMontgomeryReductionContext<u64>;
-        auto _guard = ctx::set_mod(n);
-        using mint = MontgomeryModInt<ctx>;
+        SetMod(u64, n);
         int r = std::countr_zero(n - 1);
         u64 d = (n - 1) >> r;
         for (u64 a: {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) {
@@ -94,20 +88,17 @@ namespace impl {
     struct MontgomeryCurve {
         struct Point {
             mint x, z;
-            T check() const {
-                return std::gcd(z.val(), mint::mod());
-            }
+            T check() const { return std::gcd(z.val(), mint::mod()); }
         };
         MontgomeryCurve(mint a): _a24((a + 2) / 4) {}
         static std::pair<MontgomeryCurve, Point> random_curve_and_point() {
-            while (true) {
+            loop {
                 mint a(rnd()),
                   x(rnd()),
                   m1(1),
                   y2 = x * (x * (x + a) + m1);
-                if (jacobi(y2.val(), mint::mod()) == 1) {
+                if (jacobi(y2.val(), mint::mod()) == 1) 
                     return {MontgomeryCurve(a), Point{x, m1}};
-                }
             }
         }
         Point dbl(const Point& p) const {
@@ -131,7 +122,7 @@ namespace impl {
         }
         Point mul(const Point& p, u64 k) const {
             Point p0 = p, p1 = dbl(p);
-            for (int b = std::bit_width(k) - 2; b >= 0; b--) {
+            _for_r (b, std::bit_width(k) - 1) {
                 Point tmp = add(p1, p0, p);
                 if ((k >> b) & 1) {
                     p1 = dbl(p1);
@@ -148,24 +139,21 @@ namespace impl {
     private:
         mint _a24;
     };
-    std::vector<u64> ecm_blocks(int smooth_bound) {
-        std::vector<bool> sieve(smooth_bound + 1, true);
-        std::vector<u64> blocks{1};
-        for (int p = 2; p <= smooth_bound; p++) {
+    Vec<u64> ecm_blocks(int smooth_bound) {
+        Vec<bool> sieve(smooth_bound + 1, true);
+        Vec<u64> blocks{1};
+        _for (p, 2, smooth_bound + 1) {
             if (sieve[p]) {
                 int pw = p;
                 while (pw <= smooth_bound) {
-                    if (blocks.back() <= std::numeric_limits<u64>::max() / p) {
+                    if (blocks.back() <= std::numeric_limits<u64>::max() / p)
                         blocks.back() *= p;
-                    }
-                    else {
+                    else
                         blocks.push_back(p);
-                    }
                     pw *= p;
                 }
-                for (int i = p * p; i <= smooth_bound; i += p) {
+                _for (i, p * p, smooth_bound + 1, p)
                     sieve[i] = false;
-                }
             }
         }
         return blocks;
@@ -173,11 +161,11 @@ namespace impl {
     template <typename mint, typename T = typename mint::int_type>
     T ecm_modint() {
         constexpr int B1 = 400, B2 = 3000;
-        static const std::vector<u64> blocks = ecm_blocks(B1);
+        static const Vec<u64> blocks = ecm_blocks(B1);
         while (true) {
             auto [curve, point] = MontgomeryCurve<mint>::random_curve_and_point();
             T f = 1;
-            for (u64 blk: blocks) {
+            foreach (blk, blocks) {
                 auto new_point = curve.mul(point, blk);
                 f = new_point.check();
                 if (f != 1) {
@@ -191,13 +179,13 @@ namespace impl {
                 continue;
             auto six = curve.dbl(curve.add(curve.dbl(point), point, point));
             auto q0 = six, q1 = curve.dbl(six);
-            for (int i = 6; i < B1; i += 6) {
+            _for (i, 6, B1, 6) {
                 q0 = curve.add(q1, six, q0);
                 std::swap(q0, q1);
             }
             mint xprod(1);
             mint x_norm = point.x / point.z;
-            for (int i = B1 / 6 * 6; i < B2; i += 6) {
+            _for (i, B1 / 6 * 6, B2, 6) {
                 xprod *= q0.x - q0.z * x_norm;
                 if (i % 300 == 0) {
                     f = std::gcd(xprod.val(), mint::mod());
@@ -223,13 +211,10 @@ namespace impl {
             T r = roundl(powl(n, 1.0L / k)), pw = r;
             _for (k - 1)
                 pw *= r;
-            if (pw == n) {
+            if (pw == n)
                 return r;
-            }
         }
-        using ctx = DynamicMontgomeryReductionContext<T>;
-        auto _guard = ctx::set_mod(n);
-        using mint = MontgomeryModInt<ctx>;
+        SetMod(T, n);
         return ecm_modint<mint>();
     }
     template <typename mint, typename T = typename mint::int_type>
@@ -237,11 +222,11 @@ namespace impl {
         const T n = mint::mod();
         constexpr T m = std::numeric_limits<T>::digits;
         T r = 1, g;
-        mint c(0), y, q, x, ys;
+        mint c, y, q, x, ys;
         do {
-            ++c;
-            y = mint(2);
-            q = mint(1);
+            c++;
+            y = 2;
+            q = 1;
             g = 1;
             do {
                 x = y;
@@ -272,21 +257,18 @@ namespace impl {
         } while (g == n);
         return g;
     }
-
     template <typename T>
     T pollard_rho(T n) {
-        using ctx = DynamicMontgomeryReductionContext<T>;
-        auto _guard = ctx::set_mod(n);
-        using mint = MontgomeryModInt<ctx>;
+        SetMod(T, n);
         return pollard_rho_modint<mint>();
     }
     template <typename T>
-    void factorize_work(FactorizationResult<T>& result) {
-        T n = result.factors.back();
-        result.factors.pop_back();
+    void factorize_work(FactorizationResult<T>& r) {
+        T n = r.f.back();
+        r.f.pop_back();
         T f = prime_or_factor(n);
         if (f == 1) {
-            result.prime_factors.push_back(n);
+            r.pf.push_back(n);
             return;
         }
         if (f == 0) {
@@ -297,23 +279,32 @@ namespace impl {
             else
                 f = ecm<u64>(n);
         }
-        result.factors.push_back(f);
-        result.factors.push_back(n / f);
+        r.f.push_back(f);
+        r.f.push_back(n / f);
     }
 } // namespace impl
-
 template <Unsigned T>
 Vec<T> factorize(T n) {
     if (n <= 1)
         return {};
     int twos = std::countr_zero(n);
-    impl::FactorizationResult<T> result;
-    result.prime_factors.insert(result.prime_factors.end(), twos, 2);
+    impl::FactorizationResult<T> r;
+    r.pf.insert(r.pf.end(), twos, 2);
     if ((n & (n - 1)) == 0)
-        return result.prime_factors;
-    result.factors.push_back(n >> twos);
-    while (!result.factors.empty())
-        impl::factorize_work(result);
-    sort(result.prime_factors);
-    return result.prime_factors;
+        return r.pf;
+    r.f.push_back(n >> twos);
+    while (!r.f.empty())
+        impl::factorize_work(r);
+    sort(r.pf);
+    return r.pf;
+}
+template <Unsigned T>
+Vec<std::pair<T, int>> factorize_pair(T n) {
+    Vec<std::pair<T, int>> ret;
+    foreach (p, factorize(n))
+        if (ret.empty() || ret.back().first != p)
+            ret.eb(p, 1);
+        else
+            ret.back().second++;
+    return ret;
 }

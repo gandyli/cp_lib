@@ -5,12 +5,10 @@ namespace impl {
     template <Unsigned T>
     T primitive_root(T mod) {
         auto pf = factorize(mod - 1);
-        using ctx = DynamicMontgomeryReductionContext<T>;
-        auto _guard = ctx::set_mod(mod);
-        using Z = MontgomeryModInt<ctx>;
+        SetMod(T, mod);
         loop if (T pr = rnd(2, mod); BLK {
                      foreach (p, pf)
-                         if (power(Z(pr), (mod - 1) / p) == 1)
+                         if (power(mint(pr), (mod - 1) / p) == 1)
                              return false;
                      return true;
                  }) return pr;
