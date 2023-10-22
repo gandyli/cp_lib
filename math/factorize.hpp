@@ -97,7 +97,7 @@ namespace impl {
                   x(rnd()),
                   m1(1),
                   y2 = x * (x * (x + a) + m1);
-                if (jacobi(y2.val(), mint::mod()) == 1) 
+                if (jacobi(y2.val(), mint::mod()) == 1)
                     return {MontgomeryCurve(a), Point{x, m1}};
             }
         }
@@ -300,11 +300,32 @@ Vec<T> factorize(T n) {
 }
 template <Unsigned T>
 Vec<std::pair<T, int>> factorize_pair(T n) {
-    Vec<std::pair<T, int>> ret;
+    Vec<std::pair<T, int>> r;
     foreach (p, factorize(n))
-        if (ret.empty() || ret.back().first != p)
-            ret.eb(p, 1);
+        if (r.empty() || r.back().first != p)
+            r.eb(p, 1);
         else
-            ret.back().second++;
-    return ret;
+            r.back().second++;
+    return r;
+}
+vi factorize(int n, const vi& lpf) {
+    vi r;
+    while (n > 1) {
+        int p = lpf[n];
+        r.eb(p);
+        n /= p;
+    }
+    return r;
+}
+Vec<pi> factorize_pair(int n, const vi& lpf) {
+    Vec<pi> r;
+    while (n > 1) {
+        int p = lpf[n], c = 0;
+        while (n % p == 0) {
+            n /= p;
+            c++;
+        }
+        r.eb(p, c);
+    }
+    return r;
 }

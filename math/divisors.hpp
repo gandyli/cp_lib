@@ -15,3 +15,16 @@ Vec<T> divisors(T n) {
     }
     return d;
 }
+vi divisors(int n, const vi& lpf) {
+    vi d{1};
+    for (auto&& [p, c]: factorize_pair(n, lpf)) {
+        int t = len(d);
+        int pp = 1;
+        _for (c) {
+            pp *= p;
+            _for (i, t)
+                d.eb(d[i] * pp);
+        }
+    }
+    return d;
+}
