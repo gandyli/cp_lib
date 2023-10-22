@@ -1,5 +1,4 @@
 #pragma once
-#include "../template.hpp"
 #include "factorize.hpp"
 
 namespace impl {
