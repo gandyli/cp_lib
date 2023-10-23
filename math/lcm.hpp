@@ -1,5 +1,4 @@
 #include "factorize.hpp"
-#include "prime/lpf_table.hpp"
 
 template <typename R>
 R lcm(const vi& a) {
