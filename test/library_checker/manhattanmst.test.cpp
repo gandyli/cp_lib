@@ -8,10 +8,10 @@ int main() {
     dRV(pi, a, n);
     auto mst = manhattan_mst(a);
     i64 ans = 0;
-    for (auto&& e: mst.edges)
+    foreach (e, mst.edges)
         ans += e.cost;
     writeln(ans);
-    for (auto&& e: mst.edges)
+    foreach (e, mst.edges)
         writeln({e.from, e.to});
     return 0;
 }
