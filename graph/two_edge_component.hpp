@@ -1,6 +1,10 @@
 #pragma once
 #include "base.hpp"
 
+struct TwoEdgeComponentResult {
+    int id;
+    vi comp;
+};
 auto two_edge_component(const UndirectedGraph auto& g) {
     int n = g.n, m = g.m;
     vi par(n, -2), dp(n), V;
@@ -31,5 +35,5 @@ auto two_edge_component(const UndirectedGraph auto& g) {
     vi comp(n);
     foreach (u, V)
         comp[u] = !dp[u] ? id++ : comp[par[u]];
-    return std::pair{id, std::move(comp)};
+    return TwoEdgeComponentResult{id, std::move(comp)};
 }

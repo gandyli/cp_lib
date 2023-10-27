@@ -115,6 +115,11 @@ namespace MinimumCostArborescenceImpl {
         }
     };
 } // namespace MinimumCostArborescenceImpl
+template <typename T>
+struct MinimumCostArborescenceResult {
+    T cost;
+    vi I;
+};
 template <int N>
 auto MinimumCostArborescence(const DirectedGraph auto& g, int root) {
     using G = std::decay_t<decltype(g)>;
@@ -122,5 +127,5 @@ auto MinimumCostArborescence(const DirectedGraph auto& g, int root) {
     typename G::cost_type cost{};
     foreach (i, I)
         cost += g.edges[i].cost;
-    return std::pair{cost, std::move(I)};
+    return MinimumCostArborescenceResult{cost, std::move(I)};
 };

@@ -2,7 +2,12 @@
 #include "base.hpp"
 
 template <typename T>
-std::pair<Vec<T>, vi> BellmanFord(const auto& g, int s = 0) {
+struct BellmanFordResult {
+    Vec<T> dis;
+    vi par;
+};
+template <typename T>
+auto BellmanFord(const auto& g, int s = 0) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
@@ -27,5 +32,5 @@ std::pair<Vec<T>, vi> BellmanFord(const auto& g, int s = 0) {
         if (!upd)
             break;
     }
-    return {std::move(dis), std::move(par)};
+    return BellmanFordResult{std::move(dis), std::move(par)};
 }

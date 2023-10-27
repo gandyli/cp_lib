@@ -7,6 +7,6 @@ int main() {
     dR(int, n);
     Graph<int> g(n);
     g.read_tree(true, 0);
-    writeln(diameter<int>(g).first);
+    writeln(diameter<int>(g).diam);
     return 0;
 }

@@ -2,7 +2,18 @@
 #include "base.hpp"
 
 template <typename T>
-std::pair<Vec<T>, vi> bfs01(const auto& g, int s = 0) {
+struct BFS01Result1 {
+    Vec<T> dis;
+    vi par;
+};
+template <typename T>
+struct BFS01Result2 {
+    Vec<T> dis;
+    vi par;
+    vi root;
+};
+template <typename T>
+auto bfs01(const auto& g, int s = 0) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
@@ -21,10 +32,10 @@ std::pair<Vec<T>, vi> bfs01(const auto& g, int s = 0) {
                     q.emplace_front(v);
             }
     }
-    return {std::move(dis), std::move(par)};
+    return BFS01Result1{std::move(dis), std::move(par)};
 }
 template <typename T>
-std::tuple<Vec<T>, vi, vi> bfs01(const auto& g, const vi& s) {
+auto bfs01(const auto& g, const vi& s) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
@@ -48,5 +59,5 @@ std::tuple<Vec<T>, vi, vi> bfs01(const auto& g, const vi& s) {
                     q.emplace_front(v);
             }
     }
-    return {std::move(dis), std::move(par), std::move(root)};
+    return BFS01Result2{std::move(dis), std::move(par), std::move(root)};
 }

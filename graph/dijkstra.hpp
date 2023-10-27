@@ -2,7 +2,18 @@
 #include "base.hpp"
 
 template <typename T>
-std::pair<Vec<T>, vi> dijkstra_dense(const auto& g, int s = 0) {
+struct DijkstraResult1 {
+    Vec<T> dis;
+    vi par;
+};
+template <typename T>
+struct DijkstraResult2 {
+    Vec<T> dis;
+    vi par;
+    vi root;
+};
+template <typename T>
+auto dijkstra_dense(const auto& g, int s = 0) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
@@ -20,10 +31,10 @@ std::pair<Vec<T>, vi> dijkstra_dense(const auto& g, int s = 0) {
             if (chkmin(dis[v], dis[u] + v.cost))
                 par[v] = u;
     }
-    return {std::move(dis), std::move(par)};
+    return DijkstraResult1{std::move(dis), std::move(par)};
 }
 template <typename T>
-std::pair<Vec<T>, vi> dijkstra(const auto& g, int s = 0) {
+auto dijkstra(const auto& g, int s = 0) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
@@ -41,16 +52,16 @@ std::pair<Vec<T>, vi> dijkstra(const auto& g, int s = 0) {
                 q.emplace(dis[v], v);
             }
     }
-    return {std::move(dis), std::move(par)};
+    return DijkstraResult1{std::move(dis), std::move(par)};
 }
 template <typename T>
-std::tuple<Vec<T>, vi, vi> dijkstra(const auto& g, const vi& s) {
+auto dijkstra(const auto& g, const vi& s) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
     vi root(n, -1);
     std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
-    foreach(s, s) {
+    foreach (s, s) {
         dis[s] = 0;
         root[s] = s;
         q.emplace(0, s);
@@ -67,5 +78,5 @@ std::tuple<Vec<T>, vi, vi> dijkstra(const auto& g, const vi& s) {
                 q.emplace(dis[v], v);
             }
     }
-    return {std::move(dis), std::move(par), std::move(root)};
+    return DijkstraResult2{std::move(dis), std::move(par), std::move(root)};
 }

@@ -1,6 +1,10 @@
 #pragma once
 #include "base.hpp"
 
+struct StronglyConnectedComponentResult {
+    int scc;
+    vi comp;
+};
 auto strongly_connected_component(const DirectedGraph auto& g) {
     int n = g.n;
     vi comp(n), low(n), dfn(n, -1);
@@ -34,7 +38,7 @@ auto strongly_connected_component(const DirectedGraph auto& g) {
             dfs(dfs, u);
     _for (u, n)
         comp[u] = scc - comp[u] - 1;
-    return std::pair{scc, std::move(comp)};
+    return StronglyConnectedComponentResult{scc, std::move(comp)};
 }
 auto scc_dag(const DirectedGraph auto& g, int scc, const vi& comp) {
     vvi edges(scc);
