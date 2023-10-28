@@ -46,8 +46,7 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
             int s0 = (es.empty() ? s : G.edges[es.back()].to);
             add(s0, pref_cost, -1);
             while (!que.empty()) {
-                auto [d, u] = que.top();
-                que.pop();
+                auto [d, u] = pop(que);
                 if (d != dist[u])
                     continue;
                 if (u == t)
@@ -78,8 +77,7 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
              if (chkmin(best.second, std::get<0>(paths[i])))
                  best.first = i;
         swap(paths[best.first], paths.back());
-        auto [cost, es, ng_es, n] = paths.back();
-        paths.pop_back();
+        auto [cost, es, ng_es, n] = pop(paths);
         vi vs{s};
         foreach (x, es)
             vs.eb(G.edges[x].to);

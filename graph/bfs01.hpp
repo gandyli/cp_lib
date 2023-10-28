@@ -21,8 +21,7 @@ auto bfs01(const auto& g, int s = 0) {
     dis[s] = 0;
     q.eb(s);
     while (!q.empty()) {
-        int u = q.front();
-        q.pop_front();
+        int u = pop(q);
         foreach (v, g[u])
             if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;
@@ -47,8 +46,7 @@ auto bfs01(const auto& g, const vi& s) {
         q.eb(s);
     }
     while (!q.empty()) {
-        int u = q.front();
-        q.pop_front();
+        int u = pop(q);
         foreach (v, g[u])
             if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;

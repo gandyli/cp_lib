@@ -21,10 +21,8 @@ Graph<int> block_cut_tree(const UndirectedGraph auto& g) {
                     chkmin(low[u], low[v]);
                     if ((f == -1 && child > 1) || (f != -1 && low[v] >= dfn[u])) {
                         edges.eb(m, u);
-                        while (len(st) > cur) {
-                            edges.eb(m, st.back());
-                            st.pop_back();
-                        }
+                        while (len(st) > cur)
+                            edges.eb(m, pop(st));
                         m++;
                     }
                 }

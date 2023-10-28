@@ -23,8 +23,7 @@ auto strongly_connected_component(const DirectedGraph auto& g) {
                 chkmin(low[u], dfn[v]);
         if (low[u] == dfn[u]) {
             loop {
-                int t = st.back();
-                st.pop_back();
+                int t = pop(st);
                 dfn[t] = n;
                 comp[t] = scc;
                 if (t == u)

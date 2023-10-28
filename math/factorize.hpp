@@ -264,8 +264,7 @@ namespace impl {
     }
     template <typename T>
     void factorize_work(FactorizationResult<T>& r) {
-        T n = r.f.back();
-        r.f.pop_back();
+        T n = pop(r.f);
         T f = prime_or_factor(n);
         if (f == 1) {
             r.pf.push_back(n);

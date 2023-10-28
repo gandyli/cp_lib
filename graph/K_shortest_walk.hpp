@@ -18,8 +18,7 @@ Vec<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     vi st{t};
     vis[t] = true;
     while (!st.empty()) {
-        int u = st.back();
-        st.pop_back();
+        int u = pop(st);
         bool done = false;
         foreach (v, g[u])
             if (dis[v] != inf<T>) {
@@ -45,8 +44,7 @@ Vec<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
         std::priority_queue<std::pair<T, Node*>, Vec<std::pair<T, Node*>>, decltype(cmp)> q(cmp);
         q.emplace(base + heap.top(nodes[s]).first, nodes[s]);
         while (!q.empty()) {
-            auto [d, n] = q.top();
-            q.pop();
+            auto [d, n] = pop(q);
             if (ret.eb(d); len(ret) == k)
                 break;
             if (n->l)

@@ -43,8 +43,7 @@ namespace MinimumCostArborescenceImpl {
                         int u = nxt++;
                         q.eb();
                         loop {
-                            int w = path.back();
-                            path.pop_back();
+                            int w = ::pop(path);
                             q[u] = meld(q[u], add(q[w], -best[w].cost));
                             dsu.merge(u, w), par[w] = u;
                             used[w] = 2;

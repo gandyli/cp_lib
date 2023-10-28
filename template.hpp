@@ -97,6 +97,24 @@ vi sshift(const str& s, char c = 'a') {
     return a;
 }
 template <typename T>
+T pop(Vec<T>& q) {
+    T r = std::move(q.back());
+    q.pop_back();
+    return r;
+}
+template <typename T>
+T pop(std::deque<T>& q) {
+    T r = std::move(q.front());
+    q.pop_front();
+    return r;
+}
+template <typename T, typename S, typename C>
+T pop(std::priority_queue<T, S, C>& q) {
+    T r = q.top();
+    q.pop();
+    return r;
+}
+template <typename T>
 constexpr T inf = std::numeric_limits<T>::max() * 0.49;
 template <>
 constexpr f64 inf<f64> = inf<i64>;

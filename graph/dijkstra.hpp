@@ -42,8 +42,7 @@ auto dijkstra(const auto& g, int s = 0) {
     dis[s] = 0;
     q.emplace(0, s);
     while (!q.empty()) {
-        auto [d, u] = q.top();
-        q.pop();
+        auto [d, u] = pop(q);
         if (d > dis[u])
             continue;
         foreach (v, g[u])
@@ -67,8 +66,7 @@ auto dijkstra(const auto& g, const vi& s) {
         q.emplace(0, s);
     }
     while (!q.empty()) {
-        auto [d, u] = q.top();
-        q.pop();
+        auto [d, u] = pop(q);
         if (d > dis[u])
             continue;
         foreach (v, g[u])
