@@ -38,7 +38,7 @@ auto dijkstra(const auto& g, int s = 0) {
     int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
-    std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
+    PQG<std::pair<T, int>> q;
     dis[s] = 0;
     q.emplace(0, s);
     while (!q.empty()) {

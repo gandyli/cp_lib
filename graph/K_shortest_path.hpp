@@ -36,7 +36,7 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
             foreach (x, ng_es)
                 ng_e[x] = true;
             // dijkstra
-            std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> que;
+            PQG<std::pair<T, int>> que;
             auto add = [&](int v, T d, int u) -> void {
                 if (chkmin(dist[v], d)) {
                     que.emplace(d, v);

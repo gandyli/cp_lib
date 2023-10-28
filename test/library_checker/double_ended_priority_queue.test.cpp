@@ -6,8 +6,8 @@
 int main() {
     dR(int, n, q);
     dRV(int, a, n);
-    RemovableQueue<std::priority_queue<int, vi, std::greater<>>> q1(a);
-    RemovableQueue<std::priority_queue<int>> q2(a);
+    RemovableQueue<PQG<int>> q1(a);
+    RemovableQueue<PQ<int>> q2(a);
     _for (q) {
         dR(char, t);
         if (t == '0') {
