@@ -6,6 +6,6 @@
 int main() {
     dR(int, a, b);
     auto [x, y, d] = exgcd(a, b);
-    writeln(x, ' ', y);
+    print(x, y);
     return 0;
 }

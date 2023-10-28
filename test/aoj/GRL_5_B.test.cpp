@@ -13,6 +13,6 @@ int main() {
     int v = max_element(d2) - d2.begin();
     auto [d3, _2] = bfs01<int>(g, v);
     _for (i, n)
-        writeln(max(d2[i], d3[i]));
+        print(max(d2[i], d3[i]));
     return 0;
 }

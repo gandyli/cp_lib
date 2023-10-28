@@ -11,14 +11,14 @@ int main() {
 
     auto [dis, par] = BellmanFord<int>(g, s);
     if (min(dis) == -inf<int>) {
-        writeln("NEGATIVE CYCLE");
+        print("NEGATIVE CYCLE");
         return 0;
     }
     _for (i, n) {
         if (dis[i] == inf<int>)
-            writeln("INF");
+            print("INF");
         else
-            writeln(dis[i]);
+            print(dis[i]);
     }
     return 0;
 }

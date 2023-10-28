@@ -5,6 +5,6 @@
 
 int main() {
     dR(u32, n);
-    writeln(euler_phi(n));
+    print(euler_phi(n));
     return 0;
 }

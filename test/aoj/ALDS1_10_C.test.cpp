@@ -18,7 +18,7 @@ int main() {
     multipleTests([&] {
         dR(str, s, t);
         test(s, t);
-        writeln(longest_common_subsequence(s, t));
+        print(longest_common_subsequence(s, t));
     });
     return 0;
 }

@@ -9,10 +9,10 @@ int main() {
     g.read_graph(m, false, 0);
     auto [vs, es] = find_cycle(g);
     if (vs.empty()) {
-        writeln(-1);
+        print(-1);
     }
     else {
-        writeln(len(es));
+        print(len(es));
         io.displayArray(es, '\n');
     }
     return 0;

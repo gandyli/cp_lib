@@ -15,7 +15,7 @@ int main() {
         auto&& e = g.edges[i];
         par[e.to] = e.from;
     }
-    writeln(cost);
-    writeln(par);
+    print(cost);
+    print(par);
     return 0;
 }

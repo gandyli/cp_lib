@@ -6,7 +6,7 @@
 int main() {
     multipleTests([&] {
         dR(u64, x);
-        writeln(primitive_root(x));
+        print(primitive_root(x));
     });
     return 0;
 }

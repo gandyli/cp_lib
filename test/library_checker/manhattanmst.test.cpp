@@ -10,8 +10,8 @@ int main() {
     i64 ans = 0;
     foreach (e, mst.edges)
         ans += e.cost;
-    writeln(ans);
+    print(ans);
     foreach (e, mst.edges)
-        writeln({e.from, e.to});
+        print(e.from, e.to);
     return 0;
 }

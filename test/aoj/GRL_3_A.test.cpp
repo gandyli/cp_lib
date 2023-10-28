@@ -11,6 +11,6 @@ int main() {
     auto bct = block_cut_tree(g);
     _for (i, n)
         if (bct.deg(i) > 1)
-            writeln(i);
+            print(i);
     return 0;
 }

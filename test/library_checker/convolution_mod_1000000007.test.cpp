@@ -8,6 +8,6 @@ int main() {
     dR(int, n, m);
     dRV(Z, a, n);
     dRV(Z, b, m);
-    writeln(ArbitraryNTT::multiply(a, b));
+    print(ArbitraryNTT::multiply(a, b));
     return 0;
 }

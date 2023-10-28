@@ -9,13 +9,13 @@ int main() {
     g.read_graph(m, false, 0);
 
     auto bct = block_cut_tree(g);
-    writeln(bct.n - n);
+    print(bct.n - n);
     _for (i, n, bct.n) {
         vi ans;
         foreach (j, bct[i])
             if (j < n)
                 ans.eb(j);
-        writeln(len(ans), ' ', ans);
+        print(len(ans), ans);
     }
     return 0;
 }

@@ -7,7 +7,7 @@ int main() {
     multipleTests([&]() {
         dR(u64, n);
         auto ans = factorize(n);
-        writeln(len(ans), ' ', ans);
+        print(len(ans), ans);
     });
     return 0;
 }

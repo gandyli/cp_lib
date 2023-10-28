@@ -9,6 +9,6 @@ int main() {
     foreach(d, divisors(u32(c)))
         if (a <= d && d <= b)
             ans++;
-    writeln(ans);
+    print(ans);
     return 0;
 }

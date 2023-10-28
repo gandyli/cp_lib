@@ -39,6 +39,6 @@ int main() {
     test();
 
     dR(int, v, b);
-    writeln(v + b);
+    print(v + b);
     return 0;
 }

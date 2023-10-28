@@ -15,6 +15,6 @@ int main() {
                 ans++;
         }
     }
-    writeln(ans);
+    print(ans);
     return 0;
 }

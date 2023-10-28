@@ -8,7 +8,7 @@ int main() {
     auto b = psum<i64>(a);
     _for (q) {
         dR(int, l, r);
-        writeln(b[r] - b[l]);
+        print(b[r] - b[l]);
     }
     return 0;
 }

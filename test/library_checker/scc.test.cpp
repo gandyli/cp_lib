@@ -11,8 +11,8 @@ int main() {
     vvi ans(scc);
     _for (i, n)
         ans[comp[i]].eb(i);
-    writeln(len(ans));
+    print(len(ans));
     foreach (x, ans)
-        writeln(len(x), ' ', x);
+        print(len(x), x);
     return 0;
 }

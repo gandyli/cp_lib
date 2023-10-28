@@ -9,7 +9,7 @@ int main() {
     vi ans;
     while (b < len(primes))
         ans.eb(primes[b]), b += a;
-    writeln(len(primes), ' ', len(ans));
-    writeln(ans);
+    print(len(primes), len(ans));
+    print(ans);
     return 0;
 }

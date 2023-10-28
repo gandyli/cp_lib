@@ -17,15 +17,15 @@ int main() {
         else if (t == 1)
             st.erase(x);
         else if (t == 2)
-            writeln(st.contains(x));
+            print(st.contains(x));
         else if (t == 4)
-            writeln(st.prev(x));
+            print(st.prev(x));
         else {
             u32 r = st.next(x);
             if (r == n)
-                writeln(-1);
+                print(-1);
             else
-                writeln(r);
+                print(r);
         }
     }
     return 0;

@@ -8,6 +8,6 @@ int main() {
     dR(int, n, m);
     dRV(Z, a, n);
     dRV(Z, b, m);
-    writeln(NTT<Z>{}.multiply(a, b));
+    print(NTT<Z>{}.multiply(a, b));
     return 0;
 }

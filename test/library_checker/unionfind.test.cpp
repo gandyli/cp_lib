@@ -11,7 +11,7 @@ int main() {
         if (t == 0)
             dsu.merge(x, y);
         else
-            writeln(dsu.same(x, y));
+            print(dsu.same(x, y));
     }
     return 0;
 }

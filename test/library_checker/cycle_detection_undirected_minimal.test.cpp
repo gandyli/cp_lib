@@ -9,12 +9,12 @@ int main() {
     g.read_graph(m, false, 0);
     auto [vs, es] = find_cycle(g, true);
     if (vs.empty()) {
-        writeln(-1);
+        print(-1);
     }
     else {
-        writeln(len(vs));
-        writeln(vs);
-        writeln(es);
+        print(len(vs));
+        print(vs);
+        print(es);
     }
     return 0;
 }

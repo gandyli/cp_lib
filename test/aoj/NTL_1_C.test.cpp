@@ -6,6 +6,6 @@
 int main() {
     dR(int, n);
     dRV(int, a, n);
-    writeln(lcm<int>(a));
+    print(lcm<int>(a));
     return 0;
 }

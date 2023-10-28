@@ -9,6 +9,6 @@ int main() {
     g.read_graph(m, true, 0);
 
     auto [cost, I] = MinimumCostArborescence<1500>(g, r);
-    writeln(cost);
+    print(cost);
     return 0;
 }

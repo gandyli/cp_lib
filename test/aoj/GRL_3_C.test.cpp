@@ -11,7 +11,7 @@ int main() {
     dR(int, q);
     _for (q) {
         dR(int, x, y);
-        writeln(comp[x] == comp[y]);
+        print(comp[x] == comp[y]);
     }
     return 0;
 }

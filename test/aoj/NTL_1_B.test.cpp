@@ -6,6 +6,6 @@
 using Z = MMInt1000000007;
 int main() {
     dR(u32, m, n);
-    writeln(power(Z(m), n));
+    print(power(Z(m), n));
     return 0;
 }

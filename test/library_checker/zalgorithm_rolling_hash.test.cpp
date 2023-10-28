@@ -9,6 +9,6 @@ int main() {
     _for (i, len(s)) {
         io.write(Rollinghash::lcp(hash, 0, len(s), hash, i, len(s)), ' ');
     }
-    writeln();
+    print();
     return 0;
 }

@@ -8,7 +8,7 @@ int main() {
     Graph<int> g(n);
     g.read_tree( true, 0);
     auto [d, path] = diameter<i64>(g);
-    writeln(d, ' ', len(path));
-    writeln(path);
+    print(d, len(path));
+    print(path);
     return 0;
 }

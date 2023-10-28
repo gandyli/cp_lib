@@ -5,6 +5,6 @@
 
 int main() {
     dR(i64, n);
-    writeln(prime_counting(n));
+    print(prime_counting(n));
     return 0;
 }

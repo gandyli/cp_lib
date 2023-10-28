@@ -46,6 +46,6 @@ int main() {
     test();
 
     dR(int, a, b);
-    writeln(a + b);
+    print(a + b);
     return 0;
 }

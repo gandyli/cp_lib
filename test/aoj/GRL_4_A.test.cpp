@@ -9,8 +9,8 @@ int main() {
     g.read_graph(m, false, 0);
     auto cycle = find_cycle(g);
     if (cycle.vs.empty())
-        writeln(0);
+        print(0);
     else
-        writeln(1);
+        print(1);
     return 0;
 }

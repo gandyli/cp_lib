@@ -11,12 +11,12 @@ int main() {
     g.read_graph(m, true, 0);
     auto [dist, par] = dijkstra<i64>(g, s);
     if (dist[t] == inf<i64>)
-        writeln(-1);
+        print(-1);
     else {
         auto path = restore_path(par, t);
-        writeln(dist[t], ' ', len(path) - 1);
+        print(dist[t], len(path) - 1);
         _for (i, len(path) - 1)
-            writeln(path[i], ' ', path[i + 1]);
+            print(path[i], path[i + 1]);
     }
     return 0;
 }

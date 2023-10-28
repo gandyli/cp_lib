@@ -10,7 +10,7 @@ int main() {
     Tree tree(g);
     _for (q) {
         dR(int, u, v, x);
-        writeln(tree.jump(u, v, x));
+        print(tree.jump(u, v, x));
     }
     return 0;
 }

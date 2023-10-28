@@ -9,7 +9,7 @@ int main() {
     if (mod == 2) {
         _for (T) {
             dR(u32, n, k);
-            writeln(n != 0 || k != 1);
+            print(n != 0 || k != 1);
         }
         return 0;
     }
@@ -21,7 +21,7 @@ int main() {
     
     _for (T) {
         dR(u32, n, k);
-        writeln(comb(n, k));
+        print(comb(n, k));
     }
     return 0;
 }

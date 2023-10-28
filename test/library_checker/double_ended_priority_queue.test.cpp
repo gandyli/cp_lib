@@ -17,12 +17,12 @@ int main() {
         else if (t == '1') {
             int x = q1.pop();
             q2.remove(x);
-            writeln(x);
+            print(x);
         }
         else {
             int x = q2.pop();
             q1.remove(x);
-            writeln(x);
+            print(x);
         }
     }
     return 0;

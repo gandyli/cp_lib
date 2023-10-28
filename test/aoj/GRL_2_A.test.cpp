@@ -10,6 +10,6 @@ int main() {
     g.read_graph(m, true, 0);
 
     auto [cost, _0, _1] = kruskal(g);
-    writeln(cost);
+    print(cost);
     return 0;
 }

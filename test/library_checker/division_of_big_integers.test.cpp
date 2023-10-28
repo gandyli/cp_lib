@@ -6,7 +6,7 @@
 int main() {
     multipleTests([&]{
         dR(bigint, a, b);
-        writeln(divmod(a, b));
+        print(divmod(a, b));
     });
     return 0;
 }

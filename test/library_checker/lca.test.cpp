@@ -14,7 +14,7 @@ int main() {
     Tree tree(g);
     _for (q) {
         dR(int, u, v);
-        writeln(tree.lca(u, v));
+        print(tree.lca(u, v));
     }
     return 0;
 }

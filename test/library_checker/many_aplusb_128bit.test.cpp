@@ -5,7 +5,7 @@
 int main() {
     multipleTests([&]{
         dR(i128, a, b);
-        writeln(a + b);
+        print(a + b);
     });
     return 0;
 }

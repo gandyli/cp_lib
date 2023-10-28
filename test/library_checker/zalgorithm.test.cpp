@@ -5,6 +5,6 @@
 
 int main() {
     dR(str, s);
-    writeln(zalgorithm(s));
+    print(zalgorithm(s));
     return 0;
 }

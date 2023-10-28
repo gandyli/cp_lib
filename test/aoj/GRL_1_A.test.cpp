@@ -12,9 +12,9 @@ int main() {
     auto [dis, par] = dijkstra<int>(g, s);
     _for (i, n) {
         if (dis[i] == inf<int>)
-            writeln("INF");
+            print("INF");
         else
-            writeln(dis[i]);
+            print(dis[i]);
     }
     return 0;
 }

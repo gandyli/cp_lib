@@ -12,7 +12,7 @@ int main() {
     auto dis = floyd<i64>(g);
     _for (i, n)
         if (dis[i][i] < 0) {
-            writeln("NEGATIVE CYCLE");
+            print("NEGATIVE CYCLE");
             return 0;
         }
     _for (i, n) {
@@ -24,7 +24,7 @@ int main() {
             else
                 io.write(dis[i][j]);
         }
-        writeln();
+        print();
     }
     return 0;
 }

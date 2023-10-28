@@ -5,6 +5,6 @@
 
 int main() {
     dR(bigint, a, b);
-    writeln(a * b);
+    print(a * b);
     return 0;
 }

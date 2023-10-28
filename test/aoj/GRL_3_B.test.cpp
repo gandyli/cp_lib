@@ -18,6 +18,6 @@ int main() {
         }
     sort(ans);
     foreach (x, ans)
-        writeln(x);
+        print(x);
     return 0;
 }
