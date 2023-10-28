@@ -22,6 +22,10 @@ using vvvi = Vec<vvi>;
 using pi = std::pair<int, int>;
 using str = std::string;
 template <typename T>
+using PQ = std::priority_queue<T>;
+template <typename T>
+using PQG = std::priority_queue<T, Vec<T>, std::greater<>>;
+template <typename T>
 struct make_unsigned: public std::make_unsigned<T> {};
 template <>
 struct make_unsigned<i128> {
