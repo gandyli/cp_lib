@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 template <typename T>
 std::tuple<T, T, T> exgcd(T a, T b) {

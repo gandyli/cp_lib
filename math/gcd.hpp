@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 template <typename T, typename U>
 auto binary_gcd(T _a, U _b) {

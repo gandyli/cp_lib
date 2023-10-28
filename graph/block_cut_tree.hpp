@@ -1,5 +1,5 @@
 #pragma once
-#include "base.hpp"
+#include "graph/base.hpp"
 
 Graph<int> block_cut_tree(const UndirectedGraph auto& g) {
     int n = g.n;

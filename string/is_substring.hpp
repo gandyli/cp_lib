@@ -1,5 +1,5 @@
 #pragma once
-#include "zalgorithm.hpp"
+#include "string/zalgorithm.hpp"
 
 template <typename T>
 bool is_substring(T s, const T& t) {

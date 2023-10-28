@@ -1,4 +1,4 @@
-#include "factorize.hpp"
+#include "math/factorize.hpp"
 
 template <Unsigned T>
 T euler_phi(T n) {

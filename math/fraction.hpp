@@ -1,5 +1,5 @@
 #pragma once
-#include "gcd.hpp"
+#include "math/gcd.hpp"
 
 template <typename T, typename U>
 struct FractionBase {

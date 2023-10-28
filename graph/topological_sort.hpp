@@ -1,5 +1,5 @@
 #pragma once
-#include "base.hpp"
+#include "graph/base.hpp"
 
 vi toposort(const DirectedGraph auto& g) {
     int n = g.n;

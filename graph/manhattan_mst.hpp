@@ -1,6 +1,6 @@
 #pragma once
-#include "base.hpp"
-#include "../ds/dsu.hpp"
+#include "graph/base.hpp"
+#include "ds/dsu.hpp"
 
 template <typename T>
 Graph<T> manhattan_mst(Vec<std::pair<T, T>>& a) {

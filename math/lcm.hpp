@@ -1,4 +1,4 @@
-#include "factorize.hpp"
+#include "math/factorize.hpp"
 
 template <typename R>
 R lcm(const vi& a) {

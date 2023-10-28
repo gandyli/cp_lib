@@ -1,5 +1,5 @@
-#include "../template.hpp"
-#include "../math/mod_inverse.hpp"
+#include "template.hpp"
+#include "math/mod_inverse.hpp"
 
 struct MMInt61 {
     using mint = MMInt61;

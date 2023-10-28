@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 template <typename Q>
 struct RemovableQueue: private Q {

@@ -1,5 +1,5 @@
 #pragma once
-#include "factorize.hpp"
+#include "math/factorize.hpp"
 
 namespace impl {
     template <Unsigned T>

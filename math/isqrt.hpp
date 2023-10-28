@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 i64 isqrt(i64 n) {
     if (n <= 0)

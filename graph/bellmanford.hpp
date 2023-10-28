@@ -1,5 +1,5 @@
 #pragma once
-#include "base.hpp"
+#include "graph/base.hpp"
 
 template <typename T>
 struct BellmanFordResult {

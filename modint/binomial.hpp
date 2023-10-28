@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 template <typename Z, bool EXTEND = true>
 struct Comb {

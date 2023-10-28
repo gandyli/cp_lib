@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 template <typename T>
 Vec<std::pair<T, T>> interval_union(Vec<std::pair<T, T>> a) {

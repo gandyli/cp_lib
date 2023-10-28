@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 template <typename T, bool PERSISTENT, int N, typename Compare = std::less<>>
 struct Meldable_Heap: public Compare {

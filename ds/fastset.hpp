@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 struct FastSet {
     static constexpr u32 B = 64;

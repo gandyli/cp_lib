@@ -1,6 +1,6 @@
 #pragma once
-#include "base.hpp"
-#include "../ds/dsu.hpp"
+#include "graph/base.hpp"
+#include "ds/dsu.hpp"
 
 template <typename T>
 struct KruskalResult {

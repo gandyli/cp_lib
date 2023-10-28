@@ -1,5 +1,5 @@
 #pragma once
-#include "base.hpp"
+#include "random/base.hpp"
 
 void Shuffle(auto first, auto last) {
     for (auto it = first; it != last; ++it)

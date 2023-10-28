@@ -1,5 +1,5 @@
 #pragma once
-#include "factorize.hpp"
+#include "math/factorize.hpp"
 
 template <Unsigned T>
 Vec<T> divisors(T n) {

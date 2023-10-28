@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 int longest_common_subsequence(auto&& a, auto&& b) {
     int n = len(b);

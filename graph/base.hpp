@@ -1,5 +1,5 @@
 #pragma once
-#include "../io.hpp"
+#include "io.hpp"
 
 template <typename T>
 struct Edge {

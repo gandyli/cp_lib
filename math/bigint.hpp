@@ -1,5 +1,5 @@
 #pragma once
-#include "../ntt/arbitrary_ntt.hpp"
+#include "ntt/arbitrary_ntt.hpp"
 
 namespace impl {
     struct TENS {

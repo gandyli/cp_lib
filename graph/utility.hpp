@@ -1,6 +1,6 @@
 #pragma once
-#include "bfs01.hpp"
-#include "restore_path.hpp"
+#include "graph/bfs01.hpp"
+#include "graph/restore_path.hpp"
 
 template <typename T>
 struct DiameterResult {

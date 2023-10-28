@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 enum class Connectivity : u8 {
     Four = 4,

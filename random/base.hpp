@@ -1,5 +1,5 @@
 #pragma once
-#include "../seed.hpp"
+#include "seed.hpp"
 
 u64 rnd64() {
     u64& s = seed();

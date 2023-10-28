@@ -1,5 +1,5 @@
 #pragma once
-#include "../template.hpp"
+#include "template.hpp"
 
 vi restore_path(vi par, int t) {
     vi ret{t};

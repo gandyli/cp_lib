@@ -1,5 +1,5 @@
 #pragma once
-#include "base.hpp"
+#include "graph/base.hpp"
 
 template <typename T>
 auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {

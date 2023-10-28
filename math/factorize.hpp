@@ -1,6 +1,6 @@
 #pragma once
-#include "../modint/montgomery.hpp"
-#include "../random/base.hpp"
+#include "modint/montgomery.hpp"
+#include "random/base.hpp"
 
 namespace impl {
     template <typename T>

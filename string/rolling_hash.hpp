@@ -1,7 +1,7 @@
 #pragma once
-#include "../template.hpp"
-#include "../random/base.hpp"
-#include "../modint/mint61.hpp"
+#include "template.hpp"
+#include "random/base.hpp"
+#include "modint/mint61.hpp"
 
 class Rollinghash {
     using mint = MMInt61;

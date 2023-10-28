@@ -1,6 +1,6 @@
 #pragma once
-#include "../ds/meldable_heap.hpp"
-#include "dijkstra.hpp"
+#include "ds/meldable_heap.hpp"
+#include "graph/dijkstra.hpp"
 
 template <typename T, int N>
 Vec<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
