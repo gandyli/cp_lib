@@ -11,19 +11,19 @@ vvi grid_bfs(const Vec<V>& g, int sx, int sy, V wall, Connectivity conn = Connec
     int n = len(g), m = len(g[0]);
     VECI(dis, n, m, inf<int>);
     dis[sx][sy] = 0;
-    std::queue<pi> q;
-    q.emplace(sx, sy);
+    std::deque<pi> q;
+    q.eb(sx, sy);
     constexpr int dx[]{0, 0, -1, 1, -1, -1, 1, 1};
     constexpr int dy[]{-1, 1, 0, 0, -1, 1, -1, 1};
     while (!q.empty()) {
         auto [x, y] = q.front();
-        q.pop();
+        q.pop_front();
         _for (i, int(conn)) {
             int nx = x + dx[i], ny = y + dy[i];
             if (nx < 0 || nx >= n || ny < 0 || ny >= m || count(wall, g[nx][ny]) || dis[nx][ny] != inf<int>)
                 continue;
             dis[nx][ny] = dis[x][y] + 1;
-            q.emplace(nx, ny);
+            q.eb(nx, ny);
         }
     }
     return dis;

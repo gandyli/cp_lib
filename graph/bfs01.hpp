@@ -27,7 +27,7 @@ auto bfs01(const auto& g, int s = 0) {
             if (chkmin(dis[v], dis[u] + v.cost)) {
                 par[v] = u;
                 if (v.cost)
-                    q.emplace_back(v);
+                    q.eb(v);
                 else
                     q.emplace_front(v);
             }
@@ -54,7 +54,7 @@ auto bfs01(const auto& g, const vi& s) {
                 par[v] = u;
                 root[v] = root[u];
                 if (v.cost)
-                    q.emplace_back(v);
+                    q.eb(v);
                 else
                     q.emplace_front(v);
             }
