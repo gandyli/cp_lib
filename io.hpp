@@ -425,6 +425,12 @@ public:
         requires requires (T t, IO& io) { t.write(io); }
     void write(T&& t) { t.write(*this); }
     void writeln(auto&&... x) { write(FORWARD(x)...), putch('\n'); }
+    void print() { putch('\n'); }
+    void print(auto&& x, auto&&... y) {
+        write(FORWARD(x));
+        ((putch(' '), write(FORWARD(y))), ...);
+        putch('\n');
+    }
     template <std::forward_iterator I>
     IO& readArray(I f, I l) {
         for (; f != l; ++f)
@@ -461,14 +467,13 @@ IO err(nullptr, stderr);
 #define STR(s, n) \
     str s;        \
     io.readstr(s, n)
-void multipleTests(auto&& f, IO& io = ::io) {
+void multipleTests(auto&& f) {
     dR(u32, q);
     _for (q)
         f();
 }
 void writeln(auto&&... x) { io.writeln(FORWARD(x)...); }
-template <typename T>
-void writeln(std::initializer_list<T> x) { io.writeln(x); }
+void print(auto&&... x) { io.print(FORWARD(x)...); }
 void YES(int v = 1) { return io.write(v ? "YES\n" : "NO\n"); }
 void NO(int v = 1) { return YES(!v); }
 void Yes(int v = 1) { return io.write(v ? "Yes\n" : "No\n"); }
