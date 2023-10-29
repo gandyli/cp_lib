@@ -8,7 +8,7 @@ struct FractionBase {
     T x{0}, y{1};
     FractionBase() = default;
     FractionBase(auto x): FractionBase(x, 1) {}
-    FractionBase(auto x, auto y): x(x), y(y) {
+    FractionBase(auto _x, auto _y): x(_x), y(_y) {
         if (y < 0)
             x = -x, y = -y;
         if (y != 1) {
@@ -39,7 +39,8 @@ struct FractionBase {
     R& operator*=(R r) { return *this = *this * r; }
     R& operator/=(R r) { return *this = *this / r; }
     R operator-() const { return from_raw(-x, y); }
-    auto operator<=>(R r) const { return U{x} * r.y <=> U{y} * r.x; }
+    auto operator<=>(const R& r) const { return U{x} * r.y <=> U{y} * r.x; }
+    bool operator==(const R& r) const = default;
 #ifdef FASTIO
     IO& read(IO& io) {
         return io.read(x, y);
