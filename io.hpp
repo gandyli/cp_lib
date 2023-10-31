@@ -95,8 +95,7 @@ public:
     }();
 #else
     void skipws() {
-        while (blank(getch()))
-            ;
+        while (blank(getch())) {}
         unget();
     }
     int unget(int = 0) { return *p1--; }
@@ -112,14 +111,12 @@ public:
             p1 = p2;
             fread(s, 1, n, inFile);
         }
-        else {
+        else
             memcpy(s, p1, n), p1 += n;
-        }
     }
 #endif
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
     void set(bool s = true) { status = s; }
-    bool get() const { return status; }
 };
 class Out {
     friend class IO;
@@ -247,6 +244,34 @@ public:
         ECHK1
         return *this;
     }
+#if EV == 0
+    usize next_size() const {
+        char* p = ptr;
+        while (!blank(*p))
+            p++;
+        return p - ptr;
+    }
+    IO& read(char* s) {
+        skipws();
+        auto n = next_size();
+        In::readstr(s, n);
+        s[n] = '\0';
+        return *this;
+    }
+    IO& read(str& s) {
+        skipws();
+        auto n = next_size();
+        s.assign(ptr, n);
+        ptr += n;
+        return *this;
+    }
+    IO& readstr(str& s, usize n) {
+        skipws();
+        s.assign(ptr, n);
+        ptr += n;
+        return *this;
+    }
+#else
     IO& read(char* s) {
         skipws();
         int ch = peek();
@@ -265,16 +290,17 @@ public:
             s.append(1, ch), getch_unchecked(), ch = peek();
         return *this;
     }
-    IO& readstr(char* s, usize n) {
-        skipws();
-        In::readstr(s, n);
-        s[n] = '\0';
-        return *this;
-    }
     IO& readstr(str& s, usize n) {
         skipws();
         s.resize(n);
         In::readstr(s.data(), n);
+        return *this;
+    }
+#endif
+    IO& readstr(char* s, usize n) {
+        skipws();
+        In::readstr(s, n);
+        s[n] = '\0';
         return *this;
     }
     IO& readline(char* s) {
@@ -396,40 +422,31 @@ public:
         writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, precision).ptr - buf);
     }
     void write(std::string_view s) { writestr(s.data(), s.size()); }
-    template <typename T>
-    void write(std::initializer_list<T> t) {
-        auto f = std::begin(t), l = std::end(t);
+    void print_range(auto f, auto l, char d = ' ') {
         if (f != l)
             for (write(*f++); f != l; ++f) {
-                putch(' ');
+                putch(d);
                 write(*f);
             }
     }
     template <tupleLike T>
     void write(T&& t) {
         [&]<auto... I>(std::index_sequence<I...>) {
-            (..., (I == 0 ? void(0) : putch(' '), write(std::get<I>(t))));
+            (..., (!I ? void() : putch(' '), write(std::get<I>(t))));
         }(std::make_index_sequence<std::tuple_size_v<std::decay_t<T>>>());
     }
     template <input_range R>
         requires (!std::same_as<range_value_t<R>, char>)
-    void write(R&& r) {
-        auto f = begin(r), l = end(r);
-        if (f != l)
-            for (write(*f++); f != l; ++f) {
-                putch(' ');
-                write(*f);
-            }
-    }
+    void write(R&& r) { print_range(all(r)); }
     template <typename T>
         requires requires (T t, IO& io) { t.write(io); }
     void write(T&& t) { t.write(*this); }
-    void writeln(auto&&... x) { write(FORWARD(x)...), putch('\n'); }
+    void writeln(auto&&... x) { write(FORWARD(x)...), print(); }
     void print() { putch('\n'); }
     void print(auto&& x, auto&&... y) {
         write(FORWARD(x));
         ((putch(' '), write(FORWARD(y))), ...);
-        putch('\n');
+        print();
     }
     template <std::forward_iterator I>
     IO& readArray(I f, I l) {
@@ -437,18 +454,11 @@ public:
             read(*f);
         return *this;
     }
-    IO& readArray(forward_range auto&& r) { return readArray(begin(r), end(r)); }
+    IO& readArray(forward_range auto&& r) { return readArray(all(r)); }
     template <std::input_iterator I>
-    void displayArray(I f, I l, char d = ' ') {
-        if (f != l)
-            for (write(*f++); f != l; ++f) {
-                putch(d);
-                write(*f);
-            }
-        putch('\n');
-    }
-    void displayArray(input_range auto&& r, char d = ' ') { return displayArray(begin(r), end(r), d); }
-    operator bool() const { return get(); }
+    void displayArray(I f, I l, char d = ' ') { print_range(f, l, d), print(); }
+    void displayArray(input_range auto&& r, char d = ' ') { displayArray(all(r), d); }
+    operator bool() const { return status; }
 } io;
 #ifdef LX_LOCAL
 IO err(nullptr, stderr);
@@ -474,7 +484,7 @@ void multipleTests(auto&& f) {
 }
 void writeln(auto&&... x) { io.writeln(FORWARD(x)...); }
 void print(auto&&... x) { io.print(FORWARD(x)...); }
-void YES(bool v = true) { return io.write(v ? "YES\n" : "NO\n"); }
-void NO(bool v = true) { return YES(!v); }
-void Yes(bool v = true) { return io.write(v ? "Yes\n" : "No\n"); }
-void No(bool v = true) { return Yes(!v); }
+void YES(bool v = true) { io.write(v ? "YES\n" : "NO\n"); }
+void NO(bool v = true) { YES(!v); }
+void Yes(bool v = true) { io.write(v ? "Yes\n" : "No\n"); }
+void No(bool v = true) { Yes(!v); }

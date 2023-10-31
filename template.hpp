@@ -21,11 +21,11 @@ using namespace std::ranges;
 } blk;
 #define BLK blk->*[&]
 #define lowbit(x) ((x) & (-(x)))
-#define all(x) std::begin(x), std::end(x)
-#define rall(x) std::rbegin(x), std::rend(x)
-#define LB(c, x) std::distance(std::begin(c), std::lower_bound(all(c), (x)))
-#define UB(c, x) std::distance(std::begin(c), std::upper_bound(all(c), (x)))
-#define UNIQUE(c) sort(c), (c).erase(std::unique(all(c)), std::end(c))
+#define all(x) begin(x), end(x)
+#define rall(x) rbegin(x), rend(x)
+#define LB(c, x) distance(begin(c), lower_bound(c, x))
+#define UB(c, x) distance(begin(c), upper_bound(c, x))
+#define UNIQUE(c) sort(c), (c).erase(std::unique(all(c)), end(c))
 #define VEC(type, a, ...) auto a = vec<type>(__VA_ARGS__)
 #define VECI(a, ...) auto a = veci(__VA_ARGS__)
 #define FORWARD(x) std::forward<decltype(x)>(x)
@@ -51,9 +51,9 @@ constexpr bool chkmin(auto& d, const auto&... x) {
     auto t = Min(x...);
     return t < d ? d = t, true : false;
 }
-constexpr auto sum(input_range auto&& r) { return std::accumulate(begin(r), end(r), std::decay_t<decltype(*begin(r))>{}); }
-constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(begin(r), end(r), init); }
-constexpr int len(auto&& x) { return std::size(x); }
+constexpr auto sum(input_range auto&& r) { return std::accumulate(all(r), range_value_t<decltype(r)>{}); }
+constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(all(r), init); }
+constexpr int len(auto&& x) { return size(x); }
 template <typename T>
 auto psum(const Vec<T>& a) {
     int n = len(a);
