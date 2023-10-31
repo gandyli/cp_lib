@@ -51,5 +51,7 @@ struct FractionBase {
             io.write('/', y);
     }
 #endif
+    explicit operator bool() const { return !!x; }
+    bool operator!() const { return !x; }
 };
 using Fraction = FractionBase<i64, i128>;
