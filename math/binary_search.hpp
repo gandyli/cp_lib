@@ -1,9 +1,10 @@
 #pragma once
 #include <cstdlib>
 
-auto bsearch(auto&& check, auto ok, auto ng) {
+template <typename T>
+T bsearch(auto&& check, T ok, T ng) {
     while (std::abs(ok - ng) > 1) {
-        auto x = (ng + ok) >> 1;
+        T x = (ng + ok) >> 1;
         if (check(x))
             ok = x;
         else
