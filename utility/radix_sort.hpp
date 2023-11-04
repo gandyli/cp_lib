@@ -28,13 +28,13 @@ namespace RadixSortImpl {
         memset(c1, 0, sizeof(c1));
         memset(c2, 0, sizeof(c2));
         memset(c3, 0, sizeof(c3));
-        for (int i = 0; i < n; i++) {
+        _for (i, n) {
             c0[p[i] & mask]++;
             c1[(p[i] >> b) & mask]++;
             c2[(p[i] >> b * 2) & mask]++;
             c3[(p[i] >> b * 3) & mask]++;
         }
-        for (int i = 0; i < powb - 1; i++) {
+        _for (i, powb - 1) {
             c0[i + 1] += c0[i];
             c1[i + 1] += c1[i];
             c2[i + 1] += c2[i];
@@ -50,30 +50,30 @@ namespace RadixSortImpl {
             p[--c3[tmp[i] >> b * 3 & mask]] = tmp[i];
         if constexpr (sizeof(T) == 8) {
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[p[i] >> b * 4 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 tmp[--c0[p[i] >> b * 4 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[tmp[i] >> b * 5 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 p[--c0[tmp[i] >> b * 5 & mask]] = tmp[i];
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[p[i] >> b * 6 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 tmp[--c0[p[i] >> b * 6 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[tmp[i] >> b * 7 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 p[--c0[tmp[i] >> b * 7 & mask]] = tmp[i];
@@ -105,60 +105,60 @@ namespace RadixSortImpl {
             tmp = new std::pair<T, U>[tmp_size];
         }
         memset(c0, 0, sizeof(c0));
-        for (int i = 0; i < n; i++)
+        _for (i, n)
             c0[p[i].first & mask]++;
-        for (int i = 0; i < powb - 1; i++)
+        _for (i, powb - 1)
             c0[i + 1] += c0[i];
         for (int i = n; i--;)
             tmp[--c0[p[i].first & mask]] = p[i];
         memset(c0, 0, sizeof(c0));
-        for (int i = 0; i < n; i++)
+        _for (i, n)
             c0[tmp[i].first >> b & mask]++;
-        for (int i = 0; i < powb - 1; i++)
+        _for (i, powb - 1)
             c0[i + 1] += c0[i];
         for (int i = n; i--;)
             p[--c0[tmp[i].first >> b & mask]] = tmp[i];
         memset(c0, 0, sizeof(c0));
-        for (int i = 0; i < n; i++)
+        _for (i, n)
             c0[p[i].first >> b * 2 & mask]++;
-        for (int i = 0; i < powb - 1; i++)
+        _for (i, powb - 1)
             c0[i + 1] += c0[i];
         for (int i = n; i--;)
             tmp[--c0[p[i].first >> b * 2 & mask]] = p[i];
         memset(c0, 0, sizeof(c0));
-        for (int i = 0; i < n; i++)
+        _for (i, n)
             c0[tmp[i].first >> b * 3 & mask]++;
-        for (int i = 0; i < powb - 1; i++)
+        _for (i, powb - 1)
             c0[i + 1] += c0[i];
         for (int i = n; i--;)
             p[--c0[tmp[i].first >> b * 3 & mask]] = tmp[i];
 
         if constexpr (sizeof(T) == 8) {
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[p[i].first >> b * 4 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 tmp[--c0[p[i].first >> b * 4 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[tmp[i].first >> b * 5 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 p[--c0[tmp[i].first >> b * 5 & mask]] = tmp[i];
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[p[i].first >> b * 6 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 tmp[--c0[p[i].first >> b * 6 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
-            for (int i = 0; i < n; i++)
+            _for (i, n)
                 c0[tmp[i].first >> b * 7 & mask]++;
-            for (int i = 0; i < powb - 1; i++)
+            _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             for (int i = n; i--;)
                 p[--c0[tmp[i].first >> b * 7 & mask]] = tmp[i];
