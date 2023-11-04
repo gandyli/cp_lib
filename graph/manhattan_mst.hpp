@@ -8,7 +8,7 @@ Graph<T> manhattan_mst(Vec<std::pair<T, T>>& a) {
     Vec<std::tuple<T, int, int>> dat;
     dat.reserve(4 * n);
     vi I(n);
-    iota(all(I), 0);
+    std::iota(all(I), 0);
     _for (2) {
         for (auto&& [x, y]: a)
             x = -x;

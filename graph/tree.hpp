@@ -43,7 +43,7 @@ private:
     }
 
 public:
-    using T = typename G::cost_type;
+    using T = G::cost_type;
     G& g;
     vi lid, rid, dep, top, fa, id, vtoe;
     Vec<T> wdep;
@@ -60,10 +60,7 @@ public:
           wdep(g.n) {
         build(root);
     }
-    void build(int root) {
-        dfs1(root);
-        dfs2(root);
-    }
+    void build(int root) { dfs1(root), dfs2(root); }
     pi idx(int i) const { return {lid[i], rid[i]}; }
     bool in_subtree(int v, int u) const { return lid[v] <= lid[u] && lid[u] < rid[v]; }
     int size(int u) const { return rid[u] - lid[u]; }
@@ -90,9 +87,7 @@ public:
         }
         return dep[u] < dep[v] ? u : v;
     }
-    int lca(int u, int v, int r) const {
-        return lca(u, v) ^ lca(u, r) ^ lca(v, r);
-    }
+    int lca(int u, int v, int r) const { return lca(u, v) ^ lca(u, r) ^ lca(v, r); }
     int k_ancestor(int u, int k) const {
         while (k > dep[u] - dep[top[u]]) {
             k -= dep[u] - dep[fa[top[u]]];
@@ -113,7 +108,7 @@ public:
     T wdist(int u, int v) const { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
     Vec<pi> path_decomposition(int u, int v, bool edge) const {
         Vec<pi> up, down;
-        while (top[u] != top[v]) {
+        while (top[u] != top[v])
             if (lid[u] < lid[v]) {
                 down.eb(lid[top[v]], lid[v]);
                 v = fa[top[v]];
@@ -122,7 +117,6 @@ public:
                 up.eb(lid[u], lid[top[u]]);
                 u = fa[top[u]];
             }
-        }
         if (lid[u] < lid[v])
             down.eb(lid[u] + edge, lid[v]);
         else if (lid[v] + edge <= lid[u])
@@ -133,14 +127,13 @@ public:
     }
     vi path(int u, int v) const {
         vi ret;
-        for (auto&& [a, b]: path_decomposition(u, v, false)) {
-            if (a <= b) 
+        for (auto&& [a, b]: path_decomposition(u, v, false))
+            if (a <= b)
                 _for (i, a, b + 1)
                     ret.eb(id[i]);
-            else 
+            else
                 _for_r (i, b, a + 1)
                     ret.eb(id[i]);
-        }
         return ret;
     }
 };

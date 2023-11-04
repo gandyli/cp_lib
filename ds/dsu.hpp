@@ -10,9 +10,7 @@ struct DSU {
             x = f[x] = f[f[x]];
         return x;
     }
-    bool same(int x, int y) {
-        return leader(x) == leader(y);
-    }
+    bool same(int x, int y) { return leader(x) == leader(y); }
     bool merge(int x, int y) {
         x = leader(x);
         y = leader(y);
@@ -26,7 +24,5 @@ struct DSU {
         f[y] = x;
         return true;
     }
-    int size(int x) {
-        return siz[leader(x)];
-    }
+    int size(int x) { return siz[leader(x)]; }
 };

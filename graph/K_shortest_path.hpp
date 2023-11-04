@@ -2,21 +2,20 @@
 #include "graph/base.hpp"
 
 template <typename T>
-auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
-    const int n = G.n;
+auto K_shortest_path(const DirectedGraph auto& g, int s, int t, int K) {
+    const int n = g.n;
 
     struct Result {
         T dist;
         vi vs, es;
     };
     Vec<Result> res;
-    Vec<std::pair<vi, vi>> nodes;
+    Vec<std::pair<vi, vi>> nodes{{}};
     Vec<std::tuple<T, vi, vi, int>> paths;
 
-    nodes.eb();
     Vec<T> dist(n, inf<T>);
     Vec<bool> ng_v(n);
-    Vec<bool> ng_e(G.m);
+    Vec<bool> ng_e(g.m);
     vi par(n, -1);
 
     while (len(res) < K) {
@@ -24,26 +23,26 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
             fill(par, -1);
             _for (i, n)
                 ng_v[i] = false;
-            _for (i, G.m)
+            _for (i, g.m)
                 ng_e[i] = false;
             fill(dist, inf<T>);
             T pref_cost = 0;
             foreach (x, es)
-                pref_cost += G.edges[x].cost;
+                pref_cost += g.edges[x].cost;
 
             foreach (x, es)
-                ng_v[G.edges[x].from] = 1, ng_e[x] = true;
+                ng_v[g.edges[x].from] = 1, ng_e[x] = true;
             foreach (x, ng_es)
                 ng_e[x] = true;
             // dijkstra
             PQG<std::pair<T, int>> que;
-            auto add = [&](int v, T d, int u) -> void {
+            auto add = [&](int v, T d, int u) {
                 if (chkmin(dist[v], d)) {
                     que.emplace(d, v);
                     par[v] = u;
                 }
             };
-            int s0 = (es.empty() ? s : G.edges[es.back()].to);
+            int s0 = (es.empty() ? s : g.edges[es.back()].to);
             add(s0, pref_cost, -1);
             while (!que.empty()) {
                 auto [d, u] = pop(que);
@@ -51,7 +50,7 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
                     continue;
                 if (u == t)
                     break;
-                foreach (v, G[u])
+                foreach (v, g[u])
                     if (!ng_e[v.id] && !ng_v[v])
                         add(v, d + v.cost, v.id);
             }
@@ -62,10 +61,10 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
                 int u = t;
                 while (u != s0) {
                     add_e.eb(par[u]);
-                    u = G.edges[par[u]].from;
+                    u = g.edges[par[u]].from;
                 }
             }
-            reverse(all(add_e));
+            reverse(add_e);
             int n = len(es);
             es.insert(es.end(), all(add_e));
             paths.eb(dist[t], es, ng_es, n);
@@ -80,7 +79,7 @@ auto K_shortest_path(const DirectedGraph auto& G, int s, int t, int K) {
         auto [cost, es, ng_es, n] = pop(paths);
         vi vs{s};
         foreach (x, es)
-            vs.eb(G.edges[x].to);
+            vs.eb(g.edges[x].to);
         res.eb(cost, std::move(vs), es);
 
         nodes.clear();

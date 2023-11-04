@@ -1,5 +1,6 @@
 #pragma once
-#include "template.hpp"
+#include <cstdio>
+#include <ctime>
 
 #if defined(LX_LOCAL) && !defined(CPH)
 namespace Timer {

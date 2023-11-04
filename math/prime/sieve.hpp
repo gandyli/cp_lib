@@ -83,8 +83,8 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
 }
 
 auto prime_table(int N) {
-    std::vector<u8> t(N + 1);
+    Vec<bool> t(N + 1);
     for (auto p: prime_sieve(N))
-        t[p] = 1;
+        t[p] = true;
     return t;
 }
