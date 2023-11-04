@@ -4,7 +4,7 @@
 
 template <typename T, int N>
 Vec<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
-    int n = g.n;
+    const int n = g.n;
     auto rg = g.reverse();
     auto [dis, par] = dijkstra<T>(rg, t);
     if (dis[s] == inf<T>)

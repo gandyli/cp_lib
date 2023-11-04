@@ -5,8 +5,8 @@ struct FindCycleResult {
     vi vs, es;
 };
 FindCycleResult find_cycle(const DirectedGraph auto& g) {
-    int n = g.n;
-    vi vis(n);
+    const int n = g.n;
+    Vec<u8> vis(n);
     Vec<pi> par(n);
     vi es;
     auto dfs = [&](auto&& dfs, int u) -> void {
@@ -64,8 +64,7 @@ FindCycleResult find_cycle(const DirectedGraph auto& g) {
 }
 
 FindCycleResult find_cycle(const UndirectedGraph auto& g, bool minimal = false) {
-    const int n = g.n;
-    const int m = g.m;
+    const int n = g.n, m = g.m;
     vi dep(n, -1);
     Vec<bool> vis(m);
     vi par(n, -1);
@@ -75,7 +74,7 @@ FindCycleResult find_cycle(const UndirectedGraph auto& g, bool minimal = false) 
             if (!vis[v.id]) {
                 if (dep[v] != -1)
                     return minimal ? u : v.id;
-                vis[v.id] = 1;
+                vis[v.id] = true;
                 par[v] = v.id;
                 int t = dfs(dfs, v, d + 1);
                 if (t != -1)

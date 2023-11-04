@@ -8,7 +8,7 @@ enum class Connectivity : u8 {
 
 template <typename V>
 vvi grid_bfs(const Vec<V>& g, int sx, int sy, V wall, Connectivity conn = Connectivity::Four) {
-    int n = len(g), m = len(g[0]);
+    const int n = len(g), m = len(g[0]);
     VECI(dis, n, m, inf<int>);
     dis[sx][sy] = 0;
     std::deque<pi> q;

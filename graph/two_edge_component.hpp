@@ -6,7 +6,7 @@ struct TwoEdgeComponentResult {
     vi comp;
 };
 auto two_edge_component(const UndirectedGraph auto& g) {
-    int n = g.n, m = g.m;
+    const int n = g.n, m = g.m;
     vi par(n, -2), dp(n), V;
     V.reserve(n);
     Vec<bool> used(m);

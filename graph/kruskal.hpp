@@ -10,7 +10,7 @@ struct KruskalResult {
 };
 template <typename T>
 auto kruskal(Graph<T>& g) {
-    int n = g.n, m = g.m;
+    const int n = g.n, m = g.m;
     Vec<std::pair<T, int>> edges;
     _for (i, m)
         edges.eb(g.edges[i].cost, i);
@@ -21,7 +21,7 @@ auto kruskal(Graph<T>& g) {
     Graph<T> mst(n, n - 1);
     for (auto&& [_, i]: edges)
         if (auto&& e = g.edges[i]; dsu.merge(e.from, e.to)) {
-            in[i] = 1;
+            in[i] = true;
             mst.add(e.from, e.to, e.cost);
             cost += e.cost;
         }

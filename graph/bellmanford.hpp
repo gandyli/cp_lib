@@ -8,7 +8,7 @@ struct BellmanFordResult {
 };
 template <typename T>
 auto BellmanFord(const auto& g, int s = 0) {
-    int n = g.n;
+    const int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
     dis[s] = 0;

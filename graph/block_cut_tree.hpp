@@ -2,7 +2,7 @@
 #include "graph/base.hpp"
 
 Graph<int> block_cut_tree(const UndirectedGraph auto& g) {
-    int n = g.n;
+    const int n = g.n;
     vi low(n), dfn(n, -1), st;
     st.reserve(n);
     int m = n;

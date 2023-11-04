@@ -4,7 +4,7 @@
 
 template <typename T>
 Graph<T> manhattan_mst(Vec<std::pair<T, T>>& a) {
-    int n = len(a);
+    const int n = len(a);
     Vec<std::tuple<T, int, int>> dat;
     dat.reserve(4 * n);
     vi I(n);

@@ -11,7 +11,7 @@ namespace MinimumCostArborescenceImpl {
         Solver(const G& g): g(g) { ASSERT(g.n + g.m <= N); }
 
         vi calc(int root) {
-            int n = g.n, m = g.m;
+            const int n = g.n, m = g.m;
             Vec<Node*> q(n);
             foreach (e, g.edges)
                 q[e.to] = meld(q[e.to], new_node(e.from, e.cost, e.id));

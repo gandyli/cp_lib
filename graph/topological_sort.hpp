@@ -2,7 +2,7 @@
 #include "graph/base.hpp"
 
 vi toposort(const DirectedGraph auto& g) {
-    int n = g.n;
+    const int n = g.n;
     Vec<bool> vis(n), ins(n);
     vi r;
     auto dfs = [&](auto&& dfs, int u) {

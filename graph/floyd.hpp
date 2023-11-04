@@ -3,7 +3,7 @@
 
 template <typename T>
 auto floyd(const auto& g) {
-    int n = g.n;
+    const int n = g.n;
     VECI(dis, n, n, inf<T>);
     _for (i, n)
         dis[i][i] = 0;
