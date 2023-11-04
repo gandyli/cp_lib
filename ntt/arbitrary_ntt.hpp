@@ -31,16 +31,16 @@ namespace ArbitraryNTT {
         auto d1 = mul<T, mint1>(s, t);
         auto d2 = mul<T, mint2>(s, t);
         int n = len(d0);
-        vi ret(n);
+        vi r(n);
         const int W1 = w1 % mod;
         const int W2 = w2 % mod;
         _for (i, n) {
             int n1 = d1[i].val(), n2 = d2[i].val(), a = d0[i].val();
             int b = i64(n1 + m1 - a) * r01 % m1;
             int c = (i64(n2 + m2 - a) * r02r12 + i64(m2 - b) * r12) % m2;
-            ret[i] = (i64(a) + i64(b) * W1 + i64(c) * W2) % mod;
+            r[i] = (i64(a) + i64(b) * W1 + i64(c) * W2) % mod;
         }
-        return ret;
+        return r;
     }
 
     template <typename mint>
@@ -48,11 +48,11 @@ namespace ArbitraryNTT {
         if (a.empty() && b.empty())
             return {};
         if (min(len(a), len(b)) < 128) {
-            Vec<mint> ret(len(a) + len(b) - 1);
+            Vec<mint> r(len(a) + len(b) - 1);
             _for (i, len(a))
                 _for (j, len(b))
-                    ret[i + j] += a[i] * b[j];
-            return ret;
+                    r[i + j] += a[i] * b[j];
+            return r;
         }
         vi s(len(a)), t(len(b));
         _for (i, len(a))
@@ -67,24 +67,24 @@ namespace ArbitraryNTT {
         if (s.empty() && t.empty())
             return {};
         if (min(len(s), len(t)) < 128) {
-            Vec<u128> ret(len(s) + len(t) - 1);
+            Vec<u128> r(len(s) + len(t) - 1);
             _for (i, len(s))
                 _for (j, len(t))
-                    ret[i + j] += u128(i64(s[i]) * t[j]);
-            return ret;
+                    r[i + j] += u128(i64(s[i]) * t[j]);
+            return r;
         }
         auto d0 = mul<T, mint0>(s, t);
         auto d1 = mul<T, mint1>(s, t);
         auto d2 = mul<T, mint2>(s, t);
         int n = len(d0);
-        Vec<u128> ret(n);
+        Vec<u128> r(n);
         _for (i, n) {
             i64 n1 = d1[i].val(), n2 = d2[i].val();
             i64 a = d0[i].val();
             i64 b = (n1 + m1 - a) * r01 % m1;
             i64 c = ((n2 + m2 - a) * r02r12 + (m2 - b) * r12) % m2;
-            ret[i] = a + b * w1 + u128(c) * w2;
+            r[i] = a + b * w1 + u128(c) * w2;
         }
-        return ret;
+        return r;
     }
 } // namespace ArbitraryNTT

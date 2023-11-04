@@ -17,17 +17,17 @@ auto diameter(const auto& g) {
 }
 
 vi get_path(const auto& g, int u, int v) {
-    vi ret;
+    vi r;
     auto dfs = [&](auto&& dfs, int u, int f) -> bool {
-        ret.eb(u);
+        r.eb(u);
         if (u == v)
             return true;
         foreach (v, g[u])
             if (v != f && dfs(dfs, v, u))
                 return true;
-        ret.pop_back();
+        r.pop_back();
         return false;
     };
     dfs(dfs, u, -1);
-    return ret;
+    return r;
 }

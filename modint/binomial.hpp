@@ -63,13 +63,13 @@ struct Comb {
     template <Integer T>
     Z multinomial(const Vec<T>& a) {
         int n = 0;
-        Z ret = 1;
+        Z r = 1;
         foreach(x, a) {
             n += x;
-            ret *= finv(x);
+            r *= finv(x);
         }
-        ret *= fac(n);
-        return ret;
+        r *= fac(n);
+        return r;
     }
     Z operator()(int n, int m) { return C(n, m); }
     template <Integer T>

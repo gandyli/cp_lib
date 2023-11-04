@@ -65,10 +65,10 @@ public:
     constexpr MontgomeryModInt() = default;
     constexpr MontgomeryModInt(Signed auto y) {
         using S = std::make_signed_t<int_type>;
-        S v = y % S(mr().mod());
-        x = mr().reduce(mr().mbase2() * int_double_t(v < 0 ? v + mr().mod() : v));
+        S v = y % S(mod());
+        x = mr().reduce(mr().mbase2() * int_double_t(v < 0 ? v + mod() : v));
     }
-    constexpr MontgomeryModInt(Unsigned auto y) { x = mr().reduce(mr().mbase2() * int_double_t(y % mr().mod())); }
+    constexpr MontgomeryModInt(Unsigned auto y) { x = mr().reduce(mr().mbase2() * int_double_t(y % mod())); }
     constexpr int_type val() const { return mr().strict_shrink(mr().reduce(x)); }
     constexpr int_type residue() const { return mr().strict_shrink(x); }
     static constexpr int_type mod() { return mr().mod(); }
@@ -77,35 +77,35 @@ public:
         return *this;
     }
     constexpr mint operator++(int) {
-        mint ret = *this;
+        mint r = *this;
         ++*this;
-        return ret;
+        return r;
     }
     constexpr mint& operator+=(const mint& rhs) {
         x = mr().shrink(x + rhs.x);
         return *this;
     }
     constexpr mint& operator--() {
-        x = mr().shrink(x + mr().mod() - mr().mbase());
+        x = mr().shrink(x + mod() - mr().mbase());
         return *this;
     }
     constexpr mint operator--(int) {
-        mint ret = *this;
+        mint r = *this;
         --*this;
-        return ret;
+        return r;
     }
     constexpr mint& operator-=(const mint& rhs) {
-        x = mr().shrink(x + mr().mod() * 2 - rhs.x);
+        x = mr().shrink(x + mod() * 2 - rhs.x);
         return *this;
     }
     constexpr mint& operator*=(const mint& rhs) {
         x = mr().reduce(int_double_t(x) * rhs.x);
         return *this;
     }
-    constexpr mint inv() const { return from_raw(mr().reduce(int_double_t(mr().mbase3()) * mod_inverse(x, mr().mod()))); }
+    constexpr mint inv() const { return from_raw(mr().reduce(int_double_t(mr().mbase3()) * mod_inverse(x, mod()))); }
     constexpr mint& operator/=(const mint& rhs) { return *this *= rhs.inv(); }
     constexpr mint operator+() const { return *this; }
-    constexpr mint operator-() const { return from_raw(!x ? 0 : mr().mod() * 2 - x); }
+    constexpr mint operator-() const { return from_raw(!x ? 0 : mod() * 2 - x); }
     friend constexpr mint operator+(mint lhs, const mint& rhs) { return lhs += rhs; }
     friend constexpr mint operator-(mint lhs, const mint& rhs) { return lhs -= rhs; }
     friend constexpr mint operator*(mint lhs, const mint& rhs) { return lhs *= rhs; }
@@ -113,9 +113,9 @@ public:
     constexpr bool operator==(const mint& rhs) const { return mr().strict_shrink(x) == mr().strict_shrink(rhs.x); }
 
     static constexpr mint from_raw(int_type x) {
-        mint ret;
-        ret.x = x;
-        return ret;
+        mint r;
+        r.x = x;
+        return r;
     }
     constexpr int_type raw() const { return x; }
 #ifdef FASTIO

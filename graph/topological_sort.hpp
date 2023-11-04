@@ -4,7 +4,7 @@
 vi toposort(const DirectedGraph auto& g) {
     int n = g.n;
     Vec<bool> vis(n), ins(n);
-    vi ret;
+    vi r;
     auto dfs = [&](auto&& dfs, int u) {
         if (ins[u])
             return false;
@@ -14,7 +14,7 @@ vi toposort(const DirectedGraph auto& g) {
                 if (!dfs(dfs, v))
                     return false;
             vis[u] = true;
-            ret.eb(u);
+            r.eb(u);
             ins[u] = false;
         }
         return true;
@@ -22,6 +22,6 @@ vi toposort(const DirectedGraph auto& g) {
     _for (i, n)
         if (!vis[i] && !dfs(dfs, i))
             return {};
-    reverse(ret);
-    return ret;
+    reverse(r);
+    return r;
 }

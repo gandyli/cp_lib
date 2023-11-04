@@ -73,11 +73,11 @@ public:
         return g.n - (rid[v] - lid[v]);
     }
     vi child(int u) {
-        vi ret;
+        vi r;
         foreach (v, g[u])
             if (v != fa[u])
-                ret.eb(v);
-        return ret;
+                r.eb(v);
+        return r;
     }
     int lca(int u, int v) const {
         while (top[u] != top[v]) {
@@ -126,14 +126,14 @@ public:
         return up;
     }
     vi path(int u, int v) const {
-        vi ret;
+        vi r;
         for (auto&& [a, b]: path_decomposition(u, v, false))
             if (a <= b)
                 _for (i, a, b + 1)
-                    ret.eb(id[i]);
+                    r.eb(id[i]);
             else
                 _for_r (i, b, a + 1)
-                    ret.eb(id[i]);
-        return ret;
+                    r.eb(id[i]);
+        return r;
     }
 };

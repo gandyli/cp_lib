@@ -44,15 +44,15 @@ struct Meldable_Heap: public Compare {
     Node* pop(Node* a) { return meld(a->l, a->r); }
     static T top(Node* a) { return a->x; }
     static Vec<T> get_all(Node* a) {
-        Vec<T> ret;
+        Vec<T> r;
         auto dfs = [&](auto&& dfs, Node* a) {
             if (!a)
                 return;
-            ret.eb(a->x);
+            r.eb(a->x);
             dfs(dfs, a->l);
             dfs(dfs, a->r);
         };
         dfs(dfs, a);
-        return ret;
+        return r;
     }
 };

@@ -56,18 +56,18 @@ namespace MinimumCostArborescenceImpl {
                     foreach (u, path)
                         used[u] = 2;
                 }
-            vi ret;
+            vi r;
             Vec<bool> done(nxt);
             done[root] = true;
             _for_r (u, nxt)
                 if (!done[u]) {
                     int id = best[u].id;
-                    ret.eb(id);
+                    r.eb(id);
                     int v = g.edges[id].to;
                     while (v != -1 && !done[v])
                         done[v] = true, v = par[v];
                 }
-            return ret;
+            return r;
         }
 
     private:

@@ -20,9 +20,9 @@ struct MMInt61 {
         return *this;
     }
     constexpr mint operator++(int) {
-        mint ret = *this;
+        mint r = *this;
         ++*this;
-        return ret;
+        return r;
     }
     constexpr mint& operator+=(const mint& rhs) {
         x += rhs.x;
@@ -37,9 +37,9 @@ struct MMInt61 {
         return *this;
     }
     constexpr mint operator--(int) {
-        mint ret = *this;
+        mint r = *this;
         --*this;
-        return ret;
+        return r;
     }
     constexpr mint& operator-=(const mint& rhs) {
         x += mod() - rhs.x;
@@ -64,9 +64,9 @@ struct MMInt61 {
     friend constexpr mint operator/(mint lhs, const mint& rhs) { return lhs /= rhs; }
     constexpr bool operator<=>(const mint& rhs) const = default;
     static constexpr mint from_raw(u64 x) {
-        mint ret;
-        ret.x = x;
-        return ret;
+        mint r;
+        r.x = x;
+        return r;
     }
     constexpr u64 raw() const { return x; }
 #ifdef FASTIO

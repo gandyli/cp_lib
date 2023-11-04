@@ -35,9 +35,9 @@ namespace impl {
         int r = std::countr_zero(n - 1);
         u32 d = (n - 1) >> r;
         for (u32 a: {2, 7, 61}) {
-            u32 ret = miller_rabin(mint(a), d, r);
-            if (ret != 1)
-                return ret;
+            u32 pf = miller_rabin(mint(a), d, r);
+            if (pf != 1)
+                return pf;
         }
         return 1;
     }
@@ -53,9 +53,9 @@ namespace impl {
         int r = std::countr_zero(n - 1);
         u64 d = (n - 1) >> r;
         for (u64 a: {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) {
-            u64 ret = miller_rabin(mint(a), d, r);
-            if (ret != 1)
-                return ret;
+            u64 pf = miller_rabin(mint(a), d, r);
+            if (pf != 1)
+                return pf;
         }
         return 1;
     }
@@ -77,14 +77,14 @@ namespace impl {
                 if (r == 3 || r == 5)
                     t = -t;
             }
-            std::swap(n, k);
+            swap(n, k);
             if (n % 4 == 3 && k % 4 == 3)
                 t = -t;
             n %= k;
         }
         return k == 1 ? t : 0;
     }
-    template <typename mint, typename T = typename mint::int_type>
+    template <typename mint, typename T = mint::int_type>
     struct MontgomeryCurve {
         struct Point {
             mint x, z;
@@ -98,7 +98,7 @@ namespace impl {
                   m1(1),
                   y2 = x * (x * (x + a) + m1);
                 if (jacobi(y2.val(), mint::mod()) == 1)
-                    return {MontgomeryCurve(a), Point{x, m1}};
+                    return {a, {x, m1}};
             }
         }
         Point dbl(const Point& p) const {
@@ -123,14 +123,14 @@ namespace impl {
         Point mul(const Point& p, u64 k) const {
             Point p0 = p, p1 = dbl(p);
             _for_r (b, std::bit_width(k) - 1) {
-                Point tmp = add(p1, p0, p);
+                Point t = add(p1, p0, p);
                 if ((k >> b) & 1) {
                     p1 = dbl(p1);
-                    p0 = tmp;
+                    p0 = t;
                 }
                 else {
                     p0 = dbl(p0);
-                    p1 = tmp;
+                    p1 = t;
                 }
             }
             return p0;
@@ -149,7 +149,7 @@ namespace impl {
                     if (blocks.back() <= std::numeric_limits<u64>::max() / p)
                         blocks.back() *= p;
                     else
-                        blocks.push_back(p);
+                        blocks.eb(p);
                     pw *= p;
                 }
                 _for (i, p * p, smooth_bound + 1, p)
@@ -158,7 +158,7 @@ namespace impl {
         }
         return blocks;
     }
-    template <typename mint, typename T = typename mint::int_type>
+    template <typename mint, typename T = mint::int_type>
     T ecm_modint() {
         constexpr int B1 = 400, B2 = 3000;
         static const Vec<u64> blocks = ecm_blocks(B1);
@@ -181,7 +181,7 @@ namespace impl {
             auto q0 = six, q1 = curve.dbl(six);
             _for (i, 6, B1, 6) {
                 q0 = curve.add(q1, six, q0);
-                std::swap(q0, q1);
+                swap(q0, q1);
             }
             mint xprod(1);
             mint x_norm = point.x / point.z;
@@ -196,7 +196,7 @@ namespace impl {
                     }
                 }
                 q0 = curve.add(q1, six, q0);
-                std::swap(q0, q1);
+                swap(q0, q1);
             }
             if (f == 1) {
                 f = std::gcd(xprod.val(), mint::mod());
@@ -217,7 +217,7 @@ namespace impl {
         SetMod(T, n);
         return ecm_modint<mint>();
     }
-    template <typename mint, typename T = typename mint::int_type>
+    template <typename mint, typename T = mint::int_type>
     T pollard_rho_modint() {
         const T n = mint::mod();
         constexpr T m = std::numeric_limits<T>::digits;
@@ -238,9 +238,8 @@ namespace impl {
                     q *= y - x;
                     if ((i + 1) % m == 0) {
                         g = std::gcd(q.val(), n);
-                        if (g != 1) {
+                        if (g != 1)
                             break;
-                        }
                         ys = y;
                     }
                 }
@@ -248,12 +247,11 @@ namespace impl {
                     g = std::gcd(q.val(), n);
                 r *= 2;
             } while (g == 1);
-            if (g == n) {
+            if (g == n)
                 do {
                     ys = ys * ys + c;
                     g = std::gcd((ys - x).val(), n);
                 } while (g == 1);
-            }
         } while (g == n);
         return g;
     }
@@ -267,7 +265,7 @@ namespace impl {
         T n = pop(r.f);
         T f = prime_or_factor(n);
         if (f == 1) {
-            r.pf.push_back(n);
+            r.pf.eb(n);
             return;
         }
         if (f == 0) {
@@ -278,8 +276,8 @@ namespace impl {
             else
                 f = ecm<u64>(n);
         }
-        r.f.push_back(f);
-        r.f.push_back(n / f);
+        r.f.eb(f);
+        r.f.eb(n / f);
     }
 } // namespace impl
 template <Unsigned T>
@@ -291,7 +289,7 @@ Vec<T> factorize(T n) {
     r.pf.insert(r.pf.end(), twos, 2);
     if ((n & (n - 1)) == 0)
         return r.pf;
-    r.f.push_back(n >> twos);
+    r.f.eb(n >> twos);
     while (!r.f.empty())
         impl::factorize_work(r);
     sort(r.pf);

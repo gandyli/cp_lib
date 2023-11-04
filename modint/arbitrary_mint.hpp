@@ -20,9 +20,9 @@ struct ArbitraryModIntBase {
         return *this;
     }
     mint operator++(int) {
-        mint ret = *this;
+        mint r = *this;
         ++*this;
-        return ret;
+        return r;
     }
     mint& operator+=(const mint& p) {
         x += p.x;
@@ -37,9 +37,9 @@ struct ArbitraryModIntBase {
         return *this;
     }
     mint operator--(int) {
-        mint ret = *this;
+        mint r = *this;
         --*this;
-        return ret;
+        return r;
     }
     mint& operator-=(const mint& p) {
         x += mod() - p.x;
@@ -62,9 +62,9 @@ struct ArbitraryModIntBase {
     mint inv() const { return from_raw(mod_inverse<u32>(x, mod())); }
     int val() const { return x; }
     static mint from_raw(int x) {
-        mint ret;
-        ret.x = x;
-        return ret;
+        mint r;
+        r.x = x;
+        return r;
     }
     int raw() const { return x; }
 #ifdef FASTIO
