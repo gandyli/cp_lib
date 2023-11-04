@@ -315,7 +315,7 @@ private:
         return std::pair{std::move(quo), d ? vi{int(d)} : vi{}};
     }
     static auto _divmod_naive(const vi& a, const vi& b) {
-        assert(!_is_zero(b));
+        ASSERT(!_is_zero(b));
         if (len(b) == 1)
             return _divmod_1e9(a, b);
         if (max(len(a), len(b)) <= 2)
@@ -374,7 +374,7 @@ private:
         return z;
     }
     static std::pair<vi, vi> _divmod_newton(const vi& a, const vi& b) {
-        assert(!_is_zero(b));
+        ASSERT(!_is_zero(b));
         if (len(b) <= 64 || len(a) - len(b) <= 64)
             return _divmod_naive(a, b);
         int norm = D / (b.back() + 1);

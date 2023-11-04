@@ -44,13 +44,13 @@ struct Sparse_Table {
         return M::op(st[k][l], st[k][r - (1 << k)]);
     }
     int max_right(auto&& check, int l) const {
-        assert(0 <= l && l <= n && check(M::unit()));
+        ASSERT(0 <= l && l <= n && check(M::unit()));
         if (l == n)
             return n;
         return bsearch([&](int r) { return check(prod(l, r)); }, l, n + 1);
     }
     int min_left(auto&& check, int r) const {
-        assert(0 <= r && r <= n && check(M::unit()));
+        ASSERT(0 <= r && r <= n && check(M::unit()));
         if (r == 0)
             return 0;
         return bsearch([&](int l) { return check(prod(l, r)); }, r, -1);

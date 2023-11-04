@@ -80,7 +80,7 @@ struct ArbitraryModIntBase {
         return mod;
     }
     static void set_mod(int p) {
-        assert(0 < p && p <= (1 << 30) - 1);
+        ASSERT(0 < p && p <= (1 << 30) - 1);
         mod() = p;
         barrett() = Barrett(p);
     }

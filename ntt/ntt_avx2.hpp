@@ -523,7 +523,7 @@ struct NTT {
                     s[i + j] += a[i] * b[j];
             return s;
         }
-        assert(l <= FFT_BUF_SIZE);
+        ASSERT(l <= FFT_BUF_SIZE);
         int M = 4;
         while (M < l)
             M <<= 1;

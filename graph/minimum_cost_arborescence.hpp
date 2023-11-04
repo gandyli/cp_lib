@@ -8,7 +8,7 @@ namespace MinimumCostArborescenceImpl {
         using T = typename G::cost_type;
         const G& g;
 
-        Solver(const G& g): g(g) { assert(g.n + g.m <= N); }
+        Solver(const G& g): g(g) { ASSERT(g.n + g.m <= N); }
 
         vi calc(int root) {
             int n = g.n, m = g.m;

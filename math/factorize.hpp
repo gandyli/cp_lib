@@ -67,7 +67,7 @@ u64 prime_or_factor(Unsigned auto n) {
 }
 namespace impl {
     int jacobi(i64 n, i64 k) {
-        assert(k > 0 && k % 2 == 1);
+        ASSERT(k > 0 && k % 2 == 1);
         n %= k;
         int t = 1;
         while (n != 0) {

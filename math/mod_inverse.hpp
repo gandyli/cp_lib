@@ -33,6 +33,6 @@ constexpr std::tuple<S, S, T> bezout(T x, T y) {
 template <std::unsigned_integral T>
 constexpr T mod_inverse(T x, T m) {
     auto [s, t, g] = bezout(x, m);
-    assert(g == 1);
+    ASSERT(g == 1);
     return s < 0 ? T(s) + m : s;
 }

@@ -75,7 +75,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
             for (int m = pblock[i]; m; m &= m - 1)
                 primes[psize++] = i * 30 + rs[__builtin_ctz(m)];
     }
-    assert(psize <= rsize);
+    ASSERT(psize <= rsize);
     while (psize && primes[psize - 1] > n)
         psize--;
     primes.resize(psize);

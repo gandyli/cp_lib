@@ -30,6 +30,11 @@ using namespace std::ranges;
 #define VECI(a, ...) auto a = veci(__VA_ARGS__)
 #define FORWARD(x) std::forward<decltype(x)>(x)
 #define eb emplace_back
+#if defined(LX_LOCAL) || defined(ASSERTIONS)
+#define ASSERT(...) assert(__VA_ARGS__)
+#else
+#define ASSERT(...) void()
+#endif
 // NOLINTEND
 
 constexpr auto floor(auto&& x, auto&& y) { return x / y - (x % y && (x ^ y) < 0); }
