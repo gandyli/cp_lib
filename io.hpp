@@ -3,37 +3,38 @@
 
 #define FASTIO
 #ifdef CHECK_EOF
-#define ECHK6 c <= ' ' && c > 0
-#define ECHK5 *ptr ? *ptr : -1
-#define ECHK0 *ptr ? *ptr++ : -1
+#define ECHK0 *ptr ? *ptr++ : 0
 #define ECHK1     \
-    if (ch == -1) \
+    if (ch == EV) \
         return set(false), *this;
 #define ECHK2  \
     if (!*ptr) \
         return set(false), *this;
 #define ECHK3 &&ch != -1
 #define ECHK4 &&*ptr
+#define ECHK5     \
+    if (ch == -1) \
+        return set(false);
+#define ECHK6  \
+    if (!*ptr) \
+        return set(false);
 #else
-#define ECHK6 c <= ' '
-#define ECHK5 *ptr
 #define ECHK0 *ptr++
 #define ECHK1
 #define ECHK2
 #define ECHK3
 #define ECHK4
+#define ECHK5
+#define ECHK6
 #endif
 
 #if defined(__unix__) && !defined(LX_DEBUG) && !defined(LX_LOCAL)
 #define USE_MMAP
+#define EV 0
 #include <sys/mman.h>
 #include <sys/stat.h>
-#endif
-
-#if defined(CHECK_EOF) || !defined(USE_MMAP)
-#define EV (-1)
 #else
-#define EV 0
+#define EV (-1)
 #endif
 
 constexpr usize bufSize = 1 << 20;
@@ -52,50 +53,52 @@ private:
     char buf[bufSize], *p1, *p2;
 #endif
     static constexpr bool isdigit(int c) { return '0' <= c && c <= '9'; }
-    static constexpr bool blank(char c) { return ECHK6; }
+    static constexpr bool blank(int c) { return c <= ' '; }
 
 public:
 #ifdef LX_DEBUG
     int getch() { return fgetc(inFile); }
     int getch_unchecked() { return getch(); }
     int unget(int c = 0) { return ungetc(c, inFile); }
-    int peek() { return unget(fgetc(inFile)); }
+    int peek() { return unget(getch()); }
     void input(FILE* f) { inFile = f, set(); }
     void skipws() {
-        int c = fgetc(inFile);
-        while (blank(c))
-            c = fgetc(inFile);
-        unget(c);
+        int ch = getch();
+        while (blank(ch) ECHK3)
+            ch = getch();
+        unget(ch);
     }
     void readstr(char* s, usize n) { fread(s, 1, n, inFile); }
 #elif defined(USE_MMAP)
     void skipws() {
-        while (blank(*ptr))
+        while (blank(*ptr) ECHK4)
             ptr++;
+        ECHK6
     }
     int unget(int = 0) = delete;
     int getch() { return ECHK0; }
     int getch_unchecked() { return *ptr++; }
-    int peek() { return ECHK5; }
+    int peek() { return *ptr; }
     void input(FILE* f) {
         inFile = f;
         if (inFile)
             fd = fileno(inFile), fstat(fd, &st), ptr = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
     }
     void readstr(char* s, usize n) { memcpy(s, ptr, n), ptr += n; }
-    static constexpr auto n = []() {
+    static constexpr auto n = [] {
         std::array<u32, 0x10000> n{};
         fill(n, -1);
-        constexpr u32 e0 = 0x01, e1 = 0x100;
-        int x = 0;
-        for (u32 i = 0, c0 = 0x3030; i != 10; i++, c0 += e0)
-            for (u32 j = 0, c1 = c0; j != 10; j++, c1 += e1)
-                n[c1] = x++;
+        _for (i, 10)
+            _for (j, 10)
+                n[i + j * 0x100 + 0x3030] = i * 10 + j;
         return n;
     }();
 #else
     void skipws() {
-        while (blank(getch())) {}
+        int ch = getch();
+        while (blank(ch) ECHK3)
+            ch = getch();
+        ECHK5
         unget();
     }
     int unget(int = 0) { return *p1--; }
@@ -143,15 +146,14 @@ public:
         else
             memcpy(pp, s, n), pp += n;
     }
-    static constexpr auto D = []() {
-        constexpr u32 e0 = 0x1, e1 = 0x100, e2 = 0x10000, e3 = 0x1000000;
+    static constexpr auto D = [] {
         std::array<u32, 10000> m{};
         int x = 0;
-        for (u32 i = 0, c0 = 0x30303030; i != 10; i++, c0 += e0)
-            for (u32 j = 0, c1 = c0; j != 10; j++, c1 += e1)
-                for (u32 k = 0, c2 = c1; k != 10; k++, c2 += e2)
-                    for (u32 l = 0, c3 = c2; l != 10; l++, c3 += e3)
-                        m[x++] = c3;
+        _for (i, 10)
+            _for (j, 10)
+                _for (k, 10)
+                    _for (l, 10)
+                        m[x++] = i + j * 0x100 + k * 0x10000 + l * 0x1000000 + 0x30303030;
         return m;
     }();
 #endif
@@ -186,7 +188,7 @@ public:
 #ifndef USE_MMAP
         int ch = getch();
         while (!isdigit(ch) ECHK3)
-            sign = (ch == '-'), ch = getch();
+            sign = ch == '-', ch = getch();
         ECHK1
         t = 0;
         while (isdigit(ch))
@@ -213,7 +215,7 @@ public:
             ch = getch();
         ECHK1
         while (isdigit(ch))
-            x = (x << 1) + (x << 3) + (ch ^ 48), ch = getch();
+            x = x * 10 + (ch ^ 48), ch = getch();
         unget(ch);
 #else
         while (!isdigit(*ptr) ECHK4)
@@ -229,11 +231,11 @@ public:
     }
     IO& read(std::floating_point auto& x) {
         static str s;
-        read(s);
-        std::from_chars(s.begin().base(), s.end().base(), x);
+        if (read(s))
+            std::from_chars(s.begin().base(), s.end().base(), x);
         return *this;
     }
-    template <typename T>
+    template <typename T = int>
     T read() {
         static std::decay_t<T> x;
         return read(x), x;
@@ -244,18 +246,18 @@ public:
         ECHK1
         return *this;
     }
-#if EV == 0
+#ifdef USE_MMAP
     usize next_size() const {
-        char* p = ptr;
-        while (!blank(*p))
-            p++;
-        return p - ptr;
+        char* ptr = this->ptr;
+        while (!blank(*ptr) ECHK4)
+            ptr++;
+        return ptr - this->ptr;
     }
     IO& read(char* s) {
         skipws();
         auto n = next_size();
         In::readstr(s, n);
-        s[n] = '\0';
+        s[n] = 0;
         return *this;
     }
     IO& read(str& s) {
@@ -300,7 +302,7 @@ public:
     IO& readstr(char* s, usize n) {
         skipws();
         In::readstr(s, n);
-        s[n] = '\0';
+        s[n] = 0;
         return *this;
     }
     IO& readline(char* s) {
@@ -309,7 +311,7 @@ public:
         while (ch != '\n' && ch != EV)
             *s++ = ch, ch = getch();
         *s = 0;
-        if (s == t && ch != '\n')
+        if (s == t && ch == EV)
             set(false);
         return *this;
     }
@@ -318,7 +320,7 @@ public:
         int ch = getch();
         while (ch != '\n' && ch != EV)
             s.append(1, ch), ch = getch();
-        if (s.empty() && ch != '\n')
+        if (s.empty() && ch == EV)
             set(false);
         return *this;
     }
@@ -351,11 +353,11 @@ public:
         auto L = [&](int x) { return x == 1 ? 0 : ten(x - 1); };
         auto R = [&](int x) { return ten(x) - 1; };
 
-#define de(t)                            \
-    case L(t)... R(t):                   \
-        *(u32*)(pp) = D[x / ten((t)-4)]; \
-        pp += 4;                         \
-        x %= ten((t)-4);                 \
+#define de(t)                          \
+    case L(t)... R(t):                 \
+        *(u32*)pp = D[x / ten((t)-4)]; \
+        pp += 4;                       \
+        x %= ten((t)-4);               \
         [[fallthrough]]
 
         u64 y = x;
@@ -365,7 +367,7 @@ public:
             de(10);
             de(6);
         case L(2)... R(2):
-            *(u32*)(pp) = D[x * 100];
+            *(u32*)pp = D[x * 100];
             pp += 2;
             break;
 
@@ -378,7 +380,7 @@ public:
             break;
 
         default:
-            *(u32*)(pp) = D[x / ten(16)];
+            *(u32*)pp = D[x / ten(16)];
             pp += 4;
             x %= ten(16);
             [[fallthrough]];
@@ -395,7 +397,7 @@ public:
             de(11);
             de(7);
         case L(3)... R(3):
-            *(u32*)(pp) = D[x * 10];
+            *(u32*)pp = D[x * 10];
             pp += 3;
             break;
         }
@@ -424,10 +426,8 @@ public:
     void write(std::string_view s) { writestr(s.data(), s.size()); }
     void print_range(auto f, auto l, char d = ' ') {
         if (f != l)
-            for (write(*f++); f != l; ++f) {
+            for (write(*f++); f != l; write(*f++))
                 putch(d);
-                write(*f);
-            }
     }
     template <tupleLike T>
     void write(T&& t) {
@@ -450,8 +450,8 @@ public:
     }
     template <std::forward_iterator I>
     IO& readArray(I f, I l) {
-        for (; f != l; ++f)
-            read(*f);
+        while (f != l)
+            read(*f++);
         return *this;
     }
     IO& readArray(forward_range auto&& r) { return readArray(all(r)); }
