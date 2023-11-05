@@ -3,23 +3,23 @@
 
 #define FASTIO
 #ifdef CHECK_EOF
-#define ECHK0 *ptr ? *ptr++ : 0
+#define ECHK0 *ip ? *ip++ : 0
 #define ECHK1     \
     if (ch == EV) \
         return set(false), *this;
-#define ECHK2  \
-    if (!*ptr) \
+#define ECHK2 \
+    if (!*ip) \
         return set(false), *this;
 #define ECHK3 &&ch != -1
-#define ECHK4 &&*ptr
+#define ECHK4 &&*ip
 #define ECHK5     \
     if (ch == -1) \
         return set(false);
-#define ECHK6  \
-    if (!*ptr) \
+#define ECHK6 \
+    if (!*ip) \
         return set(false);
 #else
-#define ECHK0 *ptr++
+#define ECHK0 *ip++
 #define ECHK1
 #define ECHK2
 #define ECHK3
@@ -37,29 +37,30 @@
 #define EV (-1)
 #endif
 
-constexpr usize bufSize = 1 << 20;
-
-class In {
-    friend class IO;
-
-private:
-    FILE* inFile;
-    bool status = true;
-#ifdef USE_MMAP
-    struct stat st;
-    char* ptr;
-    int fd;
-#elif !defined(LX_DEBUG)
-    char buf[bufSize], *p1, *p2;
-#endif
+class IO {
+    static constexpr usize bufSize = 1 << 20;
     static constexpr bool isdigit(int c) { return '0' <= c && c <= '9'; }
     static constexpr bool blank(int c) { return c <= ' '; }
+
+    u32 precision = 12;
+    FILE *inFile, *outFile;
+    bool status;
+#ifndef LX_DEBUG
+    char obuf[bufSize], *op;
+#ifdef USE_MMAP
+    struct stat st;
+    char* ip;
+    int fd;
+#else
+    char ibuf[bufSize], *ip1, *ip2;
+#endif
+#endif
 
 public:
 #ifdef LX_DEBUG
     int getch() { return fgetc(inFile); }
     int getch_unchecked() { return getch(); }
-    int unget(int c = 0) { return ungetc(c, inFile); }
+    int unget(int c = -1) { return ungetc(c, inFile); }
     int peek() { return unget(getch()); }
     void input(FILE* f) { inFile = f, set(); }
     void skipws() {
@@ -68,23 +69,23 @@ public:
             ch = getch();
         unget(ch);
     }
-    void readstr(char* s, usize n) { fread(s, 1, n, inFile); }
+    void ireadstr(char* s, usize n) { fread(s, 1, n, inFile); }
 #elif defined(USE_MMAP)
     void skipws() {
-        while (blank(*ptr) ECHK4)
-            ptr++;
+        while (blank(*ip) ECHK4)
+            ip++;
         ECHK6
     }
     int unget(int = 0) = delete;
     int getch() { return ECHK0; }
-    int getch_unchecked() { return *ptr++; }
-    int peek() { return *ptr; }
+    int getch_unchecked() { return *ip++; }
+    int peek() { return *ip; }
     void input(FILE* f) {
         inFile = f;
         if (inFile)
-            fd = fileno(inFile), fstat(fd, &st), ptr = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
+            fd = fileno(inFile), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
     }
-    void readstr(char* s, usize n) { memcpy(s, ptr, n), ptr += n; }
+    void ireadstr(char* s, usize n) { memcpy(s, ip, n), ip += n; }
     static constexpr auto n = [] {
         std::array<u32, 0x10000> n{};
         fill(n, -1);
@@ -101,75 +102,27 @@ public:
         ECHK5
         unget();
     }
-    int unget(int = 0) { return *p1--; }
-    int getch() { return (p1 == p2 ? (p2 = (p1 = buf) + fread(buf, 1, bufSize, inFile)) : nullptr), p1 == p2 ? -1 : *p1++; }
-    int getch_unchecked() { return *p1++; }
-    int peek() { return (p1 == p2 ? (p2 = (p1 = buf) + fread(buf, 1, bufSize, inFile)) : nullptr), p1 == p2 ? -1 : *p1; }
-    void input(FILE* f) { inFile = f, p1 = p2 = buf, set(); }
-    void readstr(char* s, usize n) {
-        if (usize len = p2 - p1; n > len) [[unlikely]] {
-            memcpy(s, p1, len);
+    int unget(int = 0) { return *ip1--; }
+    int getch() { return (ip1 == ip2 ? (ip2 = (ip1 = ibuf) + fread(ibuf, 1, bufSize, inFile)) : nullptr), ip1 == ip2 ? -1 : *ip1++; }
+    int getch_unchecked() { return *ip1++; }
+    int peek() { return (ip1 == ip2 ? (ip2 = (ip1 = ibuf) + fread(ibuf, 1, bufSize, inFile)) : nullptr), ip1 == ip2 ? -1 : *ip1; }
+    void input(FILE* f) { inFile = f, ip1 = ip2 = ibuf, set(); }
+    void ireadstr(char* s, usize n) {
+        if (usize len = ip2 - ip1; n > len) [[unlikely]] {
+            memcpy(s, ip1, len);
             n -= len;
             s += len;
-            p1 = p2;
+            ip1 = ip2;
             fread(s, 1, n, inFile);
         }
         else
-            memcpy(s, p1, n), p1 += n;
+            memcpy(s, ip1, n), ip1 += n;
     }
 #endif
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
     void set(bool s = true) { status = s; }
-};
-class Out {
-    friend class IO;
-
-private:
-    FILE* outFile;
-#ifndef LX_DEBUG
-    char pbuf[bufSize], *pp = pbuf;
-#endif
-
-public:
-#ifdef LX_DEBUG
-    void flush() { fflush(outFile); }
-    void putch_unchecked(char c) { fputc(c, outFile); }
-    void putch(char c) { putch_unchecked(c); }
-    void writestr(const char* s, usize n) { fwrite(s, 1, n, outFile); }
-#else
-    void flush() { fwrite(pbuf, 1, pp - pbuf, outFile), pp = pbuf; }
-    void putch_unchecked(char c) { *pp++ = c; }
-    void putch(char c) { (pp == end(pbuf) ? flush() : void()), putch_unchecked(c); }
-    void writestr(const char* s, usize n) {
-        if (n >= usize(end(pbuf) - pp)) [[unlikely]]
-            flush(), fwrite(s, 1, n, outFile);
-        else
-            memcpy(pp, s, n), pp += n;
-    }
-    static constexpr auto D = [] {
-        std::array<u32, 10000> m{};
-        int x = 0;
-        _for (i, 10)
-            _for (j, 10)
-                _for (k, 10)
-                    _for (l, 10)
-                        m[x++] = i + j * 0x100 + k * 0x10000 + l * 0x1000000 + 0x30303030;
-        return m;
-    }();
-#endif
-    void output(std::string_view s) { output(fopen(s.data(), "wb")); }
-    void output(FILE* f) { outFile = f; }
-};
-class IO: public In, public Out {
-private:
-    u32 precision = 12;
-
-public:
     IO(FILE* i = stdin, FILE* o = stdout) { input(i), output(o); }
     ~IO() { flush(); }
-#ifdef LX_DEBUG
-    void flush() { Out::flush(), set(); }
-#endif
     template <typename... Args>
         requires (sizeof...(Args) > 1)
     IO& read(Args&... x) {
@@ -195,14 +148,14 @@ public:
             t = t * 10 + (ch ^ 48), ch = getch();
         unget(ch);
 #else
-        while (!isdigit(*ptr) ECHK4)
-            sign = *ptr++ == '-';
+        while (!isdigit(*ip) ECHK4)
+            sign = *ip++ == '-';
         ECHK2
-        t = *ptr++ ^ 48;
-        while (~n[*reinterpret_cast<u16*&>(ptr)])
-            t = t * 100 + n[*reinterpret_cast<u16*&>(ptr)++];
-        if (isdigit(*ptr))
-            t = t * 10 + (*ptr++ ^ 48);
+        t = *ip++ ^ 48;
+        while (~n[*reinterpret_cast<u16*&>(ip)])
+            t = t * 100 + n[*reinterpret_cast<u16*&>(ip)++];
+        if (isdigit(*ip))
+            t = t * 10 + (*ip++ ^ 48);
 #endif
         x = sign ? -t : t;
         return *this;
@@ -218,14 +171,14 @@ public:
             x = x * 10 + (ch ^ 48), ch = getch();
         unget(ch);
 #else
-        while (!isdigit(*ptr) ECHK4)
-            ptr++;
+        while (!isdigit(*ip) ECHK4)
+            ip++;
         ECHK2
-        x = *ptr++ ^ 48;
-        while (~n[*reinterpret_cast<u16*&>(ptr)])
-            x = x * 100 + n[*reinterpret_cast<u16*&>(ptr)++];
-        if (isdigit(*ptr))
-            x = x * 10 + (*ptr++ ^ 48);
+        x = *ip++ ^ 48;
+        while (~n[*reinterpret_cast<u16*&>(ip)])
+            x = x * 100 + n[*reinterpret_cast<u16*&>(ip)++];
+        if (isdigit(*ip))
+            x = x * 10 + (*ip++ ^ 48);
 #endif
         return *this;
     }
@@ -248,29 +201,29 @@ public:
     }
 #ifdef USE_MMAP
     usize next_size() const {
-        char* ptr = this->ptr;
-        while (!blank(*ptr) ECHK4)
-            ptr++;
-        return ptr - this->ptr;
+        char* ip = this->ip;
+        while (!blank(*ip) ECHK4)
+            ip++;
+        return ip - this->ip;
     }
     IO& read(char* s) {
         skipws();
         auto n = next_size();
-        In::readstr(s, n);
+        ireadstr(s, n);
         s[n] = 0;
         return *this;
     }
     IO& read(str& s) {
         skipws();
         auto n = next_size();
-        s.assign(ptr, n);
-        ptr += n;
+        s.assign(ip, n);
+        ip += n;
         return *this;
     }
     IO& readstr(str& s, usize n) {
         skipws();
-        s.assign(ptr, n);
-        ptr += n;
+        s.assign(ip, n);
+        ip += n;
         return *this;
     }
 #else
@@ -295,13 +248,13 @@ public:
     IO& readstr(str& s, usize n) {
         skipws();
         s.resize(n);
-        In::readstr(s.data(), n);
+        ireadstr(s.data(), n);
         return *this;
     }
 #endif
     IO& readstr(char* s, usize n) {
         skipws();
-        In::readstr(s, n);
+        ireadstr(s, n);
         s[n] = 0;
         return *this;
     }
@@ -331,6 +284,42 @@ public:
     template <typename T>
         requires requires (T t, IO& io) { t.read(io); }
     IO& read(T& t) { return t.read(*this), *this; }
+    template <std::forward_iterator I>
+    IO& readArray(I f, I l) {
+        while (f != l)
+            read(*f++);
+        return *this;
+    }
+    IO& readArray(forward_range auto&& r) { return readArray(all(r)); }
+
+#ifdef LX_DEBUG
+    void flush() { fflush(outFile), set(); }
+    void putch_unchecked(char c) { fputc(c, outFile); }
+    void putch(char c) { putch_unchecked(c); }
+    void writestr(const char* s, usize n) { fwrite(s, 1, n, outFile); }
+#else
+    void flush() { fwrite(obuf, 1, op - obuf, outFile), op = obuf; }
+    void putch_unchecked(char c) { *op++ = c; }
+    void putch(char c) { (op == end(obuf) ? flush() : void()), putch_unchecked(c); }
+    void writestr(const char* s, usize n) {
+        if (n >= usize(end(obuf) - op)) [[unlikely]]
+            flush(), fwrite(s, 1, n, outFile);
+        else
+            memcpy(op, s, n), op += n;
+    }
+    static constexpr auto D = [] {
+        std::array<u32, 10000> m{};
+        int x = 0;
+        _for (i, 10)
+            _for (j, 10)
+                _for (k, 10)
+                    _for (l, 10)
+                        m[x++] = i + j * 0x100 + k * 0x10000 + l * 0x1000000 + 0x30303030;
+        return m;
+    }();
+#endif
+    void output(std::string_view s) { output(fopen(s.data(), "wb")); }
+    void output(FILE* f) { outFile = f, op = obuf; }
     void setprecision(u32 n = 6) { precision = n; }
     template <typename... Args>
         requires (sizeof...(Args) > 1)
@@ -347,7 +336,7 @@ public:
     }
     void write(std::unsigned_integral auto x) {
 #ifndef LX_DEBUG
-        if (end(pbuf) - pp < 64) [[unlikely]]
+        if (end(obuf) - op < 64) [[unlikely]]
             flush();
 
         auto L = [&](int x) { return x == 1 ? 0 : ten(x - 1); };
@@ -355,8 +344,8 @@ public:
 
 #define de(t)                          \
     case L(t)... R(t):                 \
-        *(u32*)pp = D[x / ten((t)-4)]; \
-        pp += 4;                       \
+        *(u32*)op = D[x / ten((t)-4)]; \
+        op += 4;                       \
         x %= ten((t)-4);               \
         [[fallthrough]]
 
@@ -367,8 +356,8 @@ public:
             de(10);
             de(6);
         case L(2)... R(2):
-            *(u32*)pp = D[x * 100];
-            pp += 2;
+            *(u32*)op = D[x * 100];
+            op += 2;
             break;
 
             de(17);
@@ -376,20 +365,20 @@ public:
             de(9);
             de(5);
         case L(1)... R(1):
-            *pp++ = x ^ 48;
+            *op++ = x ^ 48;
             break;
 
         default:
-            *(u32*)pp = D[x / ten(16)];
-            pp += 4;
+            *(u32*)op = D[x / ten(16)];
+            op += 4;
             x %= ten(16);
             [[fallthrough]];
             de(16);
             de(12);
             de(8);
         case L(4)... R(4):
-            *(u32*)pp = D[x];
-            pp += 4;
+            *(u32*)op = D[x];
+            op += 4;
             break;
 
             de(19);
@@ -397,8 +386,8 @@ public:
             de(11);
             de(7);
         case L(3)... R(3):
-            *(u32*)pp = D[x * 10];
-            pp += 3;
+            *(u32*)op = D[x * 10];
+            op += 3;
             break;
         }
 #undef de
@@ -408,7 +397,7 @@ public:
     }
     void write(u128 x) {
 #ifndef LX_DEBUG
-        if (end(pbuf) - pp < 64) [[unlikely]]
+        if (end(obuf) - op < 64) [[unlikely]]
             flush();
 #endif
         static int s[40], t = 0;
@@ -448,13 +437,6 @@ public:
         ((putch(' '), write(FORWARD(y))), ...);
         print();
     }
-    template <std::forward_iterator I>
-    IO& readArray(I f, I l) {
-        while (f != l)
-            read(*f++);
-        return *this;
-    }
-    IO& readArray(forward_range auto&& r) { return readArray(all(r)); }
     template <std::input_iterator I>
     void displayArray(I f, I l, char d = ' ') { print_range(f, l, d), print(); }
     void displayArray(input_range auto&& r, char d = ' ') { displayArray(all(r), d); }
