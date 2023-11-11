@@ -42,34 +42,30 @@ class IO {
     static constexpr bool isdigit(int c) { return '0' <= c && c <= '9'; }
     static constexpr bool blank(int c) { return c <= ' '; }
 
-    u32 precision = 12;
-    FILE *inFile, *outFile;
+    u32 prec = 12;
+    FILE *in, *out;
     bool status;
 #ifndef LX_DEBUG
-    char obuf[bufSize], *op;
-#ifdef USE_MMAP
-    struct stat st;
-    char* ip;
-    int fd;
-#else
-    char ibuf[bufSize], *ip1, *ip2;
+    char obuf[bufSize], *ip, *op;
+#ifndef USE_MMAP
+    char ibuf[bufSize], *eip;
 #endif
 #endif
 
 public:
 #ifdef LX_DEBUG
-    int getch() { return fgetc(inFile); }
+    int getch() { return fgetc(in); }
     int getch_unchecked() { return getch(); }
-    int unget(int c = -1) { return ungetc(c, inFile); }
+    int unget(int c = -1) { return ungetc(c, in); }
     int peek() { return unget(getch()); }
-    void input(FILE* f) { inFile = f, set(); }
+    void input(FILE* f) { in = f, set(); }
     void skipws() {
         int ch = getch();
         while (blank(ch) ECHK3)
             ch = getch();
         unget(ch);
     }
-    void ireadstr(char* s, usize n) { fread(s, 1, n, inFile); }
+    void ireadstr(char* s, usize n) { fread(s, 1, n, in); }
 #elif defined(USE_MMAP)
     void skipws() {
         while (blank(*ip) ECHK4)
@@ -81,18 +77,20 @@ public:
     int getch_unchecked() { return *ip++; }
     int peek() { return *ip; }
     void input(FILE* f) {
-        inFile = f;
-        if (inFile)
-            fd = fileno(inFile), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
+        struct stat st;
+        int fd;
+        in = f;
+        if (in)
+            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
     }
     void ireadstr(char* s, usize n) { memcpy(s, ip, n), ip += n; }
-    static constexpr auto n = [] {
-        std::array<u32, 0x10000> n{};
-        fill(n, -1);
+    static constexpr auto I = [] {
+        std::array<u32, 0x10000> I{};
+        fill(I, -1);
         _for (i, 10)
             _for (j, 10)
-                n[i + j * 0x100 + 0x3030] = i * 10 + j;
-        return n;
+                I[i + j * 0x100 + 0x3030] = i * 10 + j;
+        return I;
     }();
 #else
     void skipws() {
@@ -102,21 +100,21 @@ public:
         ECHK5
         unget();
     }
-    int unget(int = 0) { return *ip1--; }
-    int getch() { return (ip1 == ip2 ? (ip2 = (ip1 = ibuf) + fread(ibuf, 1, bufSize, inFile)) : nullptr), ip1 == ip2 ? -1 : *ip1++; }
-    int getch_unchecked() { return *ip1++; }
-    int peek() { return (ip1 == ip2 ? (ip2 = (ip1 = ibuf) + fread(ibuf, 1, bufSize, inFile)) : nullptr), ip1 == ip2 ? -1 : *ip1; }
-    void input(FILE* f) { inFile = f, ip1 = ip2 = ibuf, set(); }
+    int unget(int = 0) { return *ip--; }
+    int getch() { return (ip == eip ? (eip = (ip = ibuf) + fread(ibuf, 1, bufSize, in)) : nullptr), ip == eip ? -1 : *ip++; }
+    int getch_unchecked() { return *ip++; }
+    int peek() { return (ip == eip ? (eip = (ip = ibuf) + fread(ibuf, 1, bufSize, in)) : nullptr), ip == eip ? -1 : *ip; }
+    void input(FILE* f) { in = f, ip = eip = ibuf, set(); }
     void ireadstr(char* s, usize n) {
-        if (usize len = ip2 - ip1; n > len) [[unlikely]] {
-            memcpy(s, ip1, len);
+        if (usize len = eip - ip; n > len) [[unlikely]] {
+            memcpy(s, ip, len);
             n -= len;
             s += len;
-            ip1 = ip2;
-            fread(s, 1, n, inFile);
+            ip = eip;
+            fread(s, 1, n, in);
         }
         else
-            memcpy(s, ip1, n), ip1 += n;
+            memcpy(s, ip, n), ip += n;
     }
 #endif
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
@@ -152,8 +150,8 @@ public:
             sign = *ip++ == '-';
         ECHK2
         t = *ip++ ^ 48;
-        while (~n[*reinterpret_cast<u16*&>(ip)])
-            t = t * 100 + n[*reinterpret_cast<u16*&>(ip)++];
+        while (~I[*reinterpret_cast<u16*&>(ip)])
+            t = t * 100 + I[*reinterpret_cast<u16*&>(ip)++];
         if (isdigit(*ip))
             t = t * 10 + (*ip++ ^ 48);
 #endif
@@ -175,8 +173,8 @@ public:
             ip++;
         ECHK2
         x = *ip++ ^ 48;
-        while (~n[*reinterpret_cast<u16*&>(ip)])
-            x = x * 100 + n[*reinterpret_cast<u16*&>(ip)++];
+        while (~I[*reinterpret_cast<u16*&>(ip)])
+            x = x * 100 + I[*reinterpret_cast<u16*&>(ip)++];
         if (isdigit(*ip))
             x = x * 10 + (*ip++ ^ 48);
 #endif
@@ -291,36 +289,41 @@ public:
         return *this;
     }
     IO& readArray(forward_range auto&& r) { return readArray(all(r)); }
-
+    IO& zipread(auto&&... a) {
+        _for (i, (len(a), ...))
+            read(a[i]...);
+        return *this;
+    }
+    
 #ifdef LX_DEBUG
-    void flush() { fflush(outFile), set(); }
-    void putch_unchecked(char c) { fputc(c, outFile); }
+    void flush() { fflush(out), set(); }
+    void putch_unchecked(char c) { fputc(c, out); }
     void putch(char c) { putch_unchecked(c); }
-    void writestr(const char* s, usize n) { fwrite(s, 1, n, outFile); }
+    void writestr(const char* s, usize n) { fwrite(s, 1, n, out); }
 #else
-    void flush() { fwrite(obuf, 1, op - obuf, outFile), op = obuf; }
+    void flush() { fwrite(obuf, 1, op - obuf, out), op = obuf; }
     void putch_unchecked(char c) { *op++ = c; }
     void putch(char c) { (op == end(obuf) ? flush() : void()), putch_unchecked(c); }
     void writestr(const char* s, usize n) {
         if (n >= usize(end(obuf) - op)) [[unlikely]]
-            flush(), fwrite(s, 1, n, outFile);
+            flush(), fwrite(s, 1, n, out);
         else
             memcpy(op, s, n), op += n;
     }
-    static constexpr auto D = [] {
-        std::array<u32, 10000> m{};
+    static constexpr auto O = [] {
+        std::array<u32, 10000> O{};
         int x = 0;
         _for (i, 10)
             _for (j, 10)
                 _for (k, 10)
                     _for (l, 10)
-                        m[x++] = i + j * 0x100 + k * 0x10000 + l * 0x1000000 + 0x30303030;
-        return m;
+                        O[x++] = i + j * 0x100 + k * 0x10000 + l * 0x1000000 + 0x30303030;
+        return O;
     }();
 #endif
     void output(std::string_view s) { output(fopen(s.data(), "wb")); }
-    void output(FILE* f) { outFile = f, op = obuf; }
-    void setprecision(u32 n = 6) { precision = n; }
+    void output(FILE* f) { out = f, op = obuf; }
+    void setprec(u32 n = 6) { prec = n; }
     template <typename... Args>
         requires (sizeof...(Args) > 1)
     void write(Args&&... x) { (write(FORWARD(x)), ...); }
@@ -344,7 +347,7 @@ public:
 
 #define de(t)                          \
     case L(t)... R(t):                 \
-        *(u32*)op = D[x / ten((t)-4)]; \
+        *(u32*)op = O[x / ten((t)-4)]; \
         op += 4;                       \
         x %= ten((t)-4);               \
         [[fallthrough]]
@@ -356,7 +359,7 @@ public:
             de(10);
             de(6);
         case L(2)... R(2):
-            *(u32*)op = D[x * 100];
+            *(u32*)op = O[x * 100];
             op += 2;
             break;
 
@@ -369,7 +372,7 @@ public:
             break;
 
         default:
-            *(u32*)op = D[x / ten(16)];
+            *(u32*)op = O[x / ten(16)];
             op += 4;
             x %= ten(16);
             [[fallthrough]];
@@ -377,7 +380,7 @@ public:
             de(12);
             de(8);
         case L(4)... R(4):
-            *(u32*)op = D[x];
+            *(u32*)op = O[x];
             op += 4;
             break;
 
@@ -386,7 +389,7 @@ public:
             de(11);
             de(7);
         case L(3)... R(3):
-            *(u32*)op = D[x * 10];
+            *(u32*)op = O[x * 10];
             op += 3;
             break;
         }
@@ -410,7 +413,7 @@ public:
     void write(char c) { putch(c); }
     void write(std::floating_point auto x) {
         static char buf[512];
-        writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, precision).ptr - buf);
+        writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, prec).ptr - buf);
     }
     void write(std::string_view s) { writestr(s.data(), s.size()); }
     void print_range(auto f, auto l, char d = ' ') {
