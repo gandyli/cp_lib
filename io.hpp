@@ -46,7 +46,7 @@ class IO {
     FILE *in, *out;
     bool status;
 #ifndef LX_DEBUG
-    char obuf[bufSize], *ip, *op;
+    char obuf[bufSize], *ip, *op = obuf;
 #ifndef USE_MMAP
     char ibuf[bufSize], *eip;
 #endif
@@ -322,7 +322,7 @@ public:
     }();
 #endif
     void output(std::string_view s) { output(fopen(s.data(), "wb")); }
-    void output(FILE* f) { out = f, op = obuf; }
+    void output(FILE* f) { out = f; }
     void setprec(u32 n = 6) { prec = n; }
     template <typename... Args>
         requires (sizeof...(Args) > 1)
