@@ -60,17 +60,17 @@ constexpr auto sum(input_range auto&& r) { return std::accumulate(all(r), range_
 constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(all(r), init); }
 constexpr int len(auto&& x) { return size(x); }
 template <typename T>
-auto psum(const Vec<T>& a) {
+auto cumsum(const Vec<T>& a) {
     int n = len(a);
-    Vec<T> b(len(a) + 1);
+    Vec<T> b(n + 1);
     _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
 }
 template <typename T>
-auto psum(auto&& a) {
+auto cumsum(auto&& a) {
     int n = len(a);
-    Vec<T> b(len(a) + 1);
+    Vec<T> b(n + 1);
     _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
