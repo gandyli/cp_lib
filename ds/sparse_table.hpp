@@ -4,7 +4,7 @@
 template <typename Monoid>
 struct Sparse_Table {
     using M = Monoid;
-    using T = typename M::value_type;
+    using T = M::value_type;
 
     int n, lg;
     Vec<Vec<T>> st;

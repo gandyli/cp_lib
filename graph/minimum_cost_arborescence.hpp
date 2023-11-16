@@ -5,7 +5,7 @@
 namespace MinimumCostArborescenceImpl {
     template <typename G, int N>
     struct Solver {
-        using T = typename G::cost_type;
+        using T = G::cost_type;
         const G& g;
 
         Solver(const G& g): g(g) { ASSERT(g.n + g.m <= N); }
