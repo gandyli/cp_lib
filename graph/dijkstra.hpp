@@ -14,7 +14,7 @@ struct DijkstraResult2 {
 };
 template <typename T>
 auto dijkstra_dense(const auto& g, int s = 0) {
-    int n = g.n;
+    const int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
     Vec<bool> vis(n);
@@ -35,7 +35,7 @@ auto dijkstra_dense(const auto& g, int s = 0) {
 }
 template <typename T>
 auto dijkstra(const auto& g, int s = 0) {
-    int n = g.n;
+    const int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
     PQG<std::pair<T, int>> q;
@@ -55,7 +55,7 @@ auto dijkstra(const auto& g, int s = 0) {
 }
 template <typename T>
 auto dijkstra(const auto& g, const vi& s) {
-    int n = g.n;
+    const int n = g.n;
     Vec dis(n, inf<T>);
     vi par(n, -1);
     vi root(n, -1);

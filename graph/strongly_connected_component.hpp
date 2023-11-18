@@ -6,7 +6,7 @@ struct StronglyConnectedComponentResult {
     vi comp;
 };
 auto strongly_connected_component(const DirectedGraph auto& g) {
-    int n = g.n;
+    const int n = g.n;
     vi comp(n), low(n), dfn(n, -1);
     vi st;
     st.reserve(n);
