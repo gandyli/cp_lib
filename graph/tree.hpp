@@ -72,6 +72,11 @@ public:
             return rid[u] - lid[u];
         return g.n - (rid[v] - lid[v]);
     }
+    int e_to_v(int eid) const {
+        auto&& e = g.edges[eid];
+        return fa[e.from] == e.to ? e.from : e.to;
+    }
+    int v_to_e(int u) const { return vtoe[u]; }
     vi child(int u) {
         vi r;
         foreach (v, g[u])
