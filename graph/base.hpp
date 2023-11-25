@@ -70,9 +70,7 @@ struct Graph {
                 csr_edges[counter[e.to]++] = {e.to, e.from, e.cost, e.id};
         }
     }
-    OutgoingEdges operator[](int u) const {
-        return {this, indptr[u], indptr[u + 1]};
-    }
+    OutgoingEdges operator[](int u) const { return {this, indptr[u], indptr[u + 1]}; }
     const vi& Deg() {
         if (_deg.empty())
             calc_deg();
@@ -123,4 +121,4 @@ private:
 template <typename G>
 concept DirectedGraph = G::is_directed();
 template <typename G>
-concept UndirectedGraph = !G::is_directed();
+concept UndirectedGraph = !DirectedGraph<G>;
