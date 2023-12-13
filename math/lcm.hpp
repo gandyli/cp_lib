@@ -1,3 +1,4 @@
+#pragma once
 #include "math/factorize.hpp"
 
 template <typename R>

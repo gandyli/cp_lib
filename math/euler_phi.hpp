@@ -1,3 +1,4 @@
+#pragma once
 #include "math/factorize.hpp"
 #include "math/zeta.hpp"
 

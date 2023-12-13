@@ -1,23 +1,24 @@
+#pragma once
 #include "template.hpp"
 #include "math/binary_search.hpp"
 
 template <typename Monoid>
 struct Sparse_Table {
     using M = Monoid;
-    using T = M::value_type;
+    using X = M::value_type;
 
     int n, lg;
-    Vec<Vec<T>> st;
+    Vec<Vec<X>> st;
 
     Sparse_Table() = default;
     Sparse_Table(int n) { build(n); }
-    Sparse_Table(const Vec<T>& a) { build(a); }
+    Sparse_Table(const Vec<X>& a) { build(a); }
     Sparse_Table(int n, auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int i) { return M::unit(); });
     }
-    void build(const Vec<T>& a) {
+    void build(const Vec<X>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, auto&& f) {
@@ -35,7 +36,7 @@ struct Sparse_Table {
                 st[i + 1][j] = M::op(st[i][j], st[i][j + (1 << i)]);
         }
     }
-    T prod(int l, int r) const {
+    X prod(int l, int r) const {
         if (l == r)
             return M::unit();
         if (l + 1 == r)
