@@ -16,7 +16,7 @@ struct Sparse_Table {
     Sparse_Table(int n, auto&& f) { build(n, f); }
 
     void build(int n) {
-        build(n, [&](int i) { return M::unit(); });
+        build(n, [&](int) { return M::unit(); });
     }
     void build(const Vec<X>& a) {
         build(len(a), [&](int i) { return a[i]; });
