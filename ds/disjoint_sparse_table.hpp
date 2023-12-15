@@ -12,7 +12,7 @@ struct Disjoint_Sparse_Table {
     Disjoint_Sparse_Table() = default;
     Disjoint_Sparse_Table(int n) { build(n); }
     Disjoint_Sparse_Table(const Vec<X>& a) { build(a); }
-    Disjoint_Sparse_Table(int n, auto&& f) { build(n, f); }
+    Disjoint_Sparse_Table(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int) { return M::unit(); });
@@ -20,7 +20,7 @@ struct Disjoint_Sparse_Table {
     void build(const Vec<X>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
-    void build(int n, auto&& f) {
+    void build(int n, std::invocable<int> auto&& f) {
         this->n = n;
         lg = 1;
         while ((1 << lg) < n)

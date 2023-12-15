@@ -13,7 +13,7 @@ struct Static_Range_Product {
     Static_Range_Product() = default;
     Static_Range_Product(int n) { build(n); }
     Static_Range_Product(const Vec<X>& a) { build(a); }
-    Static_Range_Product(int n, auto&& f) { build(n, f); }
+    Static_Range_Product(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int i) { return M::unit(); });
@@ -21,7 +21,7 @@ struct Static_Range_Product {
     void build(const Vec<X>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
-    void build(int n, auto&& f) {
+    void build(int n, std::invocable<int> auto&& f) {
         this->n = n;
         a.resize(n);
         _for (i, n)

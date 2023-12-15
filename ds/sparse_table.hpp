@@ -13,7 +13,7 @@ struct Sparse_Table {
     Sparse_Table() = default;
     Sparse_Table(int n) { build(n); }
     Sparse_Table(const Vec<X>& a) { build(a); }
-    Sparse_Table(int n, auto&& f) { build(n, f); }
+    Sparse_Table(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int) { return M::unit(); });
@@ -21,7 +21,7 @@ struct Sparse_Table {
     void build(const Vec<X>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
-    void build(int n, auto&& f) {
+    void build(int n, std::invocable<int> auto&& f) {
         this->n = n;
         lg = 1;
         while ((1 << lg) < n)
