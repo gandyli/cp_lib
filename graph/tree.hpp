@@ -44,20 +44,20 @@ private:
 
 public:
     using T = G::cost_type;
+    int n, _id{};
     G& g;
     vi lid, rid, dep, top, fa, id, vtoe;
     Vec<T> wdep;
-    int _id{};
-    Tree(G& _g, int root = 0)
-        : g(_g),
-          lid(g.n),
-          rid(g.n),
-          dep(g.n),
-          top(g.n, root),
-          fa(g.n, root),
-          id(g.n),
-          vtoe(g.n),
-          wdep(g.n) {
+    Tree(G& g, int root = 0)
+        : n(g.n), g(g),
+          lid(n),
+          rid(n),
+          dep(n),
+          top(n, root),
+          fa(n, root),
+          id(n),
+          vtoe(n),
+          wdep(n) {
         build(root);
     }
     void build(int root) { dfs1(root), dfs2(root); }
@@ -66,11 +66,11 @@ public:
     int size(int u) const { return rid[u] - lid[u]; }
     int size(int u, int r) const {
         if (u == r)
-            return g.n;
+            return n;
         int v = jump(u, r, 1);
         if (in_subtree(u, v))
             return rid[u] - lid[u];
-        return g.n - (rid[v] - lid[v]);
+        return n - (rid[v] - lid[v]);
     }
     int e_to_v(int eid) const {
         auto&& e = g.edges[eid];
@@ -108,6 +108,10 @@ public:
         if (k < 0)
             return -1;
         return k_ancestor(v, k);
+    }
+    bool in_path(int u, int v, int x) const {
+        int w = lca(u, v);
+        return (dep[x] <= dep[u] && dep[x] >= dep[w] && k_ancestor(u, dep[u] - dep[x]) == x) || (dep[x] <= dep[v] && dep[x] >= dep[w] && k_ancestor(v, dep[v] - dep[x]) == x);
     }
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
     T wdist(int u, int v) const { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
