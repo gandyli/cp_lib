@@ -11,6 +11,7 @@ struct Monoid_Affine {
         return {t, -t * x.second};
     }
     static constexpr T eval(const X& x, T y) { return x.first * y + x.second; }
+    static constexpr X from_element(auto&& x) { return x; }
     static constexpr X unit() { return {1, 0}; }
     static constexpr bool commute = false;
 };

@@ -12,6 +12,7 @@ struct Monoid_MaxMaxcnt {
             return b;
         return {a.first, a.second + b.second};
     }
+    static constexpr X from_element(auto&& x) { return {x, 1}; }
     static constexpr X unit() { return {-inf<T>, 0}; }
     static constexpr bool commute = true;
 };
