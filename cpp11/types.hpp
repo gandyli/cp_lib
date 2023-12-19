@@ -35,8 +35,8 @@ template <typename T>
 struct tupleLike: std::integral_constant<bool, impl::has_tuple_element<T>::value && !std::is_array<T>::value> {
 };
 template <typename T>
-struct Signed: std::integral_constant<bool, std::is_signed<T>::value || std::is_same<T, i128>::value> {
+struct Signed: std::integral_constant<bool, (std::is_signed<T>::value && std::is_integral<T>::value) || std::is_same<T, i128>::value> {
 };
 template <typename T>
-struct Unsigned: std::integral_constant<bool, std::is_unsigned<T>::value || std::is_same<T, u128>::value> {
+struct Unsigned: std::integral_constant<bool, (std::is_unsigned<T>::value && std::is_integral<T>::value) || std::is_same<T, u128>::value> {
 };
