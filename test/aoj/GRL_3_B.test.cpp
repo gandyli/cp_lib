@@ -5,7 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph<int> g(n);
+    Graph g(n);
     g.read_graph(m, false, 0);
     auto [bcc, comp] = two_edge_component(g);
     Vec<pi> ans;

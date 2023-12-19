@@ -5,7 +5,7 @@
 
 int main() {
     dR(int, n);
-    Graph<int> g(n);
+    Graph g(n);
     g.read_tree(true, 0);
     auto [d1, _0] = bfs01<int>(g, 0);
     int u = max_element(d1) - d1.begin();
