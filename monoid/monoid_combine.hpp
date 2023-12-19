@@ -6,7 +6,7 @@ struct Monoid_Combine {
     using value_type = std::tuple<typename M::value_type...>;
     using X = value_type;
     static constexpr X op(const X& a, const X& b) {
-        return [&]<usize... Is>(std::index_sequence<Is...>) { return std::tuple(M::op(std::get<Is>(a), std::get<Is>(b))...); }(std::index_sequence_for<M...>{});
+        return [&]<auto... I>(std::index_sequence<I...>) { return std::tuple(M::op(std::get<I>(a), std::get<I>(b))...); }(std::index_sequence_for<M...>{});
     }
     static constexpr X from_element(auto&& x) { return {M::from_element(x)...}; }
     static constexpr X unit() { return {M::unit()...}; }
