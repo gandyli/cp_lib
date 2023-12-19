@@ -2,7 +2,7 @@
 #include "template.hpp"
 
 template <typename T, typename U>
-auto binary_gcd(T _a, U _b) {
+constexpr auto binary_gcd(T _a, U _b) {
     using CU = make_unsigned_t<std::common_type_t<T, U>>;
     CU a = _a >= 0 ? _a : -_a, b = _b >= 0 ? _b : -_b;
     if (a == 0)
