@@ -1,6 +1,6 @@
 #pragma once
 #include "graph/base.hpp"
-#include "ds/dsu.hpp"
+#include "ds/unionfind.hpp"
 
 namespace MinimumCostArborescenceImpl {
     template <typename G, int N>
@@ -22,7 +22,7 @@ namespace MinimumCostArborescenceImpl {
             vi rt(n + m);
             _for (i, n)
                 rt[i] = i;
-            DSU dsu(n + m);
+            UnionFind uf(n + m);
             int nxt = n;
             _for (s, n)
                 if (!used[s]) {
@@ -33,7 +33,7 @@ namespace MinimumCostArborescenceImpl {
                         if (!q[a])
                             return {};
                         best[a] = pop(q[a]);
-                        int to = rt[dsu.leader(best[a].to)];
+                        int to = rt[uf[best[a].to]];
                         if (!used[to]) {
                             path.eb(to);
                             continue;
@@ -45,12 +45,12 @@ namespace MinimumCostArborescenceImpl {
                         loop {
                             int w = ::pop(path);
                             q[u] = meld(q[u], add(q[w], -best[w].cost));
-                            dsu.merge(u, w), par[w] = u;
+                            uf.merge(u, w), par[w] = u;
                             used[w] = 2;
                             if (w == to)
                                 break;
                         }
-                        rt[dsu.leader(u)] = u;
+                        rt[uf[u]] = u;
                         path.eb(u);
                     }
                     foreach (u, path)

@@ -1,6 +1,6 @@
 #pragma once
 #include "graph/base.hpp"
-#include "ds/dsu.hpp"
+#include "ds/unionfind.hpp"
 
 template <typename T>
 Graph<T> manhattan_mst(Vec<std::pair<T, T>>& a) {
@@ -37,9 +37,9 @@ Graph<T> manhattan_mst(Vec<std::pair<T, T>>& a) {
         return std::get<0>(a) < std::get<0>(b);
     });
     Graph<T> mst(n);
-    DSU dsu(n);
+    UnionFind uf(n);
     for (auto&& [c, i, j]: dat)
-        if (dsu.merge(i, j))
+        if (uf.merge(i, j))
             mst.add(i, j, c);
     mst.build();
     return mst;

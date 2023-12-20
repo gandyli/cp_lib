@@ -1,6 +1,6 @@
 #pragma once
 #include "graph/base.hpp"
-#include "ds/dsu.hpp"
+#include "ds/unionfind.hpp"
 
 template <typename T>
 struct KruskalResult {
@@ -15,12 +15,12 @@ auto kruskal(Graph<T>& g) {
     _for (i, m)
         edges.eb(g.edges[i].cost, i);
     sort(edges);
-    DSU dsu(n);
+    UnionFind uf(n);
     T cost{};
     Vec<bool> in(m);
     Graph<T> mst(n, n - 1);
     for (auto&& [_, i]: edges)
-        if (auto&& e = g.edges[i]; dsu.merge(e.from, e.to)) {
+        if (auto&& e = g.edges[i]; uf.merge(e.from, e.to)) {
             in[i] = true;
             mst.add(e.from, e.to, e.cost);
             cost += e.cost;
