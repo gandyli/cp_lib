@@ -159,7 +159,6 @@ struct Lazy_SegTree {
 
 private:
     void apply(int i, const A& x) {
-        assert(i);
         a[i] = AM::act(a[i], x, 1 << (lg - std::__lg(i)));
         if (i < sz)
             lazy[i] = MA::op(lazy[i], x);
