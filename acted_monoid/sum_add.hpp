@@ -1,3 +1,4 @@
+#pragma once
 #include "monoid/add.hpp"
 
 template <typename T>
