@@ -78,7 +78,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
             return res;
         }
         else {
-            Vec<X> res(n);+987
+            Vec<X> res(n);
             _for (i, n)
                 res[i] = t[tree.lid[i]];
             return res;
@@ -106,7 +106,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
             r = MX::op(r, prod(x, y));
         return r;
     }
-    X prod_subtree(int u) cons+879Tree_Monoid_Base<template<...> class DS, typename TREE, typename Monoid>t { return ds.prod(tree.lid[u] + edge, tree.rid[u]); }
+    X prod_subtree(int u) const { return ds.prod(tree.lid[u] + edge, tree.rid[u]); }
     X prod_all() const { return prod_subtree(tree.id[0]); }
     void apply_path(int u, int v, const A& a) {
         for (auto&& [x, y]: tree.path_decomposition(u, v, edge))
