@@ -8,7 +8,7 @@ struct ActedMonoid_Max_Assign {
     using Monoid_A = Monoid_Assign<T, none>;
     using X = Monoid_X::value_type;
     using A = Monoid_A::value_type;
-    static constexpr X act(const X& x, const A& a, int sz) {
+    static constexpr X act(const X& x, const A& a, int) {
         return a == none ? x : a;
     }
 };
