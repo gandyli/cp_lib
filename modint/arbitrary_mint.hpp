@@ -59,7 +59,7 @@ struct ArbitraryModIntBase {
     mint inv() const { return from_raw(mod_inverse(x, mod())); }
     mint& operator/=(const mint& p) { return *this *= p.inv(); }
     mint operator+() const { return *this; }
-    mint operator-() const { return from_raw(!x ? 0 : mod() * 2 - x); }
+    mint operator-() const { return from_raw(!x ? 0 : mod() - x); }
     friend mint operator+(mint lhs, const mint& rhs) { return lhs += rhs; }
     friend mint operator-(mint lhs, const mint& rhs) { return lhs -= rhs; }
     friend mint operator*(mint lhs, const mint& rhs) { return lhs *= rhs; }
