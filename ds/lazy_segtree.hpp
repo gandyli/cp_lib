@@ -1,7 +1,7 @@
 #pragma once
 #include "template.hpp"
 
-template <typename ActedMonoid>
+template <typename ActedMonoid, bool beats = false>
 struct Lazy_SegTree {
     using AM = ActedMonoid;
     using MX = ActedMonoid::Monoid_X;
@@ -160,8 +160,12 @@ struct Lazy_SegTree {
 private:
     void apply(int i, const A& x) {
         a[i] = AM::act(a[i], x, 1 << (lg - std::__lg(i)));
-        if (i < sz)
+        if (i < sz) {
             lazy[i] = MA::op(lazy[i], x);
+            if constexpr (beats)
+                if (a[i].fail)
+                    push(i), update(i);
+        }
     }
     void push(int i) {
         if (lazy[i] == MA::unit())
