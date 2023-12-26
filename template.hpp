@@ -91,7 +91,7 @@ auto veci(usize n, auto&&... s) {
 template <typename T>
 vi argsort(Vec<T>& a) {
     vi p(len(a));
-    std::iota(all(p), 0);
+    iota(all(p), 0);
     sort(p, [&](int i, int j) { return std::pair{a[i], i} < std::pair{a[j], j}; });
     return p;
 }
