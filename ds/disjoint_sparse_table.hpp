@@ -1,5 +1,4 @@
 #pragma once
-#include "template.hpp"
 #include "math/binary_search.hpp"
 
 template <typename Monoid>
