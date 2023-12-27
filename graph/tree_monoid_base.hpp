@@ -162,7 +162,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
             }
         }
         else {
-            if (!check(prod(u, u)))
+            if (!check(prod(tree.lid[u], tree.lid[u])))
                 return -1;
             for (auto&& [x, y]: tree.path_decomposition(u, v, edge)) {
                 X t = prod(x, y);
