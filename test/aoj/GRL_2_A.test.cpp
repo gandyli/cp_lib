@@ -7,6 +7,6 @@ int main() {
     dR(int, n, m);
     Graph g(n);
     g.read_graph(m, true, 0);
-    print(kruskal(g).cost);
+    print(kruskal<int>(g).cost);
     return 0;
 }

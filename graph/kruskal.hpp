@@ -2,23 +2,24 @@
 #include "graph/base.hpp"
 #include "ds/unionfind.hpp"
 
-template <typename T>
+template <typename T, typename G>
 struct KruskalResult {
     T cost;
     Vec<bool> in;
-    Graph<T> mst;
+    G mst;
 };
 template <typename T>
-auto kruskal(Graph<T>& g) {
+auto kruskal(const auto& g) {
+    using cost_type = std::decay_t<decltype(g)>::cost_type;
     const int n = g.n, m = g.m;
-    Vec<std::pair<T, int>> edges;
+    Vec<std::pair<cost_type, int>> edges;
     _for (i, m)
         edges.eb(g.edges[i].cost, i);
     sort(edges);
     UnionFind uf(n);
     T cost{};
     Vec<bool> in(m);
-    Graph<T> mst(n, n - 1);
+    std::decay_t<decltype(g)> mst(n, n - 1);
     for (auto&& [_, i]: edges)
         if (auto&& e = g.edges[i]; uf.merge(e.from, e.to)) {
             in[i] = true;
