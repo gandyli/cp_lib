@@ -1,7 +1,7 @@
 #pragma once
 #include "graph/base.hpp"
 
-template <typename G>
+template <typename G, bool weighted = false>
 class Tree {
 private:
     void dfs1(int u) {
@@ -18,15 +18,14 @@ private:
             if (v == fa[u])
                 continue;
             dep[v] = dep[u] + 1;
-            wdep[v] = dep[u] + v.cost;
+            if constexpr (weighted)
+                wdep[v] = dep[u] + v.cost;
             fa[v] = u;
             vtoe[v] = v.id;
             dfs1(v);
             size[u] += size[v];
-            if (size[v] > max) {
-                max = size[v];
+            if (chkmax(max, size[v]))
                 swap(csr[l], csr[i]);
-            }
         }
     }
     void dfs2(int u) {
@@ -56,8 +55,9 @@ public:
           top(n, root),
           fa(n, root),
           id(n),
-          vtoe(n),
-          wdep(n) {
+          vtoe(n) {
+        if constexpr (weighted)
+            wdep.resize(n);
         build(root);
     }
     void build(int root) { dfs1(root), dfs2(root); }
@@ -77,6 +77,8 @@ public:
         return fa[e.from] == e.to ? e.from : e.to;
     }
     int v_to_e(int u) const { return vtoe[u]; }
+    int elid(int u) const { return 2 * lid[u] - dep[u]; }
+    int erid(int u) const { return 2 * rid[u] - dep[u] - 1; }
     vi child(int u) {
         vi r;
         foreach (v, g[u])
@@ -84,7 +86,7 @@ public:
                 r.eb(v);
         return r;
     }
-    int lca(int u, int v) const {
+    virtual int lca(int u, int v) const {
         while (top[u] != top[v]) {
             if (lid[u] < lid[v])
                 swap(u, v);

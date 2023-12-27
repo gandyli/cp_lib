@@ -8,7 +8,7 @@
 int main() {
     dR(int, n, q);
     dRV(i64, a, n);
-    Graph g(n);
+    Graph<int, true> g(n);
     _for (i, 1, n) {
         dR(int, p);
         g.add(p, i);

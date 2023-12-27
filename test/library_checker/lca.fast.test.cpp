@@ -1,7 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/lca"
 
 #include "all.hpp"
-#include "graph/tree.hpp"
+#include "graph/fast_lca.hpp"
 
 int main() {
     dR(int, n, q);
@@ -11,7 +11,7 @@ int main() {
         g.add(p, i);
     }
     g.build();
-    Tree tree(g);
+    Fast_Lca_Tree tree(g);
     _for (q) {
         dR(int, u, v);
         print(tree.lca(u, v));
