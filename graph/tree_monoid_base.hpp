@@ -27,6 +27,8 @@ namespace Tree_Monoid_Base_Helper {
     struct Base<DS, M, false> {
         mutable DS<Monoid_Reverse<M>> rds;
     };
+    template <typename DS>
+    concept is_dual = !requires (DS ds, int l, int r) { ds.prod(l, r); };
 } // namespace Tree_Monoid_Base_Helper
 
 template <template <typename> typename DS, typename TREE, typename Monoid, bool edge = false>
@@ -44,7 +46,10 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     Tree_Monoid_Base(const TREE& tree, const Vec<X>& a): tree(tree) { build(a); }
     Tree_Monoid_Base(const TREE& tree, std::invocable<int> auto&& f): tree(tree) { build(f); }
     void build() {
-        build([&](int) { return MX::unit(); });
+        if constexpr (Tree_Monoid_Base_Helper::is_dual<DS<M>>)
+            ds.build(n = tree.n);
+        else
+            build([&](int) { return MX::unit(); });
     }
     void build(const Vec<X>& a) {
         build([&](int i) { return a[i]; });
@@ -74,7 +79,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
         if constexpr (edge) {
             Vec<X> res(n - 1);
             _for (i, n - 1)
-                res[i] = t[tree.lid[tree.v_to_e(i)]];
+                res[i] = t[tree.lid[tree.e_to_v(i)]];
             return res;
         }
         else {

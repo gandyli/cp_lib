@@ -2,7 +2,7 @@
 #include "template.hpp"
 
 template <typename ActedMonoid, bool beats = false>
-struct Lazy_SegTree {
+struct Lazy_SegTree_Base {
     using AM = ActedMonoid;
     using MX = ActedMonoid::Monoid_X;
     using MA = ActedMonoid::Monoid_A;
@@ -12,10 +12,10 @@ struct Lazy_SegTree {
     Vec<X> a;
     Vec<A> lazy;
 
-    Lazy_SegTree() = default;
-    Lazy_SegTree(int n) { build(n); }
-    Lazy_SegTree(const Vec<X>& a) { build(a); }
-    Lazy_SegTree(int n, std::invocable<int> auto&& f) { build(n, f); }
+    Lazy_SegTree_Base() = default;
+    Lazy_SegTree_Base(int n) { build(n); }
+    Lazy_SegTree_Base(const Vec<X>& a) { build(a); }
+    Lazy_SegTree_Base(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int i) { return MX::unit(); });
@@ -175,3 +175,5 @@ private:
         lazy[i] = MA::unit();
     }
 };
+template <typename ActedMonoid>
+using Lazy_SegTree = Lazy_SegTree_Base<ActedMonoid>;
