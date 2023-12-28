@@ -10,13 +10,15 @@ struct SegTree {
     Vec<X> a;
     SegTree() = default;
     SegTree(int n) { build(n); }
-    SegTree(const Vec<X>& a) { build(a); }
+    template <std::convertible_to<X> T>
+    SegTree(const Vec<T>& a) { build(a); }
     SegTree(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int) { return M::unit(); });
     }
-    void build(const Vec<X>& a) {
+    template <std::convertible_to<X> T>
+    void build(const Vec<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {

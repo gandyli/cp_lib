@@ -11,7 +11,8 @@ struct FenwickTree {
     X sum;
     FenwickTree() = default;
     FenwickTree(int n) { build(n); }
-    FenwickTree(const Vec<X>& a) { build(a); }
+    template <std::convertible_to<X> T>
+    FenwickTree(const Vec<T>& a) { build(a); }
     FenwickTree(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
@@ -19,7 +20,8 @@ struct FenwickTree {
         a.assign(n, M::unit());
         sum = M::unit();
     }
-    void build(const Vec<X>& a) {
+    template <std::convertible_to<X> T>
+    void build(const Vec<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {

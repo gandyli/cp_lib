@@ -14,13 +14,15 @@ struct Lazy_SegTree_Base {
 
     Lazy_SegTree_Base() = default;
     Lazy_SegTree_Base(int n) { build(n); }
-    Lazy_SegTree_Base(const Vec<X>& a) { build(a); }
+    template <std::convertible_to<X> T>
+    Lazy_SegTree_Base(const Vec<T>& a) { build(a); }
     Lazy_SegTree_Base(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int i) { return MX::unit(); });
     }
-    void build(const Vec<X>& a) {
+    template <std::convertible_to<X> T>
+    void build(const Vec<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {

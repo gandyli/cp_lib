@@ -11,13 +11,15 @@ struct Sparse_Table {
 
     Sparse_Table() = default;
     Sparse_Table(int n) { build(n); }
-    Sparse_Table(const Vec<X>& a) { build(a); }
+    template <std::convertible_to<X> T>
+    Sparse_Table(const Vec<T>& a) { build(a); }
     Sparse_Table(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int) { return M::unit(); });
     }
-    void build(const Vec<X>& a) {
+    template <std::convertible_to<X> T>
+    void build(const Vec<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {

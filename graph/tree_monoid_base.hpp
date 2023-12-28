@@ -43,7 +43,8 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     const TREE& tree;
     int n;
     Tree_Monoid_Base(const TREE& tree): tree(tree) { build(); }
-    Tree_Monoid_Base(const TREE& tree, const Vec<X>& a): tree(tree) { build(a); }
+    template <std::convertible_to<X> T>
+    Tree_Monoid_Base(const TREE& tree, const Vec<T>& a): tree(tree) { build(a); }
     Tree_Monoid_Base(const TREE& tree, std::invocable<int> auto&& f): tree(tree) { build(f); }
     void build() {
         if constexpr (Tree_Monoid_Base_Helper::is_dual<DS<M>>)
@@ -51,7 +52,8 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
         else
             build([&](int) { return MX::unit(); });
     }
-    void build(const Vec<X>& a) {
+    template <std::convertible_to<X> T>
+    void build(const Vec<T>& a) {
         build([&](int i) { return a[i]; });
     }
     void build(std::invocable<int> auto&& f) {
