@@ -19,7 +19,7 @@ private:
                 continue;
             dep[v] = dep[u] + 1;
             if constexpr (weighted)
-                wdep[v] = dep[u] + v.cost;
+                wdep[v] = wdep[u] + v.cost;
             fa[v] = u;
             vtoe[v] = v.id;
             dfs1(v);
@@ -62,7 +62,7 @@ public:
     }
     void build(int root) { dfs1(root), dfs2(root); }
     pi idx(int i) const { return {lid[i], rid[i]}; }
-    bool in_subtree(int v, int u) const { return lid[v] <= lid[u] && lid[u] < rid[v]; }
+    bool in_subtree(int v, int u) const { return lid[u] <= lid[v] && lid[v] < rid[u]; }
     int size(int u) const { return rid[u] - lid[u]; }
     int size(int u, int r) const {
         if (u == r)
