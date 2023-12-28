@@ -134,7 +134,7 @@ public:
     template <Signed T>
     IO& read(T& x) {
         x = 0;
-        static make_unsigned_t<T> t;
+        make_unsigned_t<T> t;
         bool sign = false;
 #ifndef USE_MMAP
         int ch = getch();
@@ -188,7 +188,7 @@ public:
     }
     template <typename T = int>
     T read() {
-        static std::decay_t<T> x;
+        std::decay_t<T> x;
         return read(x), x;
     }
     IO& read(char& ch) {
@@ -330,8 +330,7 @@ public:
     void write() const {}
     template <Signed T>
     void write(T x) {
-        static make_unsigned_t<T> y;
-        y = x;
+        make_unsigned_t<T> y = x;
         if (x < 0)
             putch('-'), write(y = -y);
         else
