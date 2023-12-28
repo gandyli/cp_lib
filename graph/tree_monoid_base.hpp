@@ -1,14 +1,15 @@
 #pragma once
 #include "template.hpp"
-#include "monoid/monoid_reverse.hpp"
+#include "acted_monoid/acted_monoid_reverse.hpp"
 
 namespace Tree_Monoid_Base_Helper {
+    template <typename M>
+    concept acted_monoid = requires { typename M::Monoid_A; };
     template <typename M>
     struct MonoidX {
         using type = M;
     };
-    template <typename M>
-        requires requires { typename M::Monoid_A; }
+    template <acted_monoid M>
     struct MonoidX<M> {
         using type = M::Monoid_X;
     };
@@ -16,8 +17,7 @@ namespace Tree_Monoid_Base_Helper {
     struct MonoidA {
         using type = M;
     };
-    template <typename M>
-        requires requires { typename M::Monoid_A; }
+    template <acted_monoid M>
     struct MonoidA<M> {
         using type = M::Monoid_A;
     };
@@ -26,6 +26,10 @@ namespace Tree_Monoid_Base_Helper {
     template <template <typename> typename DS, typename M>
     struct Base<DS, M, false> {
         mutable DS<Monoid_Reverse<M>> rds;
+    };
+    template <template <typename> typename DS, acted_monoid M>
+    struct Base<DS, M, false> {
+        mutable DS<Acted_Monoid_Reverse<M>> rds;
     };
     template <typename DS>
     concept is_dual = !requires (DS ds, int l, int r) { ds.prod(l, r); };
@@ -39,6 +43,12 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     using X = MX::value_type;
     using A = MA::value_type;
 
+#define UPDATE(method, ...)                \
+    do {                                   \
+        ds.method(__VA_ARGS__);            \
+        if constexpr (!MX::commute)        \
+            this->rds.method(__VA_ARGS__); \
+    } while (false)
     mutable DS<M> ds;
     const TREE& tree;
     int n;
@@ -60,15 +70,11 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
         n = tree.n;
         if constexpr (edge) {
             auto fe = [&](int i) { return i ? f(tree.v_to_e(tree.id[i])) : MX::unit(); };
-            ds.build(n, fe);
-            if constexpr (!MX::commute)
-                this->rds.build(n, fe);
+            UPDATE(build, n, fe);
         }
         else {
             auto fv = [&](int i) { return f(tree.id[i]); };
-            ds.build(n, fv);
-            if constexpr (!MX::commute)
-                this->rds.build(n, fv);
+            UPDATE(build, n, fv);
         }
     }
     X get(int i) const {
@@ -95,17 +101,13 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
         if constexpr (edge)
             i = tree.e_to_v(i);
         i = tree.lid[i];
-        ds.set(i, x);
-        if constexpr (!MX::commute)
-            this->rds.set(i, x);
+        UPDATE(set, i, x);
     }
     void multiply(int i, const X& x) {
         if constexpr (edge)
             i = tree.e_to_v(i);
         i = tree.lid[i];
-        ds.multiply(i, x);
-        if constexpr (!MX::commute)
-            this->rds.multiply(i, x);
+        UPDATE(multiply, i, x);
     }
     X prod_path(int u, int v) const {
         X r = MX::unit();
@@ -118,14 +120,14 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     void apply_path(int u, int v, const A& a) {
         for (auto&& [x, y]: tree.path_decomposition(u, v, edge))
             if (x <= y)
-                ds.apply(x, y + 1, a);
+                UPDATE(apply, x, y + 1, a);
             else
-                ds.apply(y, x + 1, a);
+                UPDATE(apply, y, x + 1, a);
     }
-    void apply_subtree(int u, const A& a) { ds.apply(tree.lid[u] + edge, tree.rid[u], a); }
+    void apply_subtree(int u, const A& a) { UPDATE(apply, tree.lid[u] + edge, tree.rid[u], a); }
     void apply_outtree(int u, const A& a) {
-        ds.apply(edge, tree.lid[u] + edge, a);
-        ds.apply(tree.rid[u], n, a);
+        UPDATE(apply, edge, tree.lid[u] + edge, a);
+        UPDATE(apply, tree.rid[u], n, a);
     }
     int max_path(auto&& check, int u, int v) {
         X r = MX::unit();
@@ -197,3 +199,4 @@ private:
             return x <= y ? ds.prod(x, y + 1) : this->rds.prod(y, x + 1);
     }
 };
+#undef UPDATE
