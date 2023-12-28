@@ -58,7 +58,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     Tree_Monoid_Base(const TREE& tree, std::invocable<int> auto&& f): tree(tree) { build(f); }
     void build() {
         if constexpr (Tree_Monoid_Base_Helper::is_dual<DS<M>>)
-            ds.build(n = tree.n);
+            UPDATE(build, n = tree.n);
         else
             build([&](int) { return MX::unit(); });
     }
