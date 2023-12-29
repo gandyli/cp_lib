@@ -8,9 +8,6 @@ int main() {
     Graph<int, true> g(n);
     g.read_graph(m, false, 0);
     auto cycle = find_cycle(g);
-    if (cycle.vs.empty())
-        print(0);
-    else
-        print(1);
+    print(!cycle.vs.empty());
     return 0;
 }

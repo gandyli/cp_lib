@@ -40,8 +40,9 @@ struct HashMap {
         if constexpr (KEEP_IS)
             IS.clear();
     }
-    void enumerate(auto&& f) const {
-        static_assert(KEEP_IS);
+    void enumerate(auto&& f) const
+      requires (KEEP_IS)
+    {
         foreach (i, IS)
             f(key[i], val[i]);
     }

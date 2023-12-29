@@ -14,7 +14,7 @@ auto strongly_connected_component(const DirectedGraph auto& g) {
     auto dfs = [&](auto&& dfs, int u) -> void {
         st.eb(u);
         dfn[u] = low[u] = id++;
-        foreach(v, g[u])
+        foreach (v, g[u])
             if (dfn[v] == -1) {
                 dfs(dfs, v);
                 chkmin(low[u], low[v]);

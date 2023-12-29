@@ -19,7 +19,7 @@ struct Monoid_AddArray {
         foreach (x, x)
             x *= n;
         return x;
-     }
+    }
     static constexpr X from_element(auto&& x) { return x; }
     static constexpr X unit() { return {}; }
     static constexpr bool commute = true;

@@ -6,7 +6,7 @@
 int main() {
     dR(int, a, b, c);
     int ans = 0;
-    foreach(d, divisors(u32(c)))
+    foreach (d, divisors(u32(c)))
         if (a <= d && d <= b)
             ans++;
     print(ans);

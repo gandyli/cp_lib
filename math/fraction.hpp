@@ -27,7 +27,7 @@ struct FractionBase {
             return {l.x + r.x, l.y};
         return {l.x * r.y + l.y * r.x, l.y * r.y};
     }
-    friend R operator-(R l,  R r) {
+    friend R operator-(R l, R r) {
         if (l.y == r.y)
             return {l.x - r.x, l.y};
         return {l.x * r.y - l.y * r.x, l.y * r.y};

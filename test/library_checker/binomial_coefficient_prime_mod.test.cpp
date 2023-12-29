@@ -13,12 +13,8 @@ int main() {
         }
         return 0;
     }
-    using ctx = DynamicMontgomeryReductionContext<u32>;
-    auto _guard = ctx::set_mod(mod);
-    using Z = MontgomeryModInt<ctx>;
-
-    Comb<Z> comb(1e7);
-    
+    SetMod(u32, mod);
+    Comb<mint> comb(1e7);
     _for (T) {
         dR(u32, n, k);
         print(comb(n, k));

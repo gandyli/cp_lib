@@ -89,8 +89,9 @@ struct Graph {
     int deg(int u) { return Deg()[u]; }
     int in_deg(int u) { return In_deg()[u]; }
     int out_deg(int u) { return Out_deg()[u]; }
-    Graph reverse() const {
-        static_assert(directed);
+    Graph reverse() const
+      requires (directed)
+    {
         Graph g0(n);
         foreach (e, edges)
             g0.add(e.to, e.from, e.cost, e.id);

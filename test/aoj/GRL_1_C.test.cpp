@@ -6,7 +6,6 @@
 int main() {
     dR(int, n, m);
     Graph<int, true> g(n);
-
     g.read_graph(m, true, 0);
 
     auto dis = floyd<i64>(g);

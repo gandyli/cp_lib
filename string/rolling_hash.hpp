@@ -1,5 +1,4 @@
 #pragma once
-#include "template.hpp"
 #include "random/base.hpp"
 #include "modint/mint61.hpp"
 

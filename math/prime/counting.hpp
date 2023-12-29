@@ -1,5 +1,5 @@
 #pragma once
-#include "../isqrt.hpp"
+#include "math/isqrt.hpp"
 
 u64 prime_counting(u64 n) {
     if (n <= 1)

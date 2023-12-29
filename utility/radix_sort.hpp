@@ -9,8 +9,8 @@ namespace RadixSortImpl {
     int c0[powb], c1[powb], c2[powb], c3[powb];
 
     template <typename T>
+    requires (sizeof(T) == 4 || sizeof(T) == 8)
     void radix_sort(int n, T* p) {
-        static_assert(sizeof(T) == 4 || sizeof(T) == 8);
         if (!n)
             return;
         if (n <= 64)
@@ -87,8 +87,8 @@ namespace RadixSortImpl {
     }
     void radix_sort(auto& v) { radix_sort(len(v), v.data()); }
     template <typename T, typename U>
+    requires (sizeof(T) == 4 || sizeof(T) == 8)
     void radix_sort_compare_first(int n, std::pair<T, U>* p) {
-        static_assert(sizeof(T) == 4 || sizeof(T) == 8);
         if (!n)
             return;
         if (n <= 64) {

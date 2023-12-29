@@ -79,7 +79,7 @@ template <typename T>
 Vec<T> psum(const Vec<T>& a) {
     int n = len(a);
     Vec<T> b(len(a) + 1);
-    _for(i, n)
+    _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
 }
@@ -87,7 +87,7 @@ template <typename T, typename U>
 Vec<T> psum(U&& a) {
     int n = len(a);
     Vec<T> b(len(a) + 1);
-    _for(i, n)
+    _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
 }

@@ -73,7 +73,7 @@ namespace impl {
     };
     template <typename T>
     using make_double_width_t = typename make_double_width<T>::type;
-}  // namespace impl
+} // namespace impl
 template <typename T>
 class MontgomeryReduction {
 public:

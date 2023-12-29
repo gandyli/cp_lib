@@ -73,8 +73,8 @@ auto K_shortest_path(const DirectedGraph auto& g, int s, int t, int K) {
             break;
         std::pair best{-1, inf<T>};
         _for (i, len(paths))
-             if (chkmin(best.second, std::get<0>(paths[i])))
-                 best.first = i;
+            if (chkmin(best.second, std::get<0>(paths[i])))
+                best.first = i;
         swap(paths[best.first], paths.back());
         auto [cost, es, ng_es, n] = pop(paths);
         vi vs{s};

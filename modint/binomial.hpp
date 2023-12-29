@@ -5,7 +5,8 @@ template <typename Z, bool EXTEND = true>
 struct Comb {
     Vec<Z> f, g, h;
 
-    Comb(): f{1}, g{1}, h{1} { static_assert(EXTEND); }
+    Comb() requires (EXTEND)
+        : f{1}, g{1}, h{1} {}
     Comb(int n): Comb() { extend(n + 1); }
     void extend(int m = -1) {
         int n = len(f);
@@ -64,7 +65,7 @@ struct Comb {
     Z multinomial(const Vec<T>& a) {
         int n = 0;
         Z r = 1;
-        foreach(x, a) {
+        foreach (x, a) {
             n += x;
             r *= finv(x);
         }

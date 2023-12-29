@@ -4,7 +4,7 @@
 #include "math/bigint.hpp"
 
 int main() {
-    multipleTests([&]{
+    multipleTests([&] {
         dR(bigint, a, b);
         print(divmod(a, b));
     });

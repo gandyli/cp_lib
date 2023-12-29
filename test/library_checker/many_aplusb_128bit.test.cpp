@@ -3,7 +3,7 @@
 #include "all.hpp"
 
 int main() {
-    multipleTests([&]{
+    multipleTests([&] {
         dR(i128, a, b);
         print(a + b);
     });

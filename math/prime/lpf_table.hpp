@@ -1,5 +1,5 @@
 #pragma once
-#include "sieve.hpp"
+#include "math/prime/sieve.hpp"
 
 vi lpf_table(int n) {
     auto primes = prime_sieve(n);

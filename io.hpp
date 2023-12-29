@@ -122,7 +122,7 @@ public:
     IO(FILE* i = stdin, FILE* o = stdout) { input(i), output(o); }
     ~IO() { flush(); }
     template <typename... Args>
-        requires (sizeof...(Args) > 1)
+    requires (sizeof...(Args) > 1)
     IO& read(Args&... x) {
 #ifdef CHECK_EOF
         (read(x) && ...);
@@ -280,7 +280,7 @@ public:
     }
     IO& read(forward_range auto&& r) { return readArray(FORWARD(r)); }
     template <typename T>
-        requires requires (T t, IO& io) { t.read(io); }
+    requires requires (T t, IO& io) { t.read(io); }
     IO& read(T& t) { return t.read(*this), *this; }
     template <std::forward_iterator I>
     IO& readArray(I f, I l) {
@@ -294,7 +294,7 @@ public:
             read(a[i]...);
         return *this;
     }
-    
+
 #ifdef LX_DEBUG
     void flush() { fflush(out), set(); }
     void putch_unchecked(char c) { fputc(c, out); }
@@ -325,7 +325,7 @@ public:
     void output(FILE* f) { out = f; }
     void setprec(u32 n = 6) { prec = n; }
     template <typename... Args>
-        requires (sizeof...(Args) > 1)
+    requires (sizeof...(Args) > 1)
     void write(Args&&... x) { (write(FORWARD(x)), ...); }
     void write() const {}
     template <Signed T>
@@ -427,10 +427,10 @@ public:
         }(std::make_index_sequence<std::tuple_size_v<std::decay_t<T>>>());
     }
     template <input_range R>
-        requires (!std::same_as<range_value_t<R>, char>)
+    requires (!std::same_as<range_value_t<R>, char>)
     void write(R&& r) { print_range(all(r)); }
     template <typename T>
-        requires requires (T t, IO& io) { t.write(io); }
+    requires requires (T t, IO& io) { t.write(io); }
     void write(T&& t) { t.write(*this); }
     void writeln(auto&&... x) { write(FORWARD(x)...), print(); }
     void print() { putch('\n'); }

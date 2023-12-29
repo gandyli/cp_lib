@@ -132,11 +132,11 @@ private:
     int_type x{};
 };
 template <std::unsigned_integral T, T Mod>
+requires (Mod % 2 == 1 && Mod <= std::numeric_limits<T>::max() / 4)
 class StaticMontgomeryReductionContext {
 public:
     using int_type = T;
     using mr_type = MontgomeryReduction<T>;
-    static_assert(Mod % 2 && Mod <= std::numeric_limits<T>::max() / 4);
     static constexpr const mr_type& montgomery_reduction() { return _reduction; }
 
 private:

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../template.hpp"
+#include "template.hpp"
 
 auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
     static constexpr int rs[]{1, 7, 11, 13, 17, 19, 23, 29};
