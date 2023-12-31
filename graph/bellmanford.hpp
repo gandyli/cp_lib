@@ -20,6 +20,8 @@ auto BellmanFord(const auto& g, int s = 0) {
             if (dis[u] != inf<T>)
                 foreach (v, g[u]) {
                     T t = dis[u] + v.cost;
+                    if (dis[u] == -inf<T>)
+                        t = -inf<T>;
                     chkmax(t, -inf<T>);
                     if (t < dis[v]) {
                         if (cnt >= n)
