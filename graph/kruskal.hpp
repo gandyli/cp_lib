@@ -10,17 +10,15 @@ struct KruskalResult {
 };
 template <typename T>
 auto kruskal(const auto& g) {
-    using cost_type = std::decay_t<decltype(g)>::cost_type;
     const int n = g.n, m = g.m;
-    Vec<std::pair<cost_type, int>> edges;
-    _for (i, m)
-        edges.eb(g.edges[i].cost, i);
-    sort(edges);
+    vi I(m);
+    iota(all(I), 0);
+    sort(I, [&](int i, int j) { return g.edges[i].cost < g.edges[j].cost; });
     UnionFind uf(n);
     T cost{};
     Vec<bool> in(m);
     std::decay_t<decltype(g)> mst(n, n - 1);
-    for (auto&& [_, i]: edges)
+    foreach(i, I)
         if (auto&& e = g.edges[i]; uf.merge(e.from, e.to)) {
             in[i] = true;
             mst.add(e.from, e.to, e.cost);
