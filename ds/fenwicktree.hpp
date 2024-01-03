@@ -96,7 +96,7 @@ struct FenwickTree {
         }
         return i;
     }
-    int rank(const X& x) {
+    int kth(int x) {
         return max_right([&](const X& y) { return y <= x; });
     }
 };
