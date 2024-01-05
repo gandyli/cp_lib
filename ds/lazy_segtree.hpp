@@ -27,9 +27,7 @@ struct Lazy_SegTree_Base {
     }
     void build(int n, std::invocable<int> auto&& f) {
         this->n = n;
-        lg = 1;
-        while ((1 << lg) < n)
-            ++lg;
+        lg = get_lg(n);
         sz = 1 << lg;
         a.assign(sz << 1, MX::unit());
         lazy.assign(sz, MA::unit());

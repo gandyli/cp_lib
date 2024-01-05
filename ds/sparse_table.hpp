@@ -24,9 +24,7 @@ struct Sparse_Table {
     }
     void build(int n, std::invocable<int> auto&& f) {
         this->n = n;
-        lg = 1;
-        while ((1 << lg) < n)
-            lg++;
+        lg = get_lg(n);
         st.resize(lg);
         st[0].resize(n);
         _for (i, n)
