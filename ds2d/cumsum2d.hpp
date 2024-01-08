@@ -3,13 +3,18 @@
 
 template <typename T>
 struct Cumsum2D {
+    int n, m;
     Vec<Vec<T>> s;
+    Cumsum2D(int n, int m): n(n), m(m), s(n + 1, Vec<T>(m + 1)) {}
     Cumsum2D(const Vec<Vec<T>>& a) {
-        int n = len(a), m = len(a[0]);
+        n = len(a), m = len(a[0]);
         s.assign(n + 1, Vec<T>(m + 1));
         _for (i, n)
             _for (j, m)
                 s[i + 1][j + 1] = a[i][j];
+        build();
+    }
+    void build() {
         _for (i, n + 1)
             _for (j, m)
                 s[i][j + 1] += s[i][j];
