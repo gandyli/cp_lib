@@ -469,6 +469,6 @@ void multipleTests(auto&& f) {
 void writeln(auto&&... x) { io.writeln(FORWARD(x)...); }
 void print(auto&&... x) { io.print(FORWARD(x)...); }
 void YES(bool v = true) { io.write(v ? "YES\n" : "NO\n"); }
-void NO(bool v = true) { YES(!v); }
+inline void NO(bool v = true) { YES(!v); }
 void Yes(bool v = true) { io.write(v ? "Yes\n" : "No\n"); }
-void No(bool v = true) { Yes(!v); }
+inline void No(bool v = true) { Yes(!v); }
