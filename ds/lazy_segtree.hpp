@@ -123,6 +123,7 @@ struct Lazy_SegTree_Base {
             l >>= __builtin_ctz(l);
             if (!check(MX::op(t, a[l]))) {
                 while (l < sz) {
+                    push(l);
                     l <<= 1;
                     if (check(MX::op(t, a[l])))
                         t = MX::op(t, a[l++]);
@@ -146,6 +147,7 @@ struct Lazy_SegTree_Base {
             r = (r & (r + 1)) == 0 ? 1 : r >> __builtin_ctz(~r);
             if (!check(MX::op(a[r], t))) {
                 while (r < sz) {
+                    push(r);
                     r = r << 1 | 1;
                     if (check(MX::op(a[r], t)))
                         t = MX::op(a[r--], t);
