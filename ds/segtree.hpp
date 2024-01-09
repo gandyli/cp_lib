@@ -80,11 +80,10 @@ struct SegTree {
         ASSERT(0 <= r && r <= n && check(M::unit()));
         if (r == 0)
             return 0;
-        r += sz;
+        r += sz - 1;
         X t = M::unit();
         do {
-            r--;
-            r = (r & (r + 1)) == 0 ? 1 : r >> __builtin_ctz(~r);
+            r >>= __builtin_ctz(~r);
             if (!check(M::op(a[r], t))) {
                 while (r < sz) {
                     r = r << 1 | 1;
@@ -93,8 +92,8 @@ struct SegTree {
                 }
                 return r + 1 - sz;
             }
-            t = M::op(a[r], t);
-        } while (r & (r - 1));
+            t = M::op(a[r--], t);
+        } while (r & (r + 1));
         return 0;
     }
 };
