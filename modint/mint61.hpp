@@ -7,8 +7,9 @@ struct MMInt61 {
     using int_type = u64;
     constexpr MMInt61() = default;
     constexpr MMInt61(Signed auto y) {
-        y %= mod();
-        x = y < 0 ? y + mod() : y;
+        using S = std::make_signed_t<int_type>;
+        S v = y % S(mod());
+        x = v < 0 ? v + mod() : v;
     }
     constexpr MMInt61(Unsigned auto y) { x = y % mod(); }
     constexpr int_type val() const { return x; }

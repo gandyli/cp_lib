@@ -12,8 +12,9 @@ struct ArbitraryModIntBase {
 
     ArbitraryModIntBase() = default;
     ArbitraryModIntBase(Signed auto y) {
-        y %= mod();
-        x = y < 0 ? y + mod() : y;
+        using S = std::make_signed_t<int_type>;
+        S v = y % S(mod());
+        x = v < 0 ? v + mod() : v;
     }
     ArbitraryModIntBase(Unsigned auto y) { x = y % mod(); }
     T val() const { return x; }
