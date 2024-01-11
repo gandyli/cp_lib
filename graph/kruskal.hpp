@@ -18,7 +18,7 @@ auto kruskal(const auto& g) {
     T cost{};
     Vec<bool> in(m);
     std::decay_t<decltype(g)> mst(n, n - 1);
-    foreach(i, I)
+    foreach (i, I)
         if (auto&& e = g.edges[i]; uf.merge(e.from, e.to)) {
             in[i] = true;
             mst.add(e.from, e.to, e.cost);
