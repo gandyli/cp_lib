@@ -1,62 +1,10 @@
 #pragma once
+#include "modint/montgomery_reduction.hpp"
 #include "math/mod_inverse.hpp"
 #include "math/power.hpp"
 
-namespace impl {
-    template <typename T>
-    struct make_double_width {};
-    template <>
-    struct make_double_width<u8> {
-        using type = u16;
-    };
-    template <>
-    struct make_double_width<u16> {
-        using type = u32;
-    };
-    template <>
-    struct make_double_width<u32> {
-        using type = u64;
-    };
-    template <>
-    struct make_double_width<u64> {
-        using type = u128;
-    };
-    template <typename T>
-    using make_double_width_t = make_double_width<T>::type;
-} // namespace impl
-template <typename T>
-class MontgomeryReduction {
-public:
-    using int_type = T;
-    using int_double_t = impl::make_double_width_t<T>;
-    static constexpr int base_width = std::numeric_limits<T>::digits;
-
-    constexpr explicit MontgomeryReduction(T mod): _mod(mod),
-                                                   _mod_neg_inv(inv_base(~(mod - 1))),
-                                                   _mbase((int_double_t(1) << base_width) % mod),
-                                                   _mbase2(int_double_t(_mbase) * _mbase % mod),
-                                                   _mbase3(int_double_t(_mbase2) * _mbase % mod) {}
-
-    constexpr T mod() const { return _mod; }
-    constexpr T mbase() const { return _mbase; }
-    constexpr T mbase2() const { return _mbase2; }
-    constexpr T mbase3() const { return _mbase3; }
-    constexpr T reduce(int_double_t t) const { return (t + int_double_t(T(t) * _mod_neg_inv) * _mod) >> base_width; }
-    constexpr T shrink(T x) const { return x >= _mod * 2 ? x - _mod * 2 : x; }
-    constexpr T strict_shrink(T x) const { return x >= _mod ? x - _mod : x; }
-    static constexpr T inv_base(T x) {
-        T y = 1;
-        for (int i = 1; i < base_width; i *= 2)
-            y *= 2 - x * y;
-        return y;
-    }
-
-private:
-    T _mod, _mod_neg_inv, _mbase, _mbase2, _mbase3;
-};
 template <typename Context>
-class MontgomeryModInt {
-public:
+struct MontgomeryModInt {
     using mint = MontgomeryModInt;
     using int_type = Context::int_type;
     using mr_type = Context::mr_type;
@@ -110,7 +58,8 @@ public:
     friend constexpr mint operator-(mint lhs, const mint& rhs) { return lhs -= rhs; }
     friend constexpr mint operator*(mint lhs, const mint& rhs) { return lhs *= rhs; }
     friend constexpr mint operator/(mint lhs, const mint& rhs) { return lhs /= rhs; }
-    constexpr bool operator==(const mint& rhs) const { return mr().strict_shrink(x) == mr().strict_shrink(rhs.x); }
+    friend constexpr bool operator==(const mint& lhs, const mint& rhs) { return mr().strict_shrink(lhs.x) == mr().strict_shrink(rhs.x); }
+    friend constexpr auto operator<=>(const mint& lhs, const mint& rhs) { return mr().strict_shrink(lhs.x) <=> mr().strict_shrink(rhs.x); }
 
     static constexpr mint from_raw(int_type x) {
         mint r;
@@ -133,8 +82,7 @@ private:
 };
 template <std::unsigned_integral T, T Mod>
 requires (Mod % 2 == 1 && Mod <= std::numeric_limits<T>::max() / 4)
-class StaticMontgomeryReductionContext {
-public:
+struct StaticMontgomeryReductionContext {
     using int_type = T;
     using mr_type = MontgomeryReduction<T>;
     static constexpr const mr_type& montgomery_reduction() { return _reduction; }
@@ -144,13 +92,11 @@ private:
 };
 
 template <std::unsigned_integral T>
-class DynamicMontgomeryReductionContext {
-public:
+struct DynamicMontgomeryReductionContext {
     using int_type = T;
     using mr_type = MontgomeryReduction<T>;
 
-    class Guard {
-    public:
+    struct Guard {
         Guard(const Guard&) = delete;
         Guard(Guard&&) = delete;
         Guard& operator=(const Guard&) = delete;
@@ -180,7 +126,7 @@ using MMInt64 = MontgomeryModInt<StaticMontgomeryReductionContext<u64, Mod>>;
 using MMInt998244353 = MMInt<998244353>;
 using MMInt1000000007 = MMInt<1000000007>;
 
-#define SetMod(T, mod)                                \
+#define SetMMod(T, mod)                                \
     using ctx = DynamicMontgomeryReductionContext<T>; \
     auto _guard = ctx::set_mod(mod);                  \
     using mint = MontgomeryModInt<ctx>

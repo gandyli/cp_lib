@@ -5,7 +5,7 @@ u32 matrix_det_mod(Vec<Vec<u32>> a, u32 mod) {
     const int n = len(a);
     ASSERT(n == len(a[0]));
 
-    Barrett<u32> bt(mod);
+    BarrettReduction<u32> bt(mod);
     u32 det = 1;
     _for (i, n) {
         _for (j, i, n)

@@ -5,7 +5,7 @@ namespace impl {
     template <Unsigned T>
     T primitive_root(T mod) {
         auto pf = factorize(mod - 1);
-        SetMod(T, mod);
+        SetMMod(T, mod);
         loop if (T pr = rnd(2, mod); BLK {
                      foreach (p, pf)
                          if (power(mint(pr), (mod - 1) / p) == 1)

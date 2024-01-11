@@ -1,20 +1,23 @@
 #pragma once
+#include "modint/barrett_reduction.hpp"
 #include "math/mod_inverse.hpp"
 #include "math/power.hpp"
 
-struct MMInt61 {
-    using mint = MMInt61;
-    using int_type = u64;
+template <typename Context>
+struct BarrettModInt {
+    using mint = BarrettModInt;
+    using int_type = Context::int_type;
+    using br_type = Context::br_type;
 
-    constexpr MMInt61() = default;
-    constexpr MMInt61(Signed auto y) {
+    constexpr BarrettModInt() = default;
+    constexpr BarrettModInt(Signed auto y) {
         using S = std::make_signed_t<int_type>;
         S v = y % S(mod());
         x = v < 0 ? v + mod() : v;
     }
-    constexpr MMInt61(Unsigned auto y) { x = y % mod(); }
+    constexpr BarrettModInt(Unsigned auto y) { x = y % mod(); }
     constexpr int_type val() const { return x; }
-    static constexpr int_type mod() { return (1ULL << 61) - 1; }
+    static constexpr int_type mod() { return br().mod(); }
     constexpr mint& operator++() {
         x++;
         if (x == mod())
@@ -50,10 +53,7 @@ struct MMInt61 {
         return *this;
     }
     constexpr mint& operator*=(const mint& p) {
-        u128 t = u128(x) * p.x;
-        x = u64(t >> 61) + u64(t & mod());
-        if (x >= mod())
-            x -= mod();
+        x = br().mul(x, p.x);
         return *this;
     }
     constexpr mint inv() const { return from_raw(mod_inverse(x, mod())); }
@@ -80,7 +80,53 @@ struct MMInt61 {
     }
     void write(IO& io) const { io.write(val()); }
 #endif
+    static constexpr const br_type& br() { return Context::barrett_reduction(); }
 
 private:
     int_type x{};
 };
+template <std::unsigned_integral T, T Mod>
+requires (0 < Mod && Mod <= std::numeric_limits<T>::max() / 4)
+struct StaticBarrettReductionContext {
+    using int_type = T;
+    using br_type = BarrettReduction<T>;
+    static constexpr const br_type& barrett_reduction() { return _reduction; }
+
+private:
+    static constexpr auto _reduction = br_type(Mod);
+};
+template <std::unsigned_integral T>
+struct DynamicBarrettReductionContext {
+    using int_type = T;
+    using br_type = BarrettReduction<T>;
+
+    struct Guard {
+        Guard(const Guard&) = delete;
+        Guard(Guard&&) = delete;
+        Guard& operator=(const Guard&) = delete;
+        Guard& operator=(Guard&&) = delete;
+        ~Guard() { _reduction_env.pop_back(); }
+
+    private:
+        friend DynamicBarrettReductionContext;
+        Guard() = default;
+    };
+    [[nodiscard]] static Guard set_mod(T mod) {
+        ASSERT(0 < mod && mod <= std::numeric_limits<T>::max() / 4);
+        _reduction_env.eb(mod);
+        return {};
+    }
+    static constexpr const br_type& barrett_reduction() { return _reduction_env.back(); }
+
+private:
+    static inline Vec<br_type> _reduction_env;
+};
+template <u32 Mod>
+using BMInt = BarrettModInt<StaticBarrettReductionContext<u32, Mod>>;
+template <u64 Mod>
+using BMInt64 = BarrettModInt<StaticBarrettReductionContext<u64, Mod>>;
+
+#define SetBMod(T, mod)                             \
+    using ctx = DynamicBarrettReductionContext<T>; \
+    auto _guard = ctx::set_mod(mod);               \
+    using mint = BarrettModInt<ctx>

@@ -2,10 +2,10 @@
 #include "template.hpp"
 
 template <typename T>
-class Barrett;
+class BarrettReduction;
 
 template <>
-class Barrett<u32> {
+class BarrettReduction<u32> {
     constexpr auto get(u64 n) const {
         u64 x = u128(n) * im >> 64;
         u64 y = x * m;
@@ -15,7 +15,7 @@ class Barrett<u32> {
 public:
     u32 m{};
     u64 im{};
-    constexpr Barrett(u32 m = 1): m(m), im(u64(-1) / m + 1) {}
+    constexpr BarrettReduction(u32 m = 1): m(m), im(u64(-1) / m + 1) {}
     constexpr u32 mod() const { return m; }
     constexpr u64 div(u64 n) const {
         auto [x, y] = get(n);
@@ -34,10 +34,10 @@ public:
     constexpr u32 mul(u32 x, u32 y) const { return mod(u64(x) * y); }
 };
 template <>
-class Barrett<u64> {
+class BarrettReduction<u64> {
 public:
     u64 m{}, imh{}, iml{};
-    constexpr Barrett(u64 m = 1): m(m) {
+    constexpr BarrettReduction(u64 m = 1): m(m) {
         u128 im = u128(-1) / m;
         if (im * m + m == 0)
             im++;

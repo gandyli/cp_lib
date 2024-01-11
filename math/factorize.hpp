@@ -31,7 +31,7 @@ namespace impl {
         u32 g = std::gcd(n, 0xc0cfd797);
         if (g != 1)
             return g != n ? g : 0;
-        SetMod(u32, n);
+        SetMMod(u32, n);
         int r = std::countr_zero(n - 1);
         u32 d = (n - 1) >> r;
         for (u32 a: {2, 7, 61}) {
@@ -49,7 +49,7 @@ namespace impl {
         u64 g = std::gcd(n, 0xe221f97c30e94e1d);
         if (g != 1)
             return g != n ? g : 0;
-        SetMod(u64, n);
+        SetMMod(u64, n);
         int r = std::countr_zero(n - 1);
         u64 d = (n - 1) >> r;
         for (u64 a: {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) {
@@ -214,7 +214,7 @@ namespace impl {
             if (pw == n)
                 return r;
         }
-        SetMod(T, n);
+        SetMMod(T, n);
         return ecm_modint<mint>();
     }
     template <typename mint, typename T = mint::int_type>
@@ -257,7 +257,7 @@ namespace impl {
     }
     template <typename T>
     T pollard_rho(T n) {
-        SetMod(T, n);
+        SetMMod(T, n);
         return pollard_rho_modint<mint>();
     }
     template <typename T>

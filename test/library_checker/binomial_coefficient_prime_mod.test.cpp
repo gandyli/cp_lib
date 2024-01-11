@@ -13,7 +13,7 @@ int main() {
         }
         return 0;
     }
-    SetMod(u32, mod);
+    SetMMod(u32, mod);
     Comb<mint> comb(1e7);
     _for (T) {
         dR(u32, n, k);

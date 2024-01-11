@@ -5,7 +5,7 @@
 #include "modint/all_inverse.hpp"
 #include "modint/montgomery.hpp"
 #include "modint/mint61.hpp"
-#include "modint/arbitrary_mint.hpp"
+#include "modint/barrett.hpp"
 
 template <typename mint>
 void test0() {
@@ -23,10 +23,15 @@ void test() {
     test0<MMInt998244353>();
     test0<MMInt1000000007>();
     test0<MMInt61>();
-    dmint32::set_mod(998244353);
-    test0<dmint32>();
-    dmint64::set_mod(909090909090909091);
-    test0<dmint64>();
+    test0<MMInt64<909090909090909091>>();
+    {
+        SetBMod(u32, 998244353);
+        test0<mint>();
+    }
+    {
+        SetBMod(u64, 909090909090909091);
+        test0<mint>();
+    }
 }
 int main() {
     test();
