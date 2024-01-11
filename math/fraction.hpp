@@ -39,12 +39,10 @@ struct FractionBase {
     R& operator*=(R r) { return *this = *this * r; }
     R& operator/=(R r) { return *this = *this / r; }
     R operator-() const { return from_raw(-x, y); }
-    auto operator<=>(const R& r) const { return U{x} * r.y <=> U{y} * r.x; }
-    bool operator==(const R& r) const = default;
+    friend bool operator==(const R&, const R&) = default;
+    friend auto operator<=>(const R& l, const R& r) { return U{l.x} * r.y <=> U{l.y} * r.x; }
 #ifdef FASTIO
-    IO& read(IO& io) {
-        return io.read(x, y);
-    }
+    IO& read(IO& io) { return io.read(x, y); }
     void write(IO& io) const {
         io.write(x);
         if (x != 0 && y != 1)

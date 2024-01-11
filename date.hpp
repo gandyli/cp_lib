@@ -53,7 +53,8 @@ struct Date {
         return tmp;
     }
     T operator-(const Date& x) const { return to_int() - x.to_int(); }
-    auto operator<=>(const Date& rhs) const = default;
+    friend auto operator<=>(const Date&, const Date&) = default;
+
     str to_string(const str& sep = "-") const {
         str y = std::to_string(year);
         str m = std::to_string(month);
