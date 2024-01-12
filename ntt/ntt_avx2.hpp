@@ -1,18 +1,15 @@
 #pragma once
-#include "math/primitive_root.hpp"
+#include "math/primitive_root_constexpr.hpp"
 #include "modint/montgomery.hpp"
 #include "modint/simd_montgomery.hpp"
 
-#ifndef FFT_BUF_SIZE
-#define FFT_BUF_SIZE (1 << 23)
-#endif
-
 template <typename mint>
 struct NTT {
+    static constexpr int FFT_BUF_SIZE = 1 << 23;
     static u32 _buf1[FFT_BUF_SIZE] __attribute__((aligned(64)));
     static u32 _buf2[FFT_BUF_SIZE] __attribute__((aligned(64)));
     static constexpr u32 mod = mint::mod();
-    static constexpr mint pr = primitive_root(mod);
+    static constexpr mint pr = primitive_root_constexpr(mod);
     static constexpr int lvl = __builtin_ctz(mod - 1);
     mint dw[lvl], dy[lvl];
     mint *buf1, *buf2;
@@ -565,5 +562,3 @@ template <typename mint>
 u32 NTT<mint>::_buf1[FFT_BUF_SIZE] __attribute__((aligned(64)));
 template <typename mint>
 u32 NTT<mint>::_buf2[FFT_BUF_SIZE] __attribute__((aligned(64)));
-
-#undef FFT_BUF_SIZE

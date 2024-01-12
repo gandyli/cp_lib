@@ -1,11 +1,11 @@
 #pragma once
+#include "math/primitive_root_constexpr.hpp"
 #include "modint/montgomery.hpp"
-#include "math/primitive_root.hpp"
 
 template <typename mint>
 struct NTT {
     static constexpr u32 mod = mint::mod();
-    static constexpr mint pr = primitive_root(mod);
+    static constexpr mint pr = primitive_root_constexpr(mod);
     static constexpr int lvl = __builtin_ctz(mod - 1);
     mint dw[lvl], dy[lvl];
 
