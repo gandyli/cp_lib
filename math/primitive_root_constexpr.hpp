@@ -18,6 +18,7 @@ constexpr u32 primitive_root_constexpr(u32 mod) {
     u32 pr = 1;
     loop {
         pr++;
+        bool ok = true;
         _for (i, idx) {
             u64 a = pr, b = (mod - 1) / ds[i], r = 1;
             while (b) {
@@ -26,10 +27,12 @@ constexpr u32 primitive_root_constexpr(u32 mod) {
                 a = a * a % mod;
                 b >>= 1;
             }
-            if (r == 1)
-                goto cont;
+            if (r == 1) {
+                ok = false;
+                break;
+            }
         }
-        return pr;
-    cont:;
+        if (ok)
+            return pr;
     }
 }
