@@ -1,56 +1,39 @@
 #pragma once
-#include "template.hpp"
+#include "utility/make_double_width.hpp"
 
 template <typename T>
-class BarrettReduction;
-
-template <>
-class BarrettReduction<u32> {
-    constexpr auto get(u64 n) const {
-        u64 x = u128(n) * im >> 64;
-        u64 y = x * m;
-        return std::pair(x, y);
-    }
-
-public:
-    u32 m{};
-    u64 im{};
-    constexpr BarrettReduction(u32 m = 1): m(m), im(u64(-1) / m + 1) {}
-    constexpr u32 mod() const { return m; }
-    constexpr u64 div(u64 n) const {
+struct BarrettReduction {
+    using int_type = T;
+    using int_double_t = make_double_width_t<T>;
+    constexpr explicit BarrettReduction(T m = 1): m(m), im(int_double_t(-1) / m + 1) {}
+    constexpr T mod() const { return m; }
+    constexpr int_double_t div(int_double_t n) const {
         auto [x, y] = get(n);
         return x - (n < y);
     }
-    constexpr u32 mod(u64 n) const {
+    constexpr T mod(int_double_t n) const {
         auto [x, y] = get(n);
         return n - y + (n < y ? m : 0);
     }
-    constexpr std::pair<u64, u32> divmod(u64 n) const {
+    constexpr std::pair<int_double_t, T> divmod(int_double_t n) const {
         auto [x, y] = get(n);
         if (n < y)
             return {x - 1, n - y + m};
         return {x, n - y};
     }
-    constexpr u32 mul(u32 x, u32 y) const { return mod(u64(x) * y); }
-};
-template <>
-class BarrettReduction<u64> {
-public:
-    u64 m{}, imh{}, iml{};
-    constexpr BarrettReduction(u64 m = 1): m(m) {
-        u128 im = u128(-1) / m;
-        if (im * m + m == 0)
-            im++;
-        imh = im >> 64;
-        iml = im;
+    constexpr T mul(T x, T y) const { return mod(int_double_t(x) * y); }
+
+private:
+    T m{};
+    int_double_t im{};
+    constexpr auto get(int_double_t n) const {
+        int_double_t x;
+        if constexpr (sizeof(T) == 8) {
+            u64 iml = im, imh = im >> 64;
+            x = (n >> 64) * imh + ((u128(u64(n)) * imh + (n >> 64) * iml + (u128(u64(n)) * iml >> 64)) >> 64);
+        }
+        else
+            x = make_double_width_t<int_double_t>(n) * im >> (sizeof(T) * 16);
+        return std::pair{x, x * m};
     }
-    constexpr u64 mod() const { return m; }
-    constexpr u64 mod(u128 x) const {
-        u128 z = u128(u64(x)) * iml;
-        z = u128(u64(x)) * imh + (x >> 64) * iml + (z >> 64);
-        z = (x >> 64) * imh + (z >> 64);
-        x -= z * m;
-        return x < m ? x : x - m;
-    }
-    constexpr u64 mul(u64 x, u64 y) const { return mod(u128(x) * y); }
 };
