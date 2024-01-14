@@ -9,7 +9,7 @@ struct HashMap {
     vi IS;
     std::bitset<N> vis;
     int index(const K& k) const {
-        int i = hash<K>{}(k) >> (64 - LG);
+        int i = hash{}(k) >> (64 - LG);
         while (vis[i] && key[i] != k)
             i = (i + 1) & (N - 1);
         return i;
