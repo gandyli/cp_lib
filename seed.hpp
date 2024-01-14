@@ -16,3 +16,4 @@ namespace seed_impl {
     } seed;
 } // namespace seed_impl
 u64& seed() { return seed_impl::seed.seed; }
+static const u64 FIXED_RANDOM = seed();

@@ -5,7 +5,7 @@
 
 int main() {
     dR(u32, q);
-    HashMap<u64> mp;
+    HashMap<u64, u64> mp;
     _for (q) {
         dR(u32, t);
         if (t == 0) {

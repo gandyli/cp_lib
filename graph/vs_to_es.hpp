@@ -7,7 +7,7 @@ vi vs_to_es(const auto& g, const vi& vs) {
     const int n = g.n, m = g.m;
     ASSERT(!vs.empty());
 
-    static HashMap<int> mp;
+    static HashMap<u64, int> mp;
     mp.clear();
     vi nxt(m, -1);
     auto get = [&](int a, int b) {

@@ -1,22 +1,20 @@
 #pragma once
-#include "template.hpp"
+#include "random/hash.hpp"
 
-template <typename T, int LG = 20, bool KEEP_IS = false>
+template <typename K, typename V, int LG = 20, bool KEEP_IS = false>
 struct HashMap {
-    static const u64 FIXED_RANDOM;
     static constexpr int N = 1 << LG;
-    u64* key = new u64[N];
-    T* val = new T[N];
+    K* key = new K[N];
+    V* val = new V[N];
     vi IS;
     std::bitset<N> vis;
-    static u32 hash(u64 x) { return (u64(x + FIXED_RANDOM) * 11995408973635179863ULL) >> (64 - LG); }
-    int index(u64 k) const {
-        int i = hash(k);
+    int index(const K& k) const {
+        int i = hash<K>{}(k) >> (64 - LG);
         while (vis[i] && key[i] != k)
             i = (i + 1) & (N - 1);
         return i;
     }
-    T& operator[](u64 k) {
+    V& operator[](const K& k) {
         int i = index(k);
         if (!vis[i]) {
             vis[i] = true;
@@ -27,11 +25,11 @@ struct HashMap {
         }
         return val[i];
     }
-    T get(u64 k, T d = {}) const {
+    V get(const K& k, V d = {}) const {
         int i = index(k);
         return vis[i] ? val[i] : d;
     }
-    bool contains(u64 k) const {
+    bool contains(const K& k) const {
         int i = index(k);
         return vis[i] && key[i] == k;
     }
@@ -51,5 +49,3 @@ struct HashMap {
         delete[] val;
     }
 };
-template <typename T, int LG, bool KEEP_IS>
-const u64 HashMap<T, LG, KEEP_IS>::FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
