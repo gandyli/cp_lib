@@ -126,7 +126,7 @@ using BMInt = BarrettModInt<StaticBarrettReductionContext<u32, Mod>>;
 template <u64 Mod>
 using BMInt64 = BarrettModInt<StaticBarrettReductionContext<u64, Mod>>;
 
-#define SetBMod(T, mod)                             \
+#define SetBMod(T, mod)                            \
     using ctx = DynamicBarrettReductionContext<T>; \
     auto _guard = ctx::set_mod(mod);               \
     using mint = BarrettModInt<ctx>
