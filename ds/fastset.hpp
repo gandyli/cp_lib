@@ -5,16 +5,27 @@ struct FastSet {
     static constexpr u32 B = 64;
     u32 n, lg;
     Vec<Vec<u64>> a;
-    FastSet(u32 n): n(n) {
+    FastSet() = default;
+    FastSet(u32 n) { build(n); }
+    FastSet(u32 n, std::invocable<u32> auto&& f) { build(n, f); }
+    void build(u32 n) {
+        a.clear();
+        this->n = n;
         do {
-            a.eb(n / B + 1);
+            a.eb(ceil(n, B));
             n = ceil(n, B);
         } while (n > 1);
         lg = len(a);
     }
-    bool contains(u32 x) const {
-        return a[0][x / B] >> (x % B) & 1;
+    void build(u32 n, std::invocable<u32> auto&& f) {
+        build(n);
+        _for (i, n)
+            a[0][i / B] |= u64(f(i)) << (i % B);
+        _for (i, lg - 1)
+            _for (j, len(a[i]))
+                a[i + 1][j / B] |= u64(!!a[i][j]) << (j % B);
     }
+    bool contains(u32 x) const { return a[0][x / B] >> (x % B) & 1; }
     void insert(u32 x) {
         _for (i, lg) {
             a[i][x / B] |= 1ULL << (x % B);
@@ -41,7 +52,7 @@ struct FastSet {
                 continue;
             }
             x -= __builtin_clzll(d);
-            _for_r (j, int(i)) {
+            _for_r (j, i) {
                 x *= B;
                 x += B - __builtin_clzll(a[j][x / B]) - 1;
             }
@@ -61,7 +72,7 @@ struct FastSet {
                 continue;
             }
             x += __builtin_ctzll(d);
-            _for_r (j, int(i)) {
+            _for_r (j, i) {
                 x *= B;
                 x += __builtin_ctzll(a[j][x / B]);
             }
