@@ -446,7 +446,7 @@ public:
 } io;
 #ifdef LX_LOCAL
 IO err(nullptr, stderr);
-#define dbg(x) err.write(#x " = "), err.writeln(x)
+#define dbg(x) err.print(#x, '=', x)
 #else
 #define dbg(x) \
     do {       \
