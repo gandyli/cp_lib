@@ -11,7 +11,7 @@ R lcm(const vi& a) {
             chkmax(mp[p], c);
     R x = 1;
     for (auto&& [p, c]: mp)
-        x *= power(R(p), c);
+        x *= power<R>(p, c);
     return x;
 }
 template <typename R>
@@ -24,6 +24,6 @@ R lcm(const vi& a, const vi& lpf) {
             chkmax(mp[p], c);
     R x = 1;
     for (auto&& [p, c]: mp)
-        x *= power(R(p), c);
+        x *= power<R>(p, c);
     return x;
 }

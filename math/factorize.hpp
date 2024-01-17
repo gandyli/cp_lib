@@ -88,7 +88,6 @@ namespace impl {
     struct MontgomeryCurve {
         struct Point {
             mint x, z;
-            T check() const { return std::gcd(z.val(), mint::mod()); }
         };
         MontgomeryCurve(mint a): _a24((a + 2) / 4) {}
         static std::pair<MontgomeryCurve, Point> random_curve_and_point() {
@@ -162,12 +161,12 @@ namespace impl {
     T ecm_modint() {
         constexpr int B1 = 400, B2 = 3000;
         static const Vec<u64> blocks = ecm_blocks(B1);
-        while (true) {
+        loop {
             auto [curve, point] = MontgomeryCurve<mint>::random_curve_and_point();
             T f = 1;
             foreach (blk, blocks) {
                 auto new_point = curve.mul(point, blk);
-                f = new_point.check();
+                f = std::gcd(new_point.z.val(), mint::mod());
                 if (f != 1) {
                     if (f != mint::mod())
                         return f;
@@ -179,10 +178,8 @@ namespace impl {
                 continue;
             auto six = curve.dbl(curve.add(curve.dbl(point), point, point));
             auto q0 = six, q1 = curve.dbl(six);
-            _for (i, 6, B1, 6) {
-                q0 = curve.add(q1, six, q0);
-                swap(q0, q1);
-            }
+            _for (i, 6, B1, 6)
+                q0 = std::exchange(q1, curve.add(q1, six, q0));
             mint xprod(1);
             mint x_norm = point.x / point.z;
             _for (i, B1 / 6 * 6, B2, 6) {
@@ -195,8 +192,7 @@ namespace impl {
                         break;
                     }
                 }
-                q0 = curve.add(q1, six, q0);
-                swap(q0, q1);
+                q0 = std::exchange(q1, curve.add(q1, six, q0));
             }
             if (f == 1) {
                 f = std::gcd(xprod.val(), mint::mod());

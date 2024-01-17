@@ -82,9 +82,9 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
     return primes;
 }
 
-auto prime_table(int N) {
-    Vec<bool> t(N + 1);
-    for (auto p: prime_sieve(N))
+auto prime_table(int n) {
+    Vec<bool> t(n + 1);
+    foreach (p, prime_sieve(n))
         t[p] = true;
     return t;
 }
