@@ -9,7 +9,7 @@ struct Vector_Space {
 
     bool insert(T x) {
         foreach (a, a) {
-            if (!a || !x)
+            if (!x)
                 break;
             chkmin(x, x ^ a);
         }
@@ -22,10 +22,10 @@ struct Vector_Space {
     bool contains(T x) const {
         foreach (a, a) {
             if (!x)
-                break;
+                return true;
             chkmin(x, x ^ a);
         }
-        return !x;
+        return false;
     }
     T max(T x = 0) const {
         T r = x;
