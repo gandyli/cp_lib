@@ -2,7 +2,7 @@
 #include "ds/fenwicktree.hpp"
 
 template <typename TREE, typename Monoid, bool edge = false, bool path_query = true, bool subtree_query = true>
-requires (path_query || subtree_query)
+requires path_query || subtree_query
 struct Tree_AbelGroup {
     using M = Monoid;
     using X = M::value_type;
@@ -55,16 +55,13 @@ struct Tree_AbelGroup {
         if constexpr (subtree_query)
             bit_subtree.multiply(tree.lid[i], x);
     }
-    X prod_path(int u, int v) const
-      requires (path_query)
+    X prod_path(int u, int v) const requires path_query
     {
         int lca = tree.lca(u, v);
         return M::op(bit_path.prod(tree.elid(lca) + 1, tree.elid(u) + 1), bit_path.prod(tree.elid(lca) + edge, tree.elid(v) + 1));
     }
-    X prod_subtree(int u) const
-      requires (subtree_query)
+    X prod_subtree(int u) const requires subtree_query
     { return bit_subtree.prod(tree.lid[u] + edge, tree.rid[u]); }
-    X prod_all() const
-      requires (subtree_query)
+    X prod_all() const requires subtree_query
     { return bit_subtree.prod_all(); }
 };

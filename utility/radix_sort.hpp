@@ -13,8 +13,10 @@ namespace RadixSortImpl {
     void radix_sort(int n, T* p) {
         if (!n)
             return;
-        if (n <= 64)
-            return std::sort(p, p + n);
+        if (n <= 64) {
+            sort(p, p + n);
+            return;
+        }
         static T* tmp = nullptr;
         static int tmp_size = 0;
         if (!tmp || tmp_size < n) {
@@ -40,13 +42,13 @@ namespace RadixSortImpl {
             c2[i + 1] += c2[i];
             c3[i + 1] += c3[i];
         }
-        for (int i = n; i--;)
+        _for_r (i, n)
             tmp[--c0[p[i] & mask]] = p[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             p[--c1[tmp[i] >> b & mask]] = tmp[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             tmp[--c2[p[i] >> b * 2 & mask]] = p[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             p[--c3[tmp[i] >> b * 3 & mask]] = tmp[i];
         if constexpr (sizeof(T) == 8) {
             memset(c0, 0, sizeof(c0));
@@ -54,35 +56,35 @@ namespace RadixSortImpl {
                 c0[p[i] >> b * 4 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 tmp[--c0[p[i] >> b * 4 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
             _for (i, n)
                 c0[tmp[i] >> b * 5 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 p[--c0[tmp[i] >> b * 5 & mask]] = tmp[i];
             memset(c0, 0, sizeof(c0));
             _for (i, n)
                 c0[p[i] >> b * 6 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 tmp[--c0[p[i] >> b * 6 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
             _for (i, n)
                 c0[tmp[i] >> b * 7 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 p[--c0[tmp[i] >> b * 7 & mask]] = tmp[i];
         }
         if constexpr (std::is_signed_v<T>) {
             int i = n;
             while (i && p[i - 1] < 0)
                 i--;
-            std::rotate(p, p + i, p + n);
+            rotate(p, p + i, p + n);
         }
     }
     void radix_sort(auto& v) { radix_sort(len(v), v.data()); }
@@ -92,7 +94,7 @@ namespace RadixSortImpl {
         if (!n)
             return;
         if (n <= 64) {
-            std::stable_sort(p, p + n, [](auto&& s, auto&& t) { return s.first < t.first; });
+            stable_sort(p, p + n, [](auto&& s, auto&& t) { return s.first < t.first; });
             return;
         }
         static std::pair<T, U>* tmp = nullptr;
@@ -109,28 +111,28 @@ namespace RadixSortImpl {
             c0[p[i].first & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             tmp[--c0[p[i].first & mask]] = p[i];
         memset(c0, 0, sizeof(c0));
         _for (i, n)
             c0[tmp[i].first >> b & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             p[--c0[tmp[i].first >> b & mask]] = tmp[i];
         memset(c0, 0, sizeof(c0));
         _for (i, n)
             c0[p[i].first >> b * 2 & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             tmp[--c0[p[i].first >> b * 2 & mask]] = p[i];
         memset(c0, 0, sizeof(c0));
         _for (i, n)
             c0[tmp[i].first >> b * 3 & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
-        for (int i = n; i--;)
+        _for_r (i, n)
             p[--c0[tmp[i].first >> b * 3 & mask]] = tmp[i];
 
         if constexpr (sizeof(T) == 8) {
@@ -139,28 +141,28 @@ namespace RadixSortImpl {
                 c0[p[i].first >> b * 4 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 tmp[--c0[p[i].first >> b * 4 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
             _for (i, n)
                 c0[tmp[i].first >> b * 5 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 p[--c0[tmp[i].first >> b * 5 & mask]] = tmp[i];
             memset(c0, 0, sizeof(c0));
             _for (i, n)
                 c0[p[i].first >> b * 6 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 tmp[--c0[p[i].first >> b * 6 & mask]] = p[i];
             memset(c0, 0, sizeof(c0));
             _for (i, n)
                 c0[tmp[i].first >> b * 7 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
-            for (int i = n; i--;)
+            _for_r (i, n)
                 p[--c0[tmp[i].first >> b * 7 & mask]] = tmp[i];
         }
 
@@ -168,7 +170,7 @@ namespace RadixSortImpl {
             int i = n;
             while (i && p[i - 1].first < 0)
                 i--;
-            std::rotate(p, p + i, p + n);
+            rotate(p, p + i, p + n);
         }
     }
     void radix_sort_compare_first(auto& v) { radix_sort_compare_first(len(v), v.data()); }

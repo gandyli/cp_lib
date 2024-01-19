@@ -116,7 +116,8 @@ public:
         return (dep[x] <= dep[u] && dep[x] >= dep[w] && k_ancestor(u, dep[u] - dep[x]) == x) || (dep[x] <= dep[v] && dep[x] >= dep[w] && k_ancestor(v, dep[v] - dep[x]) == x);
     }
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
-    T wdist(int u, int v) const { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
+    T wdist(int u, int v) const requires weighted
+    { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
     Vec<pi> path_decomposition(int u, int v, bool edge) const {
         Vec<pi> up, down;
         while (top[u] != top[v])

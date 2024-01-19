@@ -5,7 +5,7 @@ template <typename Z, bool EXTEND = true>
 struct Comb {
     Vec<Z> f, g, h;
 
-    Comb() requires (EXTEND)
+    Comb() requires EXTEND
         : f{1}, g{1}, h{1} {}
     Comb(int n): Comb() { extend(n + 1); }
     void extend(int m = -1) {
