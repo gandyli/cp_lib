@@ -41,3 +41,5 @@ template <typename T>
 concept Unsigned = std::unsigned_integral<T> || std::is_same_v<T, u128>;
 template <typename T>
 concept Integer = Signed<T> || Unsigned<T>;
+template <typename T>
+concept Modint = requires { T::mod(); };
