@@ -18,11 +18,7 @@ namespace ArbitraryNTT {
     template <typename T, typename mint>
     Vec<mint> mul(const Vec<T>& a, const Vec<T>& b) {
         static NTT<mint> ntt;
-        Vec<mint> s(len(a)), t(len(b));
-        _for (i, len(a))
-            s[i] = a[i] % mint::mod();
-        _for (i, len(b))
-            t[i] = b[i] % mint::mod();
+        Vec<mint> s(all(a)), t(all(b));
         return ntt.multiply(s, t);
     }
     template <typename T>

@@ -28,22 +28,17 @@ struct NTT {
         if (len(a) <= 1)
             return;
         if (k == 1) {
-            mint a1 = a[1];
-            a[1] = a[0] - a[1];
-            a[0] = a[0] + a1;
+            a[0] += std::exchange(a[1], a[0] - a[1]);
             return;
         }
         if (k & 1) {
             int v = 1 << (k - 1);
-            _for (j, v) {
-                mint ajv = a[j + v];
-                a[j + v] = a[j] - ajv;
-                a[j] += ajv;
-            }
+            _for (j, v)
+                a[j] += std::exchange(a[j + v], a[j] - a[j + v]);
         }
         int u = 1 << (2 + (k & 1));
         int v = 1 << (k - 2 - (k & 1));
-        mint one = mint(1);
+        mint one(1);
         mint imag = dw[1];
         while (v) {
             // jh = 0
@@ -132,11 +127,8 @@ struct NTT {
         }
         if (k & 1) {
             u = 1 << (k - 1);
-            _for (j, u) {
-                mint ajv = a[j] - a[j + u];
-                a[j] += a[j + u];
-                a[j + u] = ajv;
-            }
+            _for (j, u)
+                a[j] += std::exchange(a[j + u], a[j] - a[j + u]);
         }
     }
 
@@ -168,7 +160,6 @@ struct NTT {
         int k = 2, M = 4;
         while (M < l)
             M <<= 1, k++;
-        setwy(k);
         Vec<mint> s(M);
         _for (i, len(a))
             s[i] = a[i];
