@@ -63,7 +63,7 @@ vc<U> convolution(const vc<T>& a, const vc<T>& b) {
     if (!n || !m)
         return {};
     if (min(n, m) <= 2500)
-        return convolution_naive(a, b);
+        return convolution_naive<T, U>(a, b);
     vc<mint0> a0(n), b0(m);
     vc<mint1> a1(n), b1(m);
     vc<mint2> a2(n), b2(m);
