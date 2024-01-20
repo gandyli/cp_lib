@@ -119,7 +119,7 @@ struct DynamicBarrettReductionContext {
     static constexpr const br_type& barrett_reduction() { return _reduction_env.back(); }
 
 private:
-    static inline Vec<br_type> _reduction_env;
+    static inline vc<br_type> _reduction_env;
 };
 template <u32 Mod>
 using BMInt = BarrettModInt<StaticBarrettReductionContext<u32, Mod>>;

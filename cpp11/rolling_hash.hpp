@@ -3,7 +3,7 @@
 
 struct RollingHash {
     static constexpr u64 P = (1ull << 61) - 1;
-    std::vector<u64> power;
+    vc<u64> power;
     static u64 add(u64 a, u64 b) {
         a += b;
         if (a >= P)
@@ -32,8 +32,8 @@ struct RollingHash {
     const u64 base;
     RollingHash(u64 base = generateBase()): power{1}, base(base) {}
     template <typename T>
-    std::vector<u64> build(T&& s) const {
-        std::vector<u64> ans(s.size() + 1);
+    vc<u64> build(T&& s) const {
+        vc<u64> ans(s.size() + 1);
         for (std::size_t i = 0; i < s.size(); i++)
             ans[i + 1] = add(mul(ans[i], base), s[i]);
         return ans;
@@ -53,21 +53,21 @@ struct RollingHash {
                 power[i + 1] = mul(power[i], base);
         }
     }
-    u64 query(const std::vector<u64>& h, int l, int r) {
+    u64 query(const vc<u64>& h, int l, int r) {
         expand(r - l);
         return add(h[r], P - mul(h[l], power[r - l]));
     }
-    u64 query(const std::vector<u64>& h, int r) {
+    u64 query(const vc<u64>& h, int r) {
         return query(h, 0, r);
     }
-    u64 query(const std::vector<u64>& h) {
+    u64 query(const vc<u64>& h) {
         return query(h, 0, h.size() - 1);
     }
     u64 combine(u64 h1, u64 h2, u64 s) {
         expand(s);
         return add(mul(h1, power[s]), h2);
     }
-    int lcp(const std::vector<u64>& h0, int l0, int r0, const std::vector<u64>& h1, int l1, int r1) {
+    int lcp(const vc<u64>& h0, int l0, int r0, const vc<u64>& h1, int l1, int r1) {
         int l = 0, r = std::min(r0 - l0, r1 - l1);
         while (l < r) {
             int m = (l + r + 1) >> 1;

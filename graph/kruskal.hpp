@@ -5,7 +5,7 @@
 template <typename T, typename G>
 struct KruskalResult {
     T cost;
-    Vec<bool> in;
+    vc<bool> in;
     G mst;
 };
 template <typename T>
@@ -16,7 +16,7 @@ auto kruskal(const auto& g) {
     sort(I, [&](int i, int j) { return g.edges[i].cost < g.edges[j].cost; });
     UnionFind uf(n);
     T cost{};
-    Vec<bool> in(m);
+    vc<bool> in(m);
     std::decay_t<decltype(g)> mst(n, n - 1);
     foreach (i, I)
         if (auto&& e = g.edges[i]; uf.merge(e.from, e.to)) {

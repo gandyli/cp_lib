@@ -2,9 +2,9 @@
 #include "template.hpp"
 
 template <typename mint>
-Vec<mint> all_inverse(Vec<mint>& a) {
+vc<mint> all_inverse(vc<mint>& a) {
     const int n = len(a);
-    Vec<mint> r(n + 1);
+    vc<mint> r(n + 1);
     r[0] = 1;
     _for (i, n)
         r[i + 1] = r[i] * a[i];

@@ -9,13 +9,13 @@ auto K_shortest_path(const DirectedGraph auto& g, int s, int t, int K) {
         T dist;
         vi vs, es;
     };
-    Vec<Result> res;
-    Vec<std::pair<vi, vi>> nodes{{}};
-    Vec<std::tuple<T, vi, vi, int>> paths;
+    vc<Result> res;
+    vc<std::pair<vi, vi>> nodes{{}};
+    vc<std::tuple<T, vi, vi, int>> paths;
 
-    Vec<T> dist(n, inf<T>);
-    Vec<bool> ng_v(n);
-    Vec<bool> ng_e(g.m);
+    vc<T> dist(n, inf<T>);
+    vc<bool> ng_v(n);
+    vc<bool> ng_e(g.m);
     vi par(n, -1);
 
     while (len(res) < K) {

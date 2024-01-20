@@ -13,7 +13,7 @@ int longest_common_subsequence(auto&& a, auto&& b) {
     }
     return d[n];
 }
-Vec<pi> longest_common_subsequence_result(auto&& a, auto&& b) {
+vc<pi> longest_common_subsequence_result(auto&& a, auto&& b) {
     int n = len(a), m = len(b);
     VEC(int, d, n + 1, m + 1);
     _for (i, n) {
@@ -24,7 +24,7 @@ Vec<pi> longest_common_subsequence_result(auto&& a, auto&& b) {
                 chkmax(d[i + 1][j + 1], d[i][j] + 1);
         }
     }
-    Vec<pi> r;
+    vc<pi> r;
     int i = n, j = m;
     while (d[i][j])
         if (d[i][j] == d[i - 1][j])

@@ -3,9 +3,9 @@
 #include "ds/unionfind.hpp"
 
 template <typename T>
-Graph<T> manhattan_mst(Vec<std::pair<T, T>>& a) {
+Graph<T> manhattan_mst(vc<std::pair<T, T>>& a) {
     const int n = len(a);
-    Vec<std::tuple<T, int, int>> dat;
+    vc<std::tuple<T, int, int>> dat;
     dat.reserve(4 * n);
     vi I(n);
     iota(all(I), 0);

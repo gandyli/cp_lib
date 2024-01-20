@@ -261,7 +261,7 @@ private:
     static vi _mul_naive(const vi& a, const vi& b) {
         if (a.empty() || b.empty())
             return {};
-        Vec<i64> prod(len(a) + len(b));
+        vc<i64> prod(len(a) + len(b));
         _for (i, len(a))
             _for (j, len(b))
                 if (prod[i + j] += i64(a[i]) * b[j]; prod[i + j] >= 4LL * D * D) {

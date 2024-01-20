@@ -9,7 +9,7 @@ struct RemovableQueue: private Q {
     bool empty() const { return !size(); }
 
     RemovableQueue() = default;
-    RemovableQueue(const Vec<T>& a): Q(all(a)) {}
+    RemovableQueue(const vc<T>& a): Q(all(a)) {}
     T pop() {
         T top = this->top();
         Q::pop();

@@ -5,15 +5,15 @@ template <typename T, bool COMPRESS = true, int LG = -1>
 struct Wavelet_Matrix {
     using X = std::conditional_t<COMPRESS, int, T>;
     int n, lg;
-    Vec<Bit_Vector> b;
+    vc<Bit_Vector> b;
     vi pos;
-    Vec<T> c;
+    vc<T> c;
     Wavelet_Matrix() = default;
-    Wavelet_Matrix(const Vec<T>& a) { build(a); }
-    void build0(Vec<X> a) {
+    Wavelet_Matrix(const vc<T>& a) { build(a); }
+    void build0(vc<X> a) {
         pos.resize(lg);
         b.assign(lg, n);
-        Vec<X> a0(n), a1(n);
+        vc<X> a0(n), a1(n);
         _for_r (d, lg) {
             int p = 0, q = 0;
             _for (i, n) {
@@ -28,7 +28,7 @@ struct Wavelet_Matrix {
             copy(a1.begin(), a1.begin() + q, a.begin() + p);
         }
     }
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         n = len(a);
         if constexpr (COMPRESS) {
             c.reserve(n);

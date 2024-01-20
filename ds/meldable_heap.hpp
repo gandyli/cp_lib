@@ -43,8 +43,8 @@ struct Meldable_Heap: public Compare {
     Node* push(Node* a, const T& x) { return meld(a, new_node(x)); }
     Node* pop(Node* a) { return meld(a->l, a->r); }
     static T top(Node* a) { return a->x; }
-    static Vec<T> get_all(Node* a) {
-        Vec<T> r;
+    static vc<T> get_all(Node* a) {
+        vc<T> r;
         auto dfs = [&](auto&& dfs, Node* a) {
             if (!a)
                 return;

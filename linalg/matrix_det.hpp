@@ -1,7 +1,7 @@
 #pragma once
 #include "modint/barrett_reduction.hpp"
 
-u32 matrix_det_mod(Vec<Vec<u32>> a, u32 mod) {
+u32 matrix_det_mod(vvc<u32> a, u32 mod) {
     const int n = len(a);
     ASSERT(n == len(a[0]));
 
@@ -33,7 +33,7 @@ u32 matrix_det_mod(Vec<Vec<u32>> a, u32 mod) {
     return det;
 }
 template <typename mint>
-mint matrix_det(const Vec<Vec<mint>>& a) {
+mint matrix_det(const vvc<mint>& a) {
     const int n = len(a);
     VEC(u32, b, n, n);
     _for (i, n)

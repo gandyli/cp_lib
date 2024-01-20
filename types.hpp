@@ -1,7 +1,6 @@
 #pragma once
 #include <bits/stdc++.h>
 
-#define Vec std::vector
 using u8 = unsigned char;
 using u16 = unsigned short;
 using u32 = unsigned int;
@@ -16,15 +15,20 @@ using i64 = long long;
 using i128 = __int128;
 using f64 = double;
 using ld = long double;
-using vi = Vec<int>;
-using vvi = Vec<vi>;
-using vvvi = Vec<vvi>;
+#define vc std::vector
+template <typename T>
+using vvc = vc<vc<T>>;
+template <typename T>
+using vvvc = vc<vvc<T>>;
+using vi = vc<int>;
+using vvi = vc<vi>;
+using vvvi = vc<vvi>;
 using pi = std::pair<int, int>;
 using str = std::string;
 template <typename T>
 using PQ = std::priority_queue<T>;
 template <typename T>
-using PQG = std::priority_queue<T, Vec<T>, std::greater<>>;
+using PQG = std::priority_queue<T, vc<T>, std::greater<>>;
 template <typename T>
 struct make_unsigned: public std::make_unsigned<T> {};
 template <>

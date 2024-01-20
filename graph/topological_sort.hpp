@@ -3,7 +3,7 @@
 
 vi toposort(const DirectedGraph auto& g) {
     const int n = g.n;
-    Vec<bool> vis(n), ins(n);
+    vc<bool> vis(n), ins(n);
     vi r;
     auto dfs = [&](auto&& dfs, int u) {
         if (ins[u])

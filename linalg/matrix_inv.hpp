@@ -2,7 +2,7 @@
 #include "template.hpp"
 
 template <typename T>
-std::pair<Vec<Vec<T>>, T> matrix_inv(Vec<Vec<T>> a) {
+std::pair<vvc<T>, T> matrix_inv(vvc<T> a) {
     const int n = len(a);
     ASSERT(n == len(a[0]));
     VEC(T, b, n, n);

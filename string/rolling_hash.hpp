@@ -4,7 +4,7 @@
 
 class Rollinghash {
     using mint = MMInt61;
-    static Vec<mint> p;
+    static vc<mint> p;
     static u64 generateBase() { return rnd(1, mint::mod()); }
     static const mint base;
     void init(auto&& s) {
@@ -19,11 +19,11 @@ class Rollinghash {
                 p[i + 1] = p[i] * base;
         }
     }
-    Vec<mint> h;
+    vc<mint> h;
 
 public:
     template <typename T>
-    Rollinghash(const Vec<T>& s) { init(s); }
+    Rollinghash(const vc<T>& s) { init(s); }
     Rollinghash(const str& s) { init(s); }
     static mint hash(auto&& s) {
         mint ans = 0;
@@ -54,4 +54,4 @@ public:
     }
 };
 const Rollinghash::mint Rollinghash::base = Rollinghash::generateBase();
-Vec<Rollinghash::mint> Rollinghash::p{1ULL};
+vc<Rollinghash::mint> Rollinghash::p{1ULL};

@@ -115,7 +115,7 @@ struct DynamicMontgomeryReductionContext {
     static constexpr const mr_type& montgomery_reduction() { return _reduction_env.back(); }
 
 private:
-    static inline Vec<mr_type> _reduction_env;
+    static inline vc<mr_type> _reduction_env;
 };
 
 template <u32 Mod>

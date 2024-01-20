@@ -7,12 +7,12 @@ struct FenwickTree {
     using X = M::value_type;
 
     int n;
-    Vec<X> a;
+    vc<X> a;
     X sum;
     FenwickTree() = default;
     FenwickTree(int n) { build(n); }
     template <std::convertible_to<X> T>
-    FenwickTree(const Vec<T>& a) { build(a); }
+    FenwickTree(const vc<T>& a) { build(a); }
     FenwickTree(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
@@ -21,7 +21,7 @@ struct FenwickTree {
         sum = M::unit();
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {
@@ -47,8 +47,8 @@ struct FenwickTree {
             a[i - 1] = M::op(a[i - 1], x);
     }
     X get(int i) const { return prod(i, i + 1); }
-    Vec<X> get_all() const {
-        Vec<X> a = this->a;
+    vc<X> get_all() const {
+        vc<X> a = this->a;
         _for_r (i, 1, n + 1) {
             int j = i + lowbit(i);
             if (j <= n)

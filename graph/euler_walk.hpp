@@ -31,7 +31,7 @@ EulerWalkResult euler_walk(const auto& g, int s = -1) {
         return {{s}, {}};
     vi D(n), is(all(g.indptr) - 1), st{s}, vs;
     D[s]++;
-    Vec<bool> vis(m);
+    vc<bool> vis(m);
     while (!st.empty()) {
         int u = st.back(), &i = is[u];
         if (i == g.indptr[u + 1]) {

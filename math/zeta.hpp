@@ -2,7 +2,7 @@
 #include "math/prime/sieve.hpp"
 
 template <typename T>
-void divisor_zeta(Vec<T>& a) {
+void divisor_zeta(vc<T>& a) {
     ASSERT(a[0] == 0);
     int n = len(a) - 1;
     foreach (p, prime_sieve(n))
@@ -11,7 +11,7 @@ void divisor_zeta(Vec<T>& a) {
 }
 
 template <typename T>
-void divisor_mobius(Vec<T>& a) {
+void divisor_mobius(vc<T>& a) {
     ASSERT(a[0] == 0);
     int n = len(a) - 1;
     foreach (p, prime_sieve(n))
@@ -20,7 +20,7 @@ void divisor_mobius(Vec<T>& a) {
 }
 
 template <typename T>
-void multiplier_zeta(Vec<T>& a) {
+void multiplier_zeta(vc<T>& a) {
     ASSERT(a[0] == 0);
     int n = len(a) - 1;
     foreach (p, prime_sieve(n))
@@ -29,7 +29,7 @@ void multiplier_zeta(Vec<T>& a) {
 }
 
 template <typename T>
-void multiplier_mobius(Vec<T>& a) {
+void multiplier_mobius(vc<T>& a) {
     ASSERT(a[0] == 0);
     int n = len(a) - 1;
     foreach (p, prime_sieve(n))

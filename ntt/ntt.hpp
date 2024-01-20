@@ -24,7 +24,7 @@ struct NTT {
 
     constexpr NTT() { setwy(lvl); }
 
-    void fft4(Vec<mint>& a, int k) {
+    void fft4(vc<mint>& a, int k) {
         if (len(a) <= 1)
             return;
         if (k == 1) {
@@ -77,7 +77,7 @@ struct NTT {
         }
     }
 
-    void ifft4(Vec<mint>& a, int k) {
+    void ifft4(vc<mint>& a, int k) {
         if (len(a) <= 1)
             return;
         if (k == 1) {
@@ -132,12 +132,12 @@ struct NTT {
         }
     }
 
-    void ntt(Vec<mint>& a) {
+    void ntt(vc<mint>& a) {
         if (len(a) <= 1)
             return;
         fft4(a, __builtin_ctz(len(a)));
     }
-    void intt(Vec<mint>& a) {
+    void intt(vc<mint>& a) {
         if (len(a) <= 1)
             return;
         ifft4(a, __builtin_ctz(len(a)));
@@ -146,12 +146,12 @@ struct NTT {
             x *= iv;
     }
 
-    Vec<mint> multiply(const Vec<mint>& a, const Vec<mint>& b) {
+    vc<mint> multiply(const vc<mint>& a, const vc<mint>& b) {
         if (a.empty() && b.empty())
             return {};
         int l = len(a) + len(b) - 1;
         if (min(len(a), len(b)) <= 40) {
-            Vec<mint> s(l);
+            vc<mint> s(l);
             _for (i, len(a))
                 _for (j, len(b))
                     s[i + j] += a[i] * b[j];
@@ -160,7 +160,7 @@ struct NTT {
         int k = 2, M = 4;
         while (M < l)
             M <<= 1, k++;
-        Vec<mint> s(M);
+        vc<mint> s(M);
         _for (i, len(a))
             s[i] = a[i];
         fft4(s, k);
@@ -168,7 +168,7 @@ struct NTT {
             _for (i, M)
                 s[i] *= s[i];
         else {
-            Vec<mint> t(M);
+            vc<mint> t(M);
             _for (i, len(b))
                 t[i] = b[i];
             fft4(t, k);
@@ -182,7 +182,7 @@ struct NTT {
             s[i] *= invm;
         return s;
     }
-    void ntt_doubling(Vec<mint>& a) {
+    void ntt_doubling(vc<mint>& a) {
         int M = len(a);
         auto b = a;
         intt(b);

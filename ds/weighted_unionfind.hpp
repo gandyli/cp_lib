@@ -8,7 +8,7 @@ struct Weighted_UnionFind {
 
     int n, comp;
     vi a;
-    Vec<X> w;
+    vc<X> w;
     Weighted_UnionFind(int n = 0) { build(n); }
     void build(int n) {
         this->n = comp = n;

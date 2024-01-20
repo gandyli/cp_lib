@@ -5,7 +5,7 @@
 namespace impl {
     template <typename T>
     struct FactorizationResult {
-        std::vector<T> factors, prime_factors;
+        vc<T> factors, prime_factors;
     };
 
     template <typename mint, typename T>
@@ -149,9 +149,9 @@ namespace impl {
     private:
         mint _a24;
     };
-    std::vector<u64> ecm_blocks(int smooth_bound) {
-        std::vector<bool> sieve(smooth_bound + 1, true);
-        std::vector<u64> blocks{1};
+    vc<u64> ecm_blocks(int smooth_bound) {
+        vc<bool> sieve(smooth_bound + 1, true);
+        vc<u64> blocks{1};
         for (int p = 2; p <= smooth_bound; p++) {
             if (sieve[p]) {
                 int pw = p;
@@ -174,7 +174,7 @@ namespace impl {
     template <typename mint, typename T = typename mint::int_type>
     T ecm_modint() {
         constexpr int B1 = 400, B2 = 3000;
-        static const std::vector<u64> blocks = ecm_blocks(B1);
+        static const vc<u64> blocks = ecm_blocks(B1);
         while (true) {
             auto res = MontgomeryCurve<mint>::random_curve_and_point();
             auto &curve = res.first, &point = res.second;
@@ -305,7 +305,7 @@ namespace impl {
 } // namespace impl
 
 template <typename T, typename std::enable_if<std::is_unsigned<T>::value>::type* = nullptr>
-std::vector<T> factorize(T n) {
+vc<T> factorize(T n) {
     if (n <= 1)
         return {};
     int twos = __builtin_ctzll(n);

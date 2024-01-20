@@ -11,8 +11,8 @@ struct Sortable_Array {
     int id{};
     int n, m;
     FastSet s;
-    Vec<Node*> root;
-    Vec<u8> rev;
+    vc<Node*> root;
+    vc<u8> rev;
     Sortable_Array(int m, const vi& a): n(len(a)), m(m) { init(a); }
     void set(int i, int x) {
         split_at(i), split_at(i + 1);

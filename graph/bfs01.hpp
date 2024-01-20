@@ -3,19 +3,19 @@
 
 template <typename T>
 struct BFS01Result1 {
-    Vec<T> dis;
+    vc<T> dis;
     vi par;
 };
 template <typename T>
 struct BFS01Result2 {
-    Vec<T> dis;
+    vc<T> dis;
     vi par;
     vi root;
 };
 template <typename T>
 auto bfs01(const auto& g, int s = 0) {
     const int n = g.n;
-    Vec dis(n, inf<T>);
+    vc dis(n, inf<T>);
     vi par(n, -1);
     std::deque<int> q;
     dis[s] = 0;
@@ -36,7 +36,7 @@ auto bfs01(const auto& g, int s = 0) {
 template <typename T>
 auto bfs01(const auto& g, const vi& s) {
     const int n = g.n;
-    Vec dis(n, inf<T>);
+    vc dis(n, inf<T>);
     vi par(n, -1);
     vi root(n, -1);
     std::deque<int> q;

@@ -11,7 +11,7 @@ template <typename mint>
 void test0() {
     vi N{1, 2, 3, 4, 5, 100000};
     foreach (n, N) {
-        Vec<mint> a(n);
+        vc<mint> a(n);
         _for (i, n)
             a[i] = rnd(1, mint::mod());
         auto b = all_inverse(a);

@@ -76,42 +76,42 @@ template <typename T, std::size_t N>
 constexpr int len(const T (&)[N]) { return N; }
 
 template <typename T>
-Vec<T> psum(const Vec<T>& a) {
+vc<T> psum(const vc<T>& a) {
     int n = len(a);
-    Vec<T> b(len(a) + 1);
+    vc<T> b(len(a) + 1);
     _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
 }
 template <typename T, typename U>
-Vec<T> psum(U&& a) {
+vc<T> psum(U&& a) {
     int n = len(a);
-    Vec<T> b(len(a) + 1);
+    vc<T> b(len(a) + 1);
     _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
 }
 
 template <typename T>
-Vec<T> vec(usize n) { return Vec<T>(n); }
+vc<T> vec(usize n) { return vc<T>(n); }
 template <typename T, typename... Args>
-auto vec(usize n, Args&&... s) -> decltype(Vec<decltype(vec<T>(s...))>(n, vec<T>(s...))) {
-    return Vec<decltype(vec<T>(s...))>(n, vec<T>(s...));
+auto vec(usize n, Args&&... s) -> decltype(vc<decltype(vec<T>(s...))>(n, vec<T>(s...))) {
+    return vc<decltype(vec<T>(s...))>(n, vec<T>(s...));
 }
 template <typename T>
-Vec<typename std::decay<T>::type> veci(usize n, T&& x) {
-    return Vec<typename std::decay<T>::type>(n, x);
+vc<typename std::decay<T>::type> veci(usize n, T&& x) {
+    return vc<typename std::decay<T>::type>(n, x);
 }
 template <typename... Args>
-auto veci(usize n, Args&&... s) -> Vec<decltype(veci(s...))> {
-    return Vec<decltype(veci(s...))>(n, veci(s...));
+auto veci(usize n, Args&&... s) -> vc<decltype(veci(s...))> {
+    return vc<decltype(veci(s...))>(n, veci(s...));
 }
 // template <typename... Args>
 // auto veci(usize n, Args&&... s) {
 //     if (sizeof...(s) == 1)
-//         return Vec(n, s...);
+//         return vc(n, s...);
 //     else
-//         return Vec(n, veci(s...));
+//         return vc(n, veci(s...));
 // }
 
 #define lc (o << 1)
@@ -132,7 +132,7 @@ auto veci(usize n, Args&&... s) -> Vec<decltype(veci(s...))> {
     io.read(a)
 
 template <typename T>
-vi argsort(Vec<T>& a) {
+vi argsort(vc<T>& a) {
     vi p(len(a));
     std::iota(all(p), 0);
     sort(p, [&](int i, int j) { return std::make_pair(a[i], i) < std::make_pair(a[j], j); });

@@ -7,7 +7,7 @@ enum class Connectivity : u8 {
 };
 
 template <typename V>
-vvi grid_bfs(const Vec<V>& g, int sx, int sy, V wall, Connectivity conn = Connectivity::Four) {
+vvi grid_bfs(const vc<V>& g, int sx, int sy, V wall, Connectivity conn = Connectivity::Four) {
     const int n = len(g), m = len(g[0]);
     VECI(dis, n, m, inf<int>);
     dis[sx][sy] = 0;

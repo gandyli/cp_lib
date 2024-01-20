@@ -8,7 +8,7 @@ int main() {
     Graph g(n);
     g.read_graph(m, false, 0);
     auto [bcc, comp] = two_edge_component(g);
-    Vec<pi> ans;
+    vc<pi> ans;
     foreach (e, g.edges)
         if (comp[e.from] != comp[e.to]) {
             if (e.from < e.to)

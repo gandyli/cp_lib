@@ -3,13 +3,13 @@
 
 template <typename T>
 struct BellmanFordResult {
-    Vec<T> dis;
+    vc<T> dis;
     vi par;
 };
 template <typename T>
 auto BellmanFord(const auto& g, int s = 0) {
     const int n = g.n;
-    Vec dis(n, inf<T>);
+    vc dis(n, inf<T>);
     vi par(n, -1);
     dis[s] = 0;
     int cnt = 0;

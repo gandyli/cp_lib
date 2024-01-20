@@ -2,7 +2,7 @@
 #include "template.hpp"
 
 struct Bit_Vector {
-    Vec<std::pair<u32, u32>> a;
+    vc<std::pair<u32, u32>> a;
     Bit_Vector(int n): a((n + 63) >> 5) {}
     void set(int i) { a[i >> 5].first |= 1U << (i & 31); }
     void reset(int i) { a[i >> 5].first &= ~(1U << (i & 31)); }

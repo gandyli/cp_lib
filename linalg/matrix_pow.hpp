@@ -2,7 +2,7 @@
 #include "linalg/matrix_mul.hpp"
 
 template <typename T>
-Vec<Vec<T>> matrix_pow(Vec<Vec<T>> a, auto b) {
+vvc<T> matrix_pow(vvc<T> a, auto b) {
     const int n = len(a);
     ASSERT(n == len(a[0]));
     VEC(T, ans, n, n);

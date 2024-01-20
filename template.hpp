@@ -61,9 +61,9 @@ constexpr auto sum(input_range auto&& r) { return std::accumulate(all(r), range_
 constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(all(r), init); }
 constexpr int len(auto&& x) { return size(x); }
 template <typename T>
-auto cumsum(const Vec<T>& a) {
+auto cumsum(const vc<T>& a) {
     int n = len(a);
-    Vec<T> b(n + 1);
+    vc<T> b(n + 1);
     _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
@@ -71,7 +71,7 @@ auto cumsum(const Vec<T>& a) {
 template <typename T>
 auto cumsum(auto&& a) {
     int n = len(a);
-    Vec<T> b(n + 1);
+    vc<T> b(n + 1);
     _for (i, n)
         b[i + 1] = b[i] + a[i];
     return b;
@@ -79,18 +79,18 @@ auto cumsum(auto&& a) {
 template <typename T>
 auto vec(usize n, auto&&... s) {
     if constexpr (!sizeof...(s))
-        return Vec<T>(n);
+        return vc<T>(n);
     else
-        return Vec(n, vec<T>(s...));
+        return vc(n, vec<T>(s...));
 }
 auto veci(usize n, auto&&... s) {
     if constexpr (sizeof...(s) == 1)
-        return Vec(n, s...);
+        return vc(n, s...);
     else
-        return Vec(n, veci(s...));
+        return vc(n, veci(s...));
 }
 template <typename T>
-vi argsort(const Vec<T>& a) {
+vi argsort(const vc<T>& a) {
     vi p(len(a));
     iota(all(p), 0);
     sort(p, [&](int i, int j) { return std::pair{a[i], i} < std::pair{a[j], j}; });
@@ -103,7 +103,7 @@ vi sshift(const str& s, char c = 'a') {
     return a;
 }
 template <typename T>
-T pop(Vec<T>& q) {
+T pop(vc<T>& q) {
     T r = std::move(q.back());
     q.pop_back();
     return r;

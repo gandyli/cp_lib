@@ -3,7 +3,7 @@
 
 template <typename Z, bool EXTEND = true>
 struct Comb {
-    Vec<Z> f, g, h;
+    vc<Z> f, g, h;
 
     Comb() requires EXTEND
         : f{1}, g{1}, h{1} {}
@@ -62,7 +62,7 @@ struct Comb {
         return fac(n) * finv(n - m);
     }
     template <Integer T>
-    Z multinomial(const Vec<T>& a) {
+    Z multinomial(const vc<T>& a) {
         int n = 0;
         Z r = 1;
         foreach (x, a) {
@@ -74,5 +74,5 @@ struct Comb {
     }
     Z operator()(int n, int m) { return C(n, m); }
     template <Integer T>
-    Z operator()(const Vec<T>& a) { return multinomial(a); }
+    Z operator()(const vc<T>& a) { return multinomial(a); }
 };

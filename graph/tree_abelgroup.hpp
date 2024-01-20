@@ -11,18 +11,18 @@ struct Tree_AbelGroup {
     FenwickTree<M> bit_path, bit_subtree;
     Tree_AbelGroup(const TREE& tree): tree(tree) { build(); }
     template <std::convertible_to<X> T>
-    Tree_AbelGroup(const TREE& tree, const Vec<T>& a): tree(tree) { build(a); }
+    Tree_AbelGroup(const TREE& tree, const vc<T>& a): tree(tree) { build(a); }
     Tree_AbelGroup(const TREE& tree, std::invocable<int> auto&& f): tree(tree) { build(f); }
     void build() {
         build([&](int) { return M::unit(); });
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build([&](int i) { return a[i]; });
     }
     void build(std::invocable<int> auto&& f) {
         n = tree.n;
-        Vec<X> a, b;
+        vc<X> a, b;
         if constexpr (path_query)
             a.resize(n << 1);
         if constexpr (subtree_query)

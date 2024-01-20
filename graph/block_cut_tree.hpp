@@ -7,7 +7,7 @@ Graph<int> block_cut_tree(const UndirectedGraph auto& g) {
     st.reserve(n);
     int m = n;
     int id = 0;
-    Vec<pi> edges;
+    vc<pi> edges;
     auto dfs = [&](auto&& dfs, int u, int f) -> void {
         st.eb(u);
         dfn[u] = low[u] = id++;

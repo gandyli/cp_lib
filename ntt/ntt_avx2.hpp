@@ -491,7 +491,7 @@ struct NTT {
         }
     }
 
-    void ntt(Vec<mint>& a) {
+    void ntt(vc<mint>& a) {
         int M = len(a);
         _for (i, M)
             buf1[i] = a[i];
@@ -500,7 +500,7 @@ struct NTT {
             a[i] = buf1[i];
     }
 
-    void intt(Vec<mint>& a) {
+    void intt(vc<mint>& a) {
         int M = len(a);
         _for (i, M)
             buf1[i] = a[i];
@@ -509,12 +509,12 @@ struct NTT {
             a[i] = buf1[i];
     }
 
-    Vec<mint> multiply(const Vec<mint>& a, const Vec<mint>& b) {
+    vc<mint> multiply(const vc<mint>& a, const vc<mint>& b) {
         if (a.empty() && b.empty())
             return {};
         int l = len(a) + len(b) - 1;
         if (min(len(a), len(b)) <= 40) {
-            Vec<mint> s(l);
+            vc<mint> s(l);
             _for (i, len(a))
                 _for (j, len(b))
                     s[i + j] += a[i] * b[j];
@@ -537,14 +537,14 @@ struct NTT {
         _for (i, M)
             buf1[i] *= buf2[i];
         intt(buf1, M, false);
-        Vec<mint> s(l);
+        vc<mint> s(l);
         mint invm = mint(M).inv();
         _for (i, l)
             s[i] = buf1[i] * invm;
         return s;
     }
 
-    void ntt_doubling(Vec<mint>& a) {
+    void ntt_doubling(vc<mint>& a) {
         int M = len(a);
         _for (i, M)
             buf1[i] = a[i];

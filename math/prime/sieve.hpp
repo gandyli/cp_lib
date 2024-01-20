@@ -11,7 +11,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
     auto approx_prime_count = [](int n) -> int { return n > 60184 ? n / (log(n) - 1.1) : max(1., n / (log(n) - 1.11)) + 1; };
 
     const int v = int(sqrt(n)) + 1, vv = int(sqrt(sqrt(n))) + 1;
-    Vec<bool> isp(v, true);
+    vc<bool> isp(v, true);
     _for (i, 2, vv)
         if (isp[i])
             _for (j, i * i, v, i)
@@ -22,7 +22,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
     int psize = 3;
     primes.resize(rsize);
 
-    Vec<P> sprimes;
+    vc<P> sprimes;
     usize pbeg = 0;
     int prod = 1;
     _for (p, 7, v)
@@ -39,7 +39,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
             sprimes.push_back(pp);
         }
 
-    Vec<u8> pre(prod, 0xff);
+    vc<u8> pre(prod, 0xff);
     _for (pi, pbeg) {
         auto pp = sprimes[pi];
         const int p = pp.p;
@@ -51,7 +51,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
     }
 
     const int block_size = ceil(L, prod) * prod;
-    Vec<u8> block(block_size);
+    vc<u8> block(block_size);
     u8* pblock = block.data();
     const int M = ceil(n, 30);
     for (int beg = 0; beg < M; beg += block_size, pblock -= block_size) {
@@ -83,7 +83,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
 }
 
 auto prime_table(int n) {
-    Vec<bool> t(n + 1);
+    vc<bool> t(n + 1);
     foreach (p, prime_sieve(n))
         t[p] = true;
     return t;

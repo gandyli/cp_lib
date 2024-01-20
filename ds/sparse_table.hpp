@@ -7,19 +7,19 @@ struct Sparse_Table {
     using X = M::value_type;
 
     int n, lg;
-    Vec<Vec<X>> st;
+    vvc<X> st;
 
     Sparse_Table() = default;
     Sparse_Table(int n) { build(n); }
     template <std::convertible_to<X> T>
-    Sparse_Table(const Vec<T>& a) { build(a); }
+    Sparse_Table(const vc<T>& a) { build(a); }
     Sparse_Table(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int) { return M::unit(); });
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {

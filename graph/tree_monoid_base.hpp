@@ -54,7 +54,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     int n;
     Tree_Monoid_Base(const TREE& tree): tree(tree) { build(); }
     template <std::convertible_to<X> T>
-    Tree_Monoid_Base(const TREE& tree, const Vec<T>& a): tree(tree) { build(a); }
+    Tree_Monoid_Base(const TREE& tree, const vc<T>& a): tree(tree) { build(a); }
     Tree_Monoid_Base(const TREE& tree, std::invocable<int> auto&& f): tree(tree) { build(f); }
     void build() {
         if constexpr (Tree_Monoid_Base_Helper::is_dual<DS<M>>)
@@ -63,7 +63,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
             build([&](int) { return MX::unit(); });
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build([&](int i) { return a[i]; });
     }
     void build(std::invocable<int> auto&& f) {
@@ -82,16 +82,16 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
             i = tree.e_to_v(i);
         return ds.get(tree.lid[i]);
     }
-    Vec<X> get_all() const {
-        Vec<X> t = ds.get_all();
+    vc<X> get_all() const {
+        vc<X> t = ds.get_all();
         if constexpr (edge) {
-            Vec<X> res(n - 1);
+            vc<X> res(n - 1);
             _for (i, n - 1)
                 res[i] = t[tree.lid[tree.e_to_v(i)]];
             return res;
         }
         else {
-            Vec<X> res(n);
+            vc<X> res(n);
             _for (i, n)
                 res[i] = t[tree.lid[i]];
             return res;

@@ -46,7 +46,7 @@ public:
     int n, _id{};
     G& g;
     vi lid, rid, dep, top, fa, id, vtoe;
-    Vec<T> wdep;
+    vc<T> wdep;
     Tree(G& g, int root = 0)
         : n(g.n), g(g),
           lid(n),
@@ -118,8 +118,8 @@ public:
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
     T wdist(int u, int v) const requires weighted
     { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
-    Vec<pi> path_decomposition(int u, int v, bool edge) const {
-        Vec<pi> up, down;
+    vc<pi> path_decomposition(int u, int v, bool edge) const {
+        vc<pi> up, down;
         while (top[u] != top[v])
             if (lid[u] < lid[v]) {
                 down.eb(lid[top[v]], lid[v]);

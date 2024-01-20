@@ -9,7 +9,7 @@ struct MaxFlow {
         T flow;
     };
     int n, s, t;
-    Vec<Vec<Edge>> g;
+    vvc<Edge> g;
     vi level;
     T ans{};
 
@@ -66,8 +66,8 @@ struct MaxFlow {
         }
     }
     T flow() { return ans; }
-    Vec<bool> cut() {
-        Vec<bool> r(n);
+    vc<bool> cut() {
+        vc<bool> r(n);
         _for (i, n)
             r[i] = level[i] != -1;
         return r;
@@ -77,7 +77,7 @@ struct MaxFlow {
         _for (i, n)
             foreach (e, g[i])
                 to[i].insert(to[i].end(), e.flow, e.to);
-        Vec<bool> vis(n);
+        vc<bool> vis(n);
         vvi r(ans);
         _for (i, ans) {
             auto&& path = r[i];

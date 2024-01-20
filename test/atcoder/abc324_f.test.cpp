@@ -14,7 +14,7 @@ int main() {
     }
     g.build();
     auto check = [&](auto mi) {
-        Vec dp(n, -inf<ld>);
+        vc dp(n, -inf<ld>);
         dp[0] = 0;
         _for (u, n)
             foreach (v, g[u])

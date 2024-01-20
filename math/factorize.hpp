@@ -5,7 +5,7 @@
 namespace impl {
     template <typename T>
     struct FactorizationResult {
-        Vec<T> f, pf;
+        vc<T> f, pf;
     };
     template <typename mint, typename T>
     T miller_rabin(mint a, T d, int r) {
@@ -138,9 +138,9 @@ namespace impl {
     private:
         mint _a24;
     };
-    Vec<u64> ecm_blocks(int smooth_bound) {
-        Vec<bool> sieve(smooth_bound + 1, true);
-        Vec<u64> blocks{1};
+    vc<u64> ecm_blocks(int smooth_bound) {
+        vc<bool> sieve(smooth_bound + 1, true);
+        vc<u64> blocks{1};
         _for (p, 2, smooth_bound + 1) {
             if (sieve[p]) {
                 int pw = p;
@@ -160,7 +160,7 @@ namespace impl {
     template <typename mint, typename T = mint::int_type>
     T ecm_modint() {
         constexpr int B1 = 400, B2 = 3000;
-        static const Vec<u64> blocks = ecm_blocks(B1);
+        static const vc<u64> blocks = ecm_blocks(B1);
         loop {
             auto [curve, point] = MontgomeryCurve<mint>::random_curve_and_point();
             T f = 1;
@@ -277,7 +277,7 @@ namespace impl {
     }
 } // namespace impl
 template <Unsigned T>
-Vec<T> factorize(T n) {
+vc<T> factorize(T n) {
     if (n <= 1)
         return {};
     int twos = std::countr_zero(n);
@@ -292,8 +292,8 @@ Vec<T> factorize(T n) {
     return r.pf;
 }
 template <Unsigned T>
-Vec<std::pair<T, int>> factorize_pair(T n) {
-    Vec<std::pair<T, int>> r;
+vc<std::pair<T, int>> factorize_pair(T n) {
+    vc<std::pair<T, int>> r;
     foreach (p, factorize(n))
         if (r.empty() || r.back().first != p)
             r.eb(p, 1);
@@ -310,8 +310,8 @@ vi factorize(int n, const vi& lpf) {
     }
     return r;
 }
-Vec<pi> factorize_pair(int n, const vi& lpf) {
-    Vec<pi> r;
+vc<pi> factorize_pair(int n, const vi& lpf) {
+    vc<pi> r;
     while (n > 1) {
         int p = lpf[n], c = 0;
         while (n % p == 0) {

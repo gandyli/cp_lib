@@ -2,9 +2,9 @@
 #include "template.hpp"
 
 template <typename T, bool strong = true>
-std::pair<int, vi> longest_increasing_sequence(const Vec<T>& a) {
+std::pair<int, vi> longest_increasing_sequence(const vc<T>& a) {
     const int n = len(a);
-    Vec dp(n, inf<T>);
+    vc dp(n, inf<T>);
     vi lis_rank(n);
     _for (i, n) {
         int j = (strong ? LB(dp, a[i]) : UB(dp, a[i]));
@@ -14,7 +14,7 @@ std::pair<int, vi> longest_increasing_sequence(const Vec<T>& a) {
     return {max(lis_rank), std::move(lis_rank)};
 }
 template <typename T, bool strong = true>
-vi longest_increasing_sequence_id(const Vec<T>& a) {
+vi longest_increasing_sequence_id(const vc<T>& a) {
     const int n = len(a);
     auto [m, d] = longest_increasing_sequence<T, strong>(a);
     vi I;

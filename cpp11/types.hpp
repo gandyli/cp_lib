@@ -1,7 +1,7 @@
 #pragma once
 #include <bits/stdc++.h>
 
-#define Vec std::vector
+#define vc std::vector
 using u8 = unsigned char;
 using u16 = unsigned short;
 using u32 = unsigned int;
@@ -13,9 +13,9 @@ using i16 = short;
 using i64 = long long;
 using i128 = __int128;
 using ld = long double;
-using vi = Vec<int>;
-using vvi = Vec<vi>;
-using vvvi = Vec<vvi>;
+using vi = vc<int>;
+using vvi = vc<vi>;
+using vvvi = vc<vvi>;
 using pi = std::pair<int, int>;
 template <typename T>
 struct make_unsigned: public std::make_unsigned<T> {};

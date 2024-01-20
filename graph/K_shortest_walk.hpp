@@ -3,18 +3,18 @@
 #include "graph/dijkstra.hpp"
 
 template <typename T, int N>
-Vec<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
+vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     const int n = g.n;
     auto rg = g.reverse();
     auto [dis, par] = dijkstra<T>(rg, t);
     if (dis[s] == inf<T>)
-        return Vec(k, inf<T>);
+        return vc(k, inf<T>);
     using Heap = Meldable_Heap<std::pair<T, int>, true, N>;
     using Node = Heap::Node;
     Heap heap;
 
-    Vec<Node*> nodes(n);
-    Vec<bool> vis(n);
+    vc<Node*> nodes(n);
+    vc<bool> vis(n);
     vi st{t};
     vis[t] = true;
     while (!st.empty()) {
@@ -37,11 +37,11 @@ Vec<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
             }
     }
     T base = dis[s];
-    Vec<T> r{base};
+    vc<T> r{base};
     r.reserve(k);
     if (nodes[s]) {
         auto cmp = [&](auto&& a, auto&& b) { return a.first > b.first; };
-        std::priority_queue<std::pair<T, Node*>, Vec<std::pair<T, Node*>>, decltype(cmp)> q(cmp);
+        std::priority_queue<std::pair<T, Node*>, vc<std::pair<T, Node*>>, decltype(cmp)> q(cmp);
         q.emplace(base + heap.top(nodes[s]).first, nodes[s]);
         while (!q.empty()) {
             auto [d, n] = pop(q);

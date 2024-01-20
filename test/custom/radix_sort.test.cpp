@@ -8,7 +8,7 @@ template <typename T>
 void test0(int n) {
     T min = Unsigned<T> ? 0 : -inf<T>, max = inf<T>;
     {
-        Vec<T> v(n);
+        vc<T> v(n);
         foreach (x, v)
             x = rnd(min, max);
         auto w = v;
@@ -16,7 +16,7 @@ void test0(int n) {
         sort(w);
         assert(v == w);
     }
-    Vec<std::pair<T, T>> v(n);
+    vc<std::pair<T, T>> v(n);
     foreach (x, v) {
         x.first = rnd(min, max);
         x.second = rnd(min, max);
@@ -42,9 +42,9 @@ void test() {
         assert(v == w);
     }
     {
-        Vec<i64> v{2, 0, 2, -1, 1, 2, 0, -1, -2};
+        vc<i64> v{2, 0, 2, -1, 1, 2, 0, -1, -2};
         radix_sort(v);
-        Vec<i64> w{-2, -1, -1, 0, 0, 1, 2, 2, 2};
+        vc<i64> w{-2, -1, -1, 0, 0, 1, 2, 2, 2};
         assert(v == w);
     }
 

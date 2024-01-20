@@ -76,9 +76,9 @@ struct Beats_SumMax_AddChmin {
     };
     SegTree_Beats<Beats> seg;
     int n;
-    Beats_SumMax_AddChmin(const Vec<T>& a) { build(a); }
+    Beats_SumMax_AddChmin(const vc<T>& a) { build(a); }
     Beats_SumMax_AddChmin(int n, std::invocable<int> auto&& f) { build(n, f); }
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {
@@ -87,8 +87,8 @@ struct Beats_SumMax_AddChmin {
     }
     void set(int i, T x) { seg.set(i, from_element(x)); }
     X get(int i) { return X::from_element(seg.get(i)); }
-    Vec<X> get_all() {
-        Vec<X> r(n);
+    vc<X> get_all() {
+        vc<X> r(n);
         auto t = seg.get_all();
         _for (i, n)
             r[i] = X::from_element(t[i]);

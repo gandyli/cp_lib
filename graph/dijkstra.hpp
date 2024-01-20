@@ -3,21 +3,21 @@
 
 template <typename T>
 struct DijkstraResult1 {
-    Vec<T> dis;
+    vc<T> dis;
     vi par;
 };
 template <typename T>
 struct DijkstraResult2 {
-    Vec<T> dis;
+    vc<T> dis;
     vi par;
     vi root;
 };
 template <typename T>
 auto dijkstra_dense(const auto& g, int s = 0) {
     const int n = g.n;
-    Vec dis(n, inf<T>);
+    vc dis(n, inf<T>);
     vi par(n, -1);
-    Vec<bool> vis(n);
+    vc<bool> vis(n);
     dis[s] = 0;
     loop {
         int u = -1;
@@ -36,7 +36,7 @@ auto dijkstra_dense(const auto& g, int s = 0) {
 template <typename T>
 auto dijkstra(const auto& g, int s = 0) {
     const int n = g.n;
-    Vec dis(n, inf<T>);
+    vc dis(n, inf<T>);
     vi par(n, -1);
     PQG<std::pair<T, int>> q;
     dis[s] = 0;
@@ -56,10 +56,10 @@ auto dijkstra(const auto& g, int s = 0) {
 template <typename T>
 auto dijkstra(const auto& g, const vi& s) {
     const int n = g.n;
-    Vec dis(n, inf<T>);
+    vc dis(n, inf<T>);
     vi par(n, -1);
     vi root(n, -1);
-    std::priority_queue<std::pair<T, int>, Vec<std::pair<T, int>>, std::greater<>> q;
+    std::priority_queue<std::pair<T, int>, vc<std::pair<T, int>>, std::greater<>> q;
     foreach (s, s) {
         dis[s] = 0;
         root[s] = s;

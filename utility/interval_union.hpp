@@ -2,11 +2,11 @@
 #include "template.hpp"
 
 template <typename T>
-Vec<std::pair<T, T>> interval_union(Vec<std::pair<T, T>> a) {
+vc<std::pair<T, T>> interval_union(vc<std::pair<T, T>> a) {
     if (a.empty())
         return {};
     sort(a);
-    Vec<std::pair<T, T>> b;
+    vc<std::pair<T, T>> b;
     T l = -inf<T>, r = -inf<T>;
     for (auto&& [x, y]: a)
         if (x > r) {

@@ -4,7 +4,7 @@
 struct FastSet {
     static constexpr u32 B = 64;
     u32 n, lg;
-    Vec<Vec<u64>> a;
+    vvc<u64> a;
     FastSet() = default;
     FastSet(u32 n) { build(n); }
     FastSet(u32 n, std::invocable<u32> auto&& f) { build(n, f); }

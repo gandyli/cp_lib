@@ -12,12 +12,12 @@ namespace MinimumCostArborescenceImpl {
 
         vi calc(int root) {
             const int n = g.n, m = g.m;
-            Vec<Node*> q(n);
+            vc<Node*> q(n);
             foreach (e, g.edges)
                 q[e.to] = meld(q[e.to], new_node(e.from, e.cost, e.id));
-            Vec<u8> used(n + m);
+            vc<u8> used(n + m);
             used[root] = 2;
-            Vec<Edge> best(n + m);
+            vc<Edge> best(n + m);
             vi par(n + m, -1);
             vi rt(n + m);
             _for (i, n)
@@ -57,7 +57,7 @@ namespace MinimumCostArborescenceImpl {
                         used[u] = 2;
                 }
             vi r;
-            Vec<bool> done(nxt);
+            vc<bool> done(nxt);
             done[root] = true;
             _for_r (u, nxt)
                 if (!done[u]) {

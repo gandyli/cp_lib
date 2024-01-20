@@ -254,7 +254,7 @@ public:
     }
 
 private:
-    static std::vector<mr_type> _reduction_env;
+    static vc<mr_type> _reduction_env;
 };
 
 template <u32 Mod>

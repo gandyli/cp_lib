@@ -6,7 +6,7 @@
 
 void test(int n) {
     vi v(n + 1);
-    Vec<pi> a;
+    vc<pi> a;
     _for (Min(rnd(0, n / 2), rnd(0, n / 2))) {
         int l, r;
         do {

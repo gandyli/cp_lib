@@ -2,8 +2,8 @@
 #include "math/factorize.hpp"
 
 template <Unsigned T>
-Vec<T> divisors(T n) {
-    Vec<T> d{1};
+vc<T> divisors(T n) {
+    vc<T> d{1};
     for (auto&& [p, c]: factorize_pair(n)) {
         int t = len(d);
         T pp = 1;

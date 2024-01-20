@@ -7,19 +7,19 @@ struct Static_Range_Product {
     using X = M::value_type;
 
     int n;
-    Vec<X> a, pre, suf;
+    vc<X> a, pre, suf;
     ST<M> st;
     Static_Range_Product() = default;
     Static_Range_Product(int n) { build(n); }
     template <std::convertible_to<X> T>
-    Static_Range_Product(const Vec<T>& a) { build(a); }
+    Static_Range_Product(const vc<T>& a) { build(a); }
     Static_Range_Product(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int i) { return M::unit(); });
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {

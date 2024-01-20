@@ -4,7 +4,7 @@
 template <typename T>
 struct BIT {
     int n;
-    Vec<T> a;
+    vc<T> a;
     BIT(int n): n(n), a(n) {}
     void add(int x, T v) {
         for (int i = x + 1; i <= n; i += i & -i)

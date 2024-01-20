@@ -3,9 +3,9 @@
 
 template <typename T>
 struct Vector_Space {
-    Vec<T> a;
+    vc<T> a;
     Vector_Space() = default;
-    Vector_Space(const Vec<T>& a): a(a) { reduce(); }
+    Vector_Space(const vc<T>& a): a(a) { reduce(); }
 
     bool insert(T x) {
         foreach (a, a) {

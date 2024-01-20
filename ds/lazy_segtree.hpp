@@ -9,20 +9,20 @@ struct Lazy_SegTree_Base {
     using X = MX::value_type;
     using A = MA::value_type;
     int n, lg, sz;
-    Vec<X> a;
-    Vec<A> lazy;
+    vc<X> a;
+    vc<A> lazy;
 
     Lazy_SegTree_Base() = default;
     Lazy_SegTree_Base(int n) { build(n); }
     template <std::convertible_to<X> T>
-    Lazy_SegTree_Base(const Vec<T>& a) { build(a); }
+    Lazy_SegTree_Base(const vc<T>& a) { build(a); }
     Lazy_SegTree_Base(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int i) { return MX::unit(); });
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {
@@ -59,7 +59,7 @@ struct Lazy_SegTree_Base {
             push(i >> j);
         return a[i];
     }
-    Vec<X> get_all() {
+    vc<X> get_all() {
         _for (i, sz)
             push(i);
         return {a.begin() + sz, a.begin() + sz + n};

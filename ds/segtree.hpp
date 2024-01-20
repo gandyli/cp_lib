@@ -7,18 +7,18 @@ struct SegTree {
     using X = M::value_type;
 
     int n, lg, sz;
-    Vec<X> a;
+    vc<X> a;
     SegTree() = default;
     SegTree(int n) { build(n); }
     template <std::convertible_to<X> T>
-    SegTree(const Vec<T>& a) { build(a); }
+    SegTree(const vc<T>& a) { build(a); }
     SegTree(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
         build(n, [&](int) { return M::unit(); });
     }
     template <std::convertible_to<X> T>
-    void build(const Vec<T>& a) {
+    void build(const vc<T>& a) {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {
@@ -44,7 +44,7 @@ struct SegTree {
             update(i);
     }
     X get(int i) const { return a[i + sz]; }
-    Vec<X> get_all() const { return {a.begin() + sz, a.begin() + sz + n}; }
+    vc<X> get_all() const { return {a.begin() + sz, a.begin() + sz + n}; }
     X prod(int l, int r) const {
         X vl = M::unit(), vr = M::unit();
         for (l += sz, r += sz; l < r; l >>= 1, r >>= 1) {

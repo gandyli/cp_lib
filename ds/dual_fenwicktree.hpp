@@ -7,7 +7,7 @@ struct Dual_FenwickTree {
     using A = M::value_type;
 
     int n;
-    Vec<A> a;
+    vc<A> a;
     Dual_FenwickTree() = default;
     Dual_FenwickTree(int n) { build(n); }
 
@@ -21,8 +21,8 @@ struct Dual_FenwickTree {
             r = M::op(r, a[i - 1]);
         return r;
     }
-    Vec<A> get_all() {
-        Vec<A> a = this->a;
+    vc<A> get_all() {
+        vc<A> a = this->a;
         _for_r (i, 1, n + 1) {
             int j = i + lowbit(i);
             if (j <= n)

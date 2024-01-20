@@ -15,9 +15,9 @@ struct Graph {
     using edge_type = Edge<cost_type>;
 
     int n{}, m{};
-    Vec<edge_type> edges;
+    vc<edge_type> edges;
     vi indptr;
-    Vec<edge_type> csr_edges;
+    vc<edge_type> csr_edges;
 
     vi _deg, _indeg, _outdeg;
     class OutgoingEdges {

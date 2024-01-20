@@ -7,7 +7,7 @@ struct Dual_SegTree {
     using A = M::value_type;
 
     int n, lg, sz;
-    Vec<A> a;
+    vc<A> a;
     Dual_SegTree() = default;
     Dual_SegTree(int n) { build(n); }
 
@@ -23,7 +23,7 @@ struct Dual_SegTree {
             push(i >> j);
         return a[i];
     }
-    Vec<A> get_all() {
+    vc<A> get_all() {
         _for (i, sz)
             push(i);
         return {a.begin() + sz, a.begin() + sz + n};

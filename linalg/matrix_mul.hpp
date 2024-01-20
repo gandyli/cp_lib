@@ -2,7 +2,7 @@
 #include "template.hpp"
 
 template <typename T>
-Vec<Vec<T>> matrix_mul(const Vec<Vec<T>>& a, const Vec<Vec<T>>& b) {
+vvc<T> matrix_mul(const vvc<T>& a, const vvc<T>& b) {
     int n0 = len(a), n1 = len(b), n2 = len(b[0]);
     ASSERT(n1 == len(a[0]));
     VEC(T, t, n2, n1);

@@ -1,8 +1,8 @@
 #pragma once
 #include "template.hpp"
 
-Vec<str> split(const str& s, char sep = ' ') {
-    Vec<str> ans{{}};
+vc<str> split(const str& s, char sep = ' ') {
+    vc<str> ans{{}};
     foreach (c, s)
         if (c == sep)
             ans.eb();
@@ -11,8 +11,8 @@ Vec<str> split(const str& s, char sep = ' ') {
     return ans;
 }
 
-Vec<str> split(const str& s, str seps = " ,") {
-    Vec<str> ans{{}};
+vc<str> split(const str& s, str seps = " ,") {
+    vc<str> ans{{}};
     foreach (c, s)
         if (count(seps, c))
             ans.eb();

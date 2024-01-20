@@ -16,13 +16,13 @@ namespace ArbitraryNTT {
     constexpr i64 w2 = i64(m0) * m1;
 
     template <typename T, typename mint>
-    Vec<mint> mul(const Vec<T>& a, const Vec<T>& b) {
+    vc<mint> mul(const vc<T>& a, const vc<T>& b) {
         static NTT<mint> ntt;
-        Vec<mint> s(all(a)), t(all(b));
+        vc<mint> s(all(a)), t(all(b));
         return ntt.multiply(s, t);
     }
     template <typename T>
-    vi multiply(const Vec<T>& s, const Vec<T>& t, int mod) {
+    vi multiply(const vc<T>& s, const vc<T>& t, int mod) {
         auto d0 = mul<T, mint0>(s, t);
         auto d1 = mul<T, mint1>(s, t);
         auto d2 = mul<T, mint2>(s, t);
@@ -40,11 +40,11 @@ namespace ArbitraryNTT {
     }
 
     template <typename mint>
-    Vec<mint> multiply(const Vec<mint>& a, const Vec<mint>& b) {
+    vc<mint> multiply(const vc<mint>& a, const vc<mint>& b) {
         if (a.empty() && b.empty())
             return {};
         if (min(len(a), len(b)) < 128) {
-            Vec<mint> r(len(a) + len(b) - 1);
+            vc<mint> r(len(a) + len(b) - 1);
             _for (i, len(a))
                 _for (j, len(b))
                     r[i + j] += a[i] * b[j];
@@ -59,11 +59,11 @@ namespace ArbitraryNTT {
         return {all(u)};
     }
     template <typename T>
-    Vec<u128> multiply_u128(const Vec<T>& s, const Vec<T>& t) {
+    vc<u128> multiply_u128(const vc<T>& s, const vc<T>& t) {
         if (s.empty() && t.empty())
             return {};
         if (min(len(s), len(t)) < 128) {
-            Vec<u128> r(len(s) + len(t) - 1);
+            vc<u128> r(len(s) + len(t) - 1);
             _for (i, len(s))
                 _for (j, len(t))
                     r[i + j] += u128(i64(s[i]) * t[j]);
@@ -73,7 +73,7 @@ namespace ArbitraryNTT {
         auto d1 = mul<T, mint1>(s, t);
         auto d2 = mul<T, mint2>(s, t);
         int n = len(d0);
-        Vec<u128> r(n);
+        vc<u128> r(n);
         _for (i, n) {
             i64 n1 = d1[i].val(), n2 = d2[i].val();
             i64 a = d0[i].val();
