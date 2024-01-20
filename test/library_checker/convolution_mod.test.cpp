@@ -1,13 +1,13 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/convolution_mod"
 
 #include "all.hpp"
-#include "ntt/ntt_avx2.hpp"
+#include "poly/convolution.hpp"
 
-using Z = MMInt998244353;
+using mint = MMInt998244353;
 int main() {
     dR(int, n, m);
-    dRV(Z, a, n);
-    dRV(Z, b, m);
-    print(NTT<Z>{}.multiply(a, b));
+    dRV(mint, a, n);
+    dRV(mint, b, m);
+    print(convolution(a, b));
     return 0;
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "ntt/arbitrary_ntt.hpp"
+#include "poly/convolution.hpp"
 
 namespace impl {
     struct TENS {
@@ -243,15 +243,16 @@ private:
     static vi _mul_fft(const vi& a, const vi& b) {
         if (a.empty() || b.empty())
             return {};
-        auto m = ArbitraryNTT::multiply_u128(a, b);
+        auto m = convolution<int, u128>(a, b);
         vi c;
         c.reserve(len(m) + 3);
         u128 x = 0;
-        for (int i = 0;; i++) {
-            if (i >= len(m) && x == 0)
-                break;
-            if (i < len(m))
-                x += m[i];
+        _for (i, len(m)) {
+            x += m[i];
+            c.eb(x % D);
+            x /= D;
+        }
+        while (x) {
             c.eb(x % D);
             x /= D;
         }
