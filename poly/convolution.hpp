@@ -48,10 +48,8 @@ vc<mint> convolution_garner(const vc<mint>& a, const vc<mint>& b) {
     auto c0 = convolution_ntt(a0, b0);
     auto c1 = convolution_ntt(a1, b1);
     auto c2 = convolution_ntt(a2, b2);
-    constexpr u64 W1 = w1 % mint::mod();
-    constexpr u64 W2 = w2 % mint::mod();
     vc<mint> r(n + m - 1);
-    crt<u64, W1, W2>(c0, c1, c2, r);
+    crt<u64>(c0, c1, c2, r, w1 % mint::mod(), w2 % mint::mod());
     return r;
 }
 template <typename R>
@@ -81,7 +79,7 @@ vc<U> convolution(const vc<T>& a, const vc<T>& b) {
     auto c1 = convolution_ntt(a1, b1);
     auto c2 = convolution_ntt(a2, b2);
     vc<U> r(n + m - 1);
-    crt<U, w1, w2>(c0, c1, c2, r);
+    crt<U>(c0, c1, c2, r, w1, w2);
     return r;
 }
 template <Modint mint>
@@ -89,12 +87,10 @@ vc<mint> convolution(const vc<mint>& a, const vc<mint>& b) {
     int n = len(a), m = len(b);
     if (!n || !m)
         return {};
-    if (__builtin_ctz(mint::mod() - 1) < 3 || n + m - 1 > (1 << __builtin_ctz(mint::mod() - 1))) {
-        if (min(n, m) <= 200)
-            return convolution_karatsuba(a, b);
-        return convolution_garner(a, b);
+    if constexpr (StaticModint<mint>) {
+        constexpr int lvl = __builtin_ctz(mint::mod() - 1);
+        if (n + m - 1 <= (1 << lvl) && min(n, m) > 50)
+            return convolution_ntt(a, b);
     }
-    if (min(n, m) <= 50)
-        return convolution_karatsuba(a, b);
-    return convolution_ntt(a, b);
+    return min(n, m) <= 200 ? convolution_karatsuba(a, b) : convolution_garner(a, b);
 }

@@ -47,3 +47,5 @@ template <typename T>
 concept Integer = Signed<T> || Unsigned<T>;
 template <typename T>
 concept Modint = requires { T::mod(); };
+template <typename T>
+concept StaticModint = requires { typename std::integral_constant<decltype(T::mod()), T::mod()>; };
