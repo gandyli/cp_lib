@@ -1,13 +1,16 @@
 #pragma once
-#include "template.hpp"
+#include "math/fixpoint.hpp"
 
-i64 isqrt(i64 n) {
-    if (n <= 0)
-        return 0;
-    i64 x = sqrt(n);
-    while ((x + 1) * (x + 1) <= n)
-        x++;
-    while (x * x > n)
-        x--;
-    return x;
+template <Unsigned T>
+T isqrt(T a) {
+    if (a < 4)
+        return a > 0;
+    auto guess = [&](T x) -> T { return sqrt(x); };
+    auto next = [&](T x) { return (a / x + x) >> 1; };
+    return fixpoint(guess(a), next);
+}
+template <Signed T>
+T isqrt(T a) {
+    ASSERT(a >= 0);
+    return isqrt<std::make_signed_t<T>>(a);
 }
