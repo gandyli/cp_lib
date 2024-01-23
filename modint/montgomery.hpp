@@ -59,7 +59,7 @@ struct MontgomeryModInt {
     friend constexpr mint operator*(mint lhs, const mint& rhs) { return lhs *= rhs; }
     friend constexpr mint operator/(mint lhs, const mint& rhs) { return lhs /= rhs; }
     friend constexpr bool operator==(const mint& lhs, const mint& rhs) { return mr().strict_shrink(lhs.x) == mr().strict_shrink(rhs.x); }
-    friend constexpr auto operator<=>(const mint& lhs, const mint& rhs) { return mr().strict_shrink(lhs.x) <=> mr().strict_shrink(rhs.x); }
+    friend constexpr auto operator<=>(const mint& lhs, const mint& rhs) { return lhs.val() <=> rhs.val(); }
 
     static constexpr mint from_raw(int_type x) {
         mint r;
