@@ -3,11 +3,9 @@
 
 template <typename T, bool PERSISTENT, int N>
 struct Dynamic_Array {
-    static constexpr int lg = 4;
-    static constexpr int mask = (1 << lg) - 1;
     struct Node {
         T x;
-        Node* ch[1 << lg]{};
+        Node* ch[2];
     }* pool{new Node[N]};
     int id{};
 
@@ -29,22 +27,22 @@ struct Dynamic_Array {
             return x0;
         if (i == 0)
             return u->x;
-        return get(u->ch[i & mask], (i - 1) >> lg);
+        return get(u->ch[i & 1], (i - 1) >> 1);
     }
     Node* set(Node* u, int i, T x, bool copy = true) {
         if (!u)
             u = new_node();
         else if (copy && PERSISTENT) {
             pool[id].x = u->x;
-            _for (j, 1 << lg)
-                pool[id].ch[j] = u->ch[j];
+            pool[id].ch[0] = u->ch[0];
+            pool[id].ch[1] = u->ch[1];
             u = &pool[id++];
         }
         if (i == 0) {
             u->x = std::move(x);
             return u;
         }
-        u->ch[i & mask] = set(u->ch[i & mask], (i - 1) >> lg, std::move(x), copy);
+        u->ch[i & 1] = set(u->ch[i & 1], (i - 1) >> 1, std::move(x), copy);
         return u;
     }
 };

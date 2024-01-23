@@ -5,7 +5,7 @@
 
 int main() {
     dR(int, n, q);
-    Dynamic_UnionFind<true, 2 * ten(6)> uf;
+    Dynamic_UnionFind<true, 8 * ten(6)> uf;
     using Node = decltype(uf)::Node;
     vc<Node*> roots{uf.new_node()};
     _for (q) {
