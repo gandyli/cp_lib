@@ -9,6 +9,6 @@ struct ActedMonoid_MinMincnt_Add {
     using X = Monoid_X::value_type;
     using A = Monoid_A::value_type;
     static constexpr X act(const X& x, const A& a, int) {
-        return {Min(inf<X>, x.first + a), x.second};
+        return {Min(inf<T>, x.first + a), x.second};
     }
 };
