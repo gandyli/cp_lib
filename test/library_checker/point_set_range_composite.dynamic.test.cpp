@@ -12,7 +12,7 @@ int main() {
     using X = M::value_type;
     dRV(X, a, n);
     Dynamic_SegTree<M, false, 2 * ten(6)> st(0, n);
-    auto* root = st.new_node(a);
+    int root = st.new_node(a);
     _for (q) {
         dR(int, t, x, y, z);
         if (t == 0) {
