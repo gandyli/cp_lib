@@ -8,10 +8,10 @@ int main() {
     dR(int, n, q);
     Dual_SegTree<Monoid_Add<int>> st(n);
     _for (q) {
-        dR(int, t, x);
+        dR(int, t, x), x--;
         if (t == 0) {
             dR(int, y, z);
-            st.apply(x, y + 1, z);
+            st.apply(x, y, z);
         }
         else {
             print(st.get(x));

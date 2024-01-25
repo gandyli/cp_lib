@@ -8,10 +8,10 @@ int main() {
     dR(int, n, q);
     Range_Add_Range_Sum<Monoid_Add<int>> ft(n);
     _for (q) {
-        dR(int, t, x);
+        dR(int, t, x), x--;
         if (t == 0) {
             dR(int, y, z);
-            ft.apply(x, y + 1, z);
+            ft.apply(x, y, z);
         }
         else {
             print(ft.prod(x, x + 1));
