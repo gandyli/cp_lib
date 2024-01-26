@@ -1,11 +1,12 @@
 #pragma once
 #include "template.hpp"
 
+template <bool ByRank = true>
 struct UnionFind {
     int n, comp;
     vi a;
-    UnionFind(int n = 0) { bulid(n); }
-    void bulid(int n) {
+    UnionFind(int n = 0) { build(n); }
+    void build(int n) {
         this->n = comp = n;
         a.assign(n, -1);
     }
@@ -25,7 +26,7 @@ struct UnionFind {
         if (x == y)
             return false;
         comp--;
-        if (a[x] > a[y])
+        if (ByRank && a[x] > a[y])
             swap(x, y);
         a[x] += a[y];
         a[y] = x;
