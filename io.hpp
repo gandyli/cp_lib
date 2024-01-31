@@ -67,6 +67,11 @@ public:
     }
     void ireadstr(char* s, usize n) { fread(s, 1, n, in); }
 #elif defined(USE_MMAP)
+    u16 load2() {
+        u16 x;
+        memcpy(&x, ip, 2);
+        return x;
+    }
     void skipws() {
         while (blank(*ip) ECHK4)
             ip++;
@@ -150,8 +155,8 @@ public:
             sign = *ip++ == '-';
         ECHK2
         t = *ip++ ^ 48;
-        while (~I[*reinterpret_cast<u16*&>(ip)])
-            t = t * 100 + I[*reinterpret_cast<u16*&>(ip)++];
+        while (~I[load2()])
+            t = t * 100 + I[load2()], ip += 2;
         if (isdigit(*ip))
             t = t * 10 + (*ip++ ^ 48);
 #endif
@@ -173,8 +178,8 @@ public:
             ip++;
         ECHK2
         x = *ip++ ^ 48;
-        while (~I[*reinterpret_cast<u16*&>(ip)])
-            x = x * 100 + I[*reinterpret_cast<u16*&>(ip)++];
+        while (~I[load2()])
+            x = x * 100 + I[load2()], ip += 2;
         if (isdigit(*ip))
             x = x * 10 + (*ip++ ^ 48);
 #endif
