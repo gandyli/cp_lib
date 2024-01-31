@@ -30,6 +30,6 @@ T icbrt(T a) {
 template <Signed T>
 T icbrt(T a) {
     if (a >= 0)
-        return icbrt<std::make_signed_t<T>>(a);
-    return -icbrt<std::make_signed_t<T>>(-a);
+        return icbrt<std::make_unsigned_t<T>>(a);
+    return -icbrt<std::make_unsigned_t<T>>(-a);
 }

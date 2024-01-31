@@ -12,5 +12,5 @@ T isqrt(T a) {
 template <Signed T>
 T isqrt(T a) {
     ASSERT(a >= 0);
-    return isqrt<std::make_signed_t<T>>(a);
+    return isqrt<std::make_unsigned_t<T>>(a);
 }

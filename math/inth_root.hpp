@@ -49,7 +49,7 @@ T inth_root(T a, T n) {
 template <Signed T>
 T inth_root(T a, T n) {
     if (a >= 0)
-        return inth_root<std::make_signed_t<T>>(a, n);
+        return inth_root<std::make_unsigned_t<T>>(a, n);
     ASSERT(n & 1);
-    return -inth_root<std::make_signed_t<T>>(-a, n);
+    return -inth_root<std::make_unsigned_t<T>>(-a, n);
 }
