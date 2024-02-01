@@ -1,7 +1,7 @@
 #pragma once
 #include "graph/base.hpp"
 
-template <typename G, bool weighted = false>
+template <typename G>
 class Tree {
 private:
     void dfs1(int u) {
@@ -18,7 +18,7 @@ private:
             if (v == fa[u])
                 continue;
             dep[v] = dep[u] + 1;
-            if constexpr (weighted)
+            if constexpr (G::is_weighted())
                 wdep[v] = wdep[u] + v.cost;
             fa[v] = u;
             vtoe[v] = v.id;
@@ -56,7 +56,7 @@ public:
           fa(n, root),
           id(n),
           vtoe(n) {
-        if constexpr (weighted)
+        if constexpr (G::is_weighted())
             wdep.resize(n);
         build(root);
     }
@@ -116,7 +116,7 @@ public:
         return (dep[x] <= dep[u] && dep[x] >= dep[w] && k_ancestor(u, dep[u] - dep[x]) == x) || (dep[x] <= dep[v] && dep[x] >= dep[w] && k_ancestor(v, dep[v] - dep[x]) == x);
     }
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
-    T wdist(int u, int v) const requires weighted
+    T wdist(int u, int v) const requires (G::is_weighted())
     { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
     vc<pi> path_decomposition(int u, int v, bool edge) const {
         vc<pi> up, down;

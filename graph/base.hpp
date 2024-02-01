@@ -8,11 +8,19 @@ struct Edge {
     int id;
     operator int() const { return to; }
 };
+template <>
+struct Edge<void> {
+    int from, to, id;
+    operator int() const { return to; }
+};
 
-template <typename T = int, bool directed = false>
+template <typename T = void, bool directed = false>
 struct Graph {
-    using cost_type = T;
-    using edge_type = Edge<cost_type>;
+    static constexpr bool is_directed() { return directed; }
+    static constexpr bool is_weighted() { return !std::is_same_v<T, void>; }
+
+    using cost_type = std::conditional_t<is_weighted(), T, int>;
+    using edge_type = Edge<T>;
 
     int n{}, m{};
     vc<edge_type> edges;
@@ -30,26 +38,32 @@ struct Graph {
         const Graph* G;
         int l, r;
     };
-    static constexpr bool is_directed() { return directed; }
     Graph() = default;
     Graph(int n): n(n) {}
     Graph(int n, int m): n(n) { edges.reserve(m); }
-    void add(int from, int to, cost_type cost = 1, int id = -1) {
+    void add(int from, int to, int id = -1) requires (!is_weighted())
+    {
+        if (id == -1)
+            id = m;
+        edges.eb(from, to, id), m++;
+    }
+    void add(int from, int to, cost_type cost, int id = -1) requires (is_weighted())
+    {
         if (id == -1)
             id = m;
         edges.eb(from, to, cost, id), m++;
     }
-    void read_tree(bool w = false, int off = 1) { read_graph(n - 1, w, off); }
-    void read_graph(int m, bool w = false, int off = 1) {
+    void read_tree(int off = 1) { read_graph(n - 1, off); }
+    void read_graph(int m, int off = 1) {
         edges.reserve(m);
         _for (m) {
             dR(int, a, b), a -= off, b -= off;
-            if (!w)
-                add(a, b);
-            else {
+            if constexpr (is_weighted()) {
                 dR(cost_type, c);
                 add(a, b, c);
             }
+            else
+                add(a, b);
         }
         build();
     }
@@ -66,8 +80,11 @@ struct Graph {
         csr_edges.resize(indptr.back() + 1);
         foreach (e, edges) {
             csr_edges[counter[e.from]++] = e;
-            if constexpr (!directed)
-                csr_edges[counter[e.to]++] = {e.to, e.from, e.cost, e.id};
+            if constexpr (!directed) {
+                swap(e.from, e.to);
+                csr_edges[counter[e.from]++] = e;
+                swap(e.from, e.to);
+            }
         }
     }
     OutgoingEdges operator[](int u) const { return {this, indptr[u], indptr[u + 1]}; }
@@ -92,13 +109,25 @@ struct Graph {
     Graph reverse() const requires directed
     {
         Graph g0(n);
-        foreach (e, edges)
-            g0.add(e.to, e.from, e.cost, e.id);
+        foreach (e, edges) {
+            if constexpr (is_weighted())
+                g0.add(e.to, e.from, e.cost, e.id);
+            else
+                g0.add(e.to, e.from, e.id);
+        }
         g0.build();
         return g0;
     }
 
-    void write(IO& io) const {
+    void write(IO& io) const requires (!is_weighted())
+    {
+        io.writeln("from to id");
+        _for (i, n)
+            foreach (e, (*this)[i])
+                io.writeln(e.from, ' ', e.to, ' ', e.id);
+    }
+    void write(IO& io) const requires (is_weighted())
+    {
         io.writeln("from to cost id");
         _for (i, n)
             foreach (e, (*this)[i])
@@ -122,3 +151,5 @@ template <typename G>
 concept DirectedGraph = G::is_directed();
 template <typename G>
 concept UndirectedGraph = !DirectedGraph<G>;
+template <typename G>
+concept WeightedGraph = G::is_weighted();

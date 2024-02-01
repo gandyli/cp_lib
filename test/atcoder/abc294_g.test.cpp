@@ -7,8 +7,8 @@
 
 int main() {
     dR(int, n);
-    Graph g(n);
-    g.read_tree(true);
+    Graph<int> g(n);
+    g.read_tree();
     Tree tree(g);
     Tree_AbelGroup<decltype(tree), Monoid_Add<i64>, true, true, false> seg(tree, [&](int i) { return g.edges[i].cost; });
     dR(int, q);

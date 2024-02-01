@@ -9,7 +9,7 @@ int main() {
     dR(int, n, q);
     dRV(i64, a, n);
     Graph g(n);
-    g.read_tree(false, 0);
+    g.read_tree(0);
     Tree tree(g);
     Tree_Monoid<decltype(tree), Monoid_Add<i64>> st(tree, a);
     _for (q) {

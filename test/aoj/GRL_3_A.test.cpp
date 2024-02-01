@@ -6,7 +6,7 @@
 int main() {
     dR(int, n, m);
     Graph g(n);
-    g.read_graph(m, false, 0);
+    g.read_graph(m, 0);
 
     auto bct = block_cut_tree(g);
     _for (i, n)

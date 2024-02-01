@@ -5,8 +5,8 @@
 
 int main() {
     dR(int, n, m);
-    Graph<int, true> g(n);
-    g.read_graph(m, false, 0);
+    Graph<void, true> g(n);
+    g.read_graph(m, 0);
     auto [vs, es] = find_cycle(g);
     if (vs.empty()) {
         print(-1);

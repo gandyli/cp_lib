@@ -6,7 +6,7 @@
 int main() {
     dR(int, n, m, s);
     Graph<int, true> g(n);
-    g.read_graph(m, true, 0);
+    g.read_graph(m, 0);
 
     auto [dis, par] = BellmanFord<int>(g, s);
     if (min(dis) == -inf<int>) {

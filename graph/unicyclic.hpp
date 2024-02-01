@@ -2,7 +2,7 @@
 #include "graph/tree.hpp"
 #include "ds/unionfind.hpp"
 
-template <UndirectedGraph G, bool weighted = false>
+template <UndirectedGraph G>
 struct UnicyclicGraph {
     using T = G::cost_type;
     G& g;
@@ -37,7 +37,7 @@ struct UnicyclicGraph {
         while (cycle.back() != root)
             in_cycle[cycle.eb(to[cycle.back()])] = 1;
     }
-    std::pair<Graph<T, true>, Tree<Graph<T, true>, weighted>> build(bool keep_eid = false) {
+    std::pair<Graph<T, true>, Tree<Graph<T, true>>> build(bool keep_eid = false) {
         static Graph<T, true> g(n);
         _for (eid, n)
             if (eid != out_eid) {
@@ -45,7 +45,10 @@ struct UnicyclicGraph {
                 int a = e.from, b = e.to;
                 if (to[a] == b)
                     swap(a, b);
-                g.add(a, b, e.cost, keep_eid ? eid : -1);
+                if constexpr (G::is_weighted())
+                    g.add(a, b, e.cost, keep_eid ? eid : -1);
+                else
+                    g.add(a, b, keep_eid ? eid : -1);
             }
         g.build();
         return {g, {g, root}};
@@ -57,6 +60,6 @@ struct UnicyclicGraph {
         return d + D[u] + D[v] - D[u0] - D[v0];
     }
     int dist(auto& tree, int u, int v) const { return dist(tree, u, v, tree.dep, 1); }
-    T wdist(auto& tree, int u, int v) const requires weighted
+    T wdist(auto& tree, int u, int v) const requires (G::is_weighted())
     { return dist(tree, u, v, tree.wdep, g.edges[out_eid].cost); }
 };

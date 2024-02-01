@@ -5,8 +5,8 @@
 
 int main() {
     dR(int, n);
-    Graph g(n);
-    g.read_tree(true, 0);
+    Graph<int> g(n);
+    g.read_tree(0);
     auto [d1, _0] = bfs01<int>(g, 0);
     int u = max_element(d1) - d1.begin();
     auto [d2, _1] = bfs01<int>(g, u);

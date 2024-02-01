@@ -5,7 +5,7 @@
 
 int main() {
     dR(int, n, a, b, c, d);
-    Graph<int, true> g(2);
+    Graph<void, true> g(2);
     _for (a)
         g.add(0, 0);
     _for (b)
