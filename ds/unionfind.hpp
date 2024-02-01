@@ -20,9 +20,9 @@ struct UnionFind {
         return x;
     }
     int operator[](int x) { return get(x); }
-    bool same(int x, int y) { return (*this)[x] == (*this)[y]; }
+    bool same(int x, int y) { return get(x) == get(y); }
     bool merge(int x, int y) {
-        x = (*this)[x], y = (*this)[y];
+        x = get(x), y = get(y);
         if (x == y)
             return false;
         comp--;
@@ -32,5 +32,5 @@ struct UnionFind {
         a[y] = x;
         return true;
     }
-    int size(int x) { return -a[(*this)[x]]; }
+    int size(int x) { return -a[get(x)]; }
 };
