@@ -5,9 +5,7 @@
 
 int main() {
     dR(int, n, m, s);
-    Graph<int, true> g(n);
-    g.read_graph(m, 0);
-
+    auto g = read_graph<int, true>(n, m, 0);
     auto [dis, par] = dijkstra<int>(g, s);
     _for (i, n) {
         if (dis[i] == inf<int>)

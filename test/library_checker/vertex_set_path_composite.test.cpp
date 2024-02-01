@@ -11,8 +11,7 @@ int main() {
     using M = Monoid_Affine<mint>;
     dR(int, n, q);
     dRV(M::X, a, n);
-    Graph<void> g(n);
-    g.read_tree(0);
+    auto g = read_tree(n, 0);
     Tree tree(g);
     Tree_Monoid<decltype(tree), M> st(tree, a);
     _for (q) {

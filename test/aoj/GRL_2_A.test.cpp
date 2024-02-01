@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph<int> g(n);
-    g.read_graph(m, 0);
+    auto g = read_graph<int>(n, m, 0);
     print(kruskal<int>(g).cost);
     return 0;
 }

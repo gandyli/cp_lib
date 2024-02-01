@@ -5,9 +5,7 @@
 
 int main() {
     dR(int, n, m, r);
-    Graph<int, true> g(n);
-    g.read_graph(m, 0);
-
+    auto g = read_graph<int, true>(n, m, 0);
     auto [cost, I] = MinimumCostArborescence<1500>(g, r);
     print(cost);
     return 0;

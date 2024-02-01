@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph g(n);
-    g.read_graph(m, 0);
+    auto g = read_graph(n, m, 0);
     auto [bcc, comp] = two_edge_component(g);
     vvi ans(bcc);
     _for (i, n)

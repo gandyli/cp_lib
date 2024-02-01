@@ -5,9 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph<void> g(n);
-    g.read_graph(m, 0);
-
+    auto g = read_graph(n, m, 0);
     auto bct = block_cut_tree(g);
     print(bct.n - n);
     _for (i, n, bct.n) {

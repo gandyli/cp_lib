@@ -53,20 +53,6 @@ struct Graph {
             id = m;
         edges.eb(from, to, cost, id), m++;
     }
-    void read_tree(int off = 1) { read_graph(n - 1, off); }
-    void read_graph(int m, int off = 1) {
-        edges.reserve(m);
-        _for (m) {
-            dR(int, a, b), a -= off, b -= off;
-            if constexpr (is_weighted()) {
-                dR(cost_type, c);
-                add(a, b, c);
-            }
-            else
-                add(a, b);
-        }
-        build();
-    }
     void build() {
         indptr.assign(n + 1, 0);
         foreach (e, edges) {
@@ -121,17 +107,17 @@ struct Graph {
 
     void write(IO& io) const requires (!is_weighted())
     {
-        io.writeln("from to id");
+        io.print("from to id");
         _for (i, n)
             foreach (e, (*this)[i])
-                io.writeln(e.from, ' ', e.to, ' ', e.id);
+                io.print(e.from, e.to, e.id);
     }
     void write(IO& io) const requires (is_weighted())
     {
-        io.writeln("from to cost id");
+        io.print("from to cost id");
         _for (i, n)
             foreach (e, (*this)[i])
-                io.writeln(e.from, ' ', e.to, ' ', e.cost, ' ', e.id);
+                io.print(e.from, e.to, e.cost, e.id);
     }
 
 private:
@@ -153,3 +139,20 @@ template <typename G>
 concept UndirectedGraph = !DirectedGraph<G>;
 template <typename G>
 concept WeightedGraph = G::is_weighted();
+
+template <typename T = void, bool directed = false>
+auto read_graph(int n, int m, int off = 1) {
+    Graph<T, directed> g(n, m);
+    _for (m) {
+        dR(int, a, b), a -= off, b -= off;
+        if constexpr (g.is_weighted()) {
+            dR(T, c);
+            g.add(a, b, c);
+        } else
+            g.add(a, b);
+    }
+    g.build();
+    return g;
+}
+template <typename T = void, bool directed = false>
+auto read_tree(int n, int off = 1) { return read_graph<T, directed>(n, n - 1, off); }

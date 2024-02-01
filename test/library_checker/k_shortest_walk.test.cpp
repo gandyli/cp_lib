@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n, m, s, t, k);
-    Graph<int, true> g(n);
-    g.read_graph(m, 0);
+    auto g = read_graph<int, true>(n, m, 0);
     auto ret = K_shortest_walk<i64, 5000000>(g, s, t, k);
     foreach (r, ret)
         if (r == inf<i64>)

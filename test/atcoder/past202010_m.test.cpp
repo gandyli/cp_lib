@@ -7,8 +7,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph g(n);
-    g.read_tree();
+    auto g = read_tree(n);
     Tree tree(g);
     Dual_Tree_Monoid<decltype(tree), Monoid_Assign<int, 0>, true> seg(tree);
     _for (m) {

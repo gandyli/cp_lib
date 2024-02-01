@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n);
-    Graph g(n);
-    g.read_graph(n);
+    auto g = read_graph(n, n);
     UnicyclicGraph ug(g);
     auto tree = ug.build().second;
     dR(int, q);

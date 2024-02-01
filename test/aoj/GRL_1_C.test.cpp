@@ -5,9 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph<int, true> g(n);
-    g.read_graph(m, 0);
-
+    auto g = read_graph<int, true>(n, m, 0);
     auto dis = floyd<i64>(g);
     _for (i, n)
         if (dis[i][i] < 0) {

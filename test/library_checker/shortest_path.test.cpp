@@ -6,8 +6,7 @@
 
 int main() {
     dR(int, n, m, s, t);
-    Graph<int, true> g(n);
-    g.read_graph(m, 0);
+    auto g = read_graph<int, true>(n, m, 0);
     auto [dist, par] = dijkstra<i64>(g, s);
     if (dist[t] == inf<i64>)
         print(-1);

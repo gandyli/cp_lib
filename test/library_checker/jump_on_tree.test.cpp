@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n, q);
-    Graph<void> g(n);
-    g.read_tree(0);
+    auto g = read_tree(n, 0);
     Tree tree(g);
     _for (q) {
         dR(int, u, v, x);

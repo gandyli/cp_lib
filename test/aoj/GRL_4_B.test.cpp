@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph<void, true> g(n);
-    g.read_graph(m, 0);
+    auto g = read_graph<void, true>(n, m, 0);
     auto V = toposort(g);
     io.displayArray(V, '\n');
     return 0;

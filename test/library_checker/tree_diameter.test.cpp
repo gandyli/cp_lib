@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n);
-    Graph<int> g(n);
-    g.read_tree(0);
+    auto g = read_tree<int>(n, 0);
     auto [d, path] = diameter<i64>(g);
     print(d, len(path));
     print(path);

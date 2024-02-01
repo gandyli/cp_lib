@@ -5,9 +5,7 @@
 
 int main() {
     dR(int, n, m);
-    Graph g(n);
-    g.read_graph(m, 0);
-
+    auto g = read_graph(n, m, 0);
     auto bct = block_cut_tree(g);
     _for (i, n)
         if (bct.deg(i) > 1)

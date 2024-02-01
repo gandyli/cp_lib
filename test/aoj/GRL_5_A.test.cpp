@@ -5,8 +5,7 @@
 
 int main() {
     dR(int, n);
-    Graph<int> g(n);
-    g.read_tree(0);
+    auto g = read_tree<int>(n, 0);
     print(diameter<int>(g).diam);
     return 0;
 }
