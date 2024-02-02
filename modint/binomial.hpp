@@ -7,7 +7,7 @@ struct Comb {
 
     Comb() requires EXTEND
         : f{1}, g{1}, h{1} {}
-    Comb(int n): Comb() { extend(n + 1); }
+    Comb(int n): f{1}, g{1}, h{1} { extend(n + 1); }
     void extend(int m = -1) {
         int n = len(f);
         if (m == -1)
