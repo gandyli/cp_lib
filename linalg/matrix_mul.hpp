@@ -1,14 +1,11 @@
 #pragma once
-#include "template.hpp"
+#include "linalg/transpose.hpp"
 
 template <typename T>
 vvc<T> matrix_mul(const vvc<T>& a, const vvc<T>& b) {
     int n0 = len(a), n1 = len(b), n2 = len(b[0]);
     ASSERT(n1 == len(a[0]));
-    VEC(T, t, n2, n1);
-    _for (i, n1)
-        _for (j, n2)
-            t[j][i] = b[i][j];
+    auto t = transpose(b);
     VEC(T, c, n0, n2);
     _for (i, n0)
         _for (j, n2)
