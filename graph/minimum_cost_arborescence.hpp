@@ -1,6 +1,7 @@
 #pragma once
 #include "graph/base.hpp"
 #include "ds/unionfind.hpp"
+#include "utility/memory_pool.hpp"
 
 namespace MinimumCostArborescenceImpl {
     template <typename G, int N>
@@ -81,13 +82,10 @@ namespace MinimumCostArborescenceImpl {
             Edge e;
             T lazy;
             int s;
-        }* pool{new Node[N]};
-        int pid{};
+        };
+        Memory_Pool<Node, N> pool;
 
-        Node* new_node(int to, T cost, int id) {
-            pool[pid] = {nullptr, nullptr, {to, id, cost}, 0, 1};
-            return &pool[pid++];
-        }
+        Node* new_node(int to, T cost, int id) { return pool.new_node({nullptr, nullptr, {to, id, cost}, 0, 1}); }
         static Node* add(Node* a, T x) {
             if (a)
                 a->e.cost += x, a->lazy += x;
@@ -119,7 +117,7 @@ struct MinimumCostArborescenceResult {
     T cost;
     vi I;
 };
-template <int N>
+template <int N = -1>
 auto MinimumCostArborescence(const DirectedGraph auto& g, int root) {
     using G = std::decay_t<decltype(g)>;
     auto I = MinimumCostArborescenceImpl::Solver<G, N>{g}.calc(root);

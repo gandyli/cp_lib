@@ -2,7 +2,7 @@
 #include "ds/meldable_heap.hpp"
 #include "graph/dijkstra.hpp"
 
-template <typename T, int N>
+template <typename T, int N = -1>
 vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     const int n = g.n;
     auto rg = g.reverse();

@@ -1,7 +1,7 @@
 #pragma once
 #include "ds/dynamic_array.hpp"
 
-template <bool PERSISTENT, int N>
+template <bool PERSISTENT, int N = -1>
 struct Dynamic_UnionFind {
     Dynamic_Array<int, PERSISTENT, N> a;
     using Node = Dynamic_Array<int, PERSISTENT, N>::Node;

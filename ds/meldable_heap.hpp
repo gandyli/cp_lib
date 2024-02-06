@@ -1,29 +1,22 @@
 #pragma once
-#include "template.hpp"
+#include "utility/memory_pool.hpp"
 
-template <typename T, bool PERSISTENT, int N, typename Compare = std::less<>>
+template <typename T, bool PERSISTENT, int N = -1, typename Compare = std::less<>>
 struct Meldable_Heap: public Compare {
     struct Node {
         Node *l, *r;
         T x;
         int s;
-    }* pool{new Node[N]};
-    int id{};
+    };
+    Memory_Pool<Node, N> pool;
 
     Meldable_Heap() = default;
     Meldable_Heap(const Compare& cmp): Compare(cmp) {}
-    Node* new_node(const T& x) {
-        pool[id] = {nullptr, nullptr, x, 1};
-        return &pool[id++];
-    }
+    Node* new_node(const T& x) { return pool.new_node({nullptr, nullptr, x, 1}); }
     Node* copy_node(Node* a) {
-        if (!a || !PERSISTENT)
-            return a;
-        Node* b = new_node(a->x);
-        b->s = a->s;
-        b->l = a->l;
-        b->r = a->r;
-        return b;
+        if (a && PERSISTENT)
+            return pool.new_node(*a);
+        return a;
     }
     Node* meld(Node* a, Node* b) {
         if (!a)

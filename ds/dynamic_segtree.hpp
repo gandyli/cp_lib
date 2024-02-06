@@ -1,7 +1,8 @@
 #pragma once
 #include "ds/unit_prod.hpp"
+#include "utility/memory_pool.hpp"
 
-template <typename Monoid, bool PERSISTENT, int N, typename F = Unit_Prod<Monoid>>
+template <typename Monoid, bool PERSISTENT, int N = -1, typename F = Unit_Prod<Monoid>>
 struct Dynamic_SegTree {
     using M = Monoid;
     using X = M::value_type;
@@ -9,16 +10,13 @@ struct Dynamic_SegTree {
     struct Node {
         int l, r;
         X x;
-    }* pool{new Node[N]};
-    int id{1};
+    };
+    Memory_Pool<Node, N> pool;
 
     i64 L, R;
     F default_prod;
-    Dynamic_SegTree(i64 L, i64 R, F default_prod = {}): L(L), R(R), default_prod(default_prod) {}
-    int new_node(const X& x) {
-        pool[id] = {0, 0, x};
-        return id++;
-    }
+    Dynamic_SegTree(i64 L, i64 R, F default_prod = {}): L(L), R(R), default_prod(default_prod) { pool.new_node(); }
+    int new_node(const X& x) { return pool.new_node_id({0, 0, x}); }
     int new_node(i64 l, i64 r) {
         return new_node(default_prod(l, r));
     }
@@ -150,10 +148,8 @@ struct Dynamic_SegTree {
         return dfs(dfs, u, L, R);
     }
     int copy_node(int u) {
-        if (u && PERSISTENT) {
-            pool[id] = pool[u];
-            return id++;
-        }
+        if (u && PERSISTENT)
+            return pool.new_node_id(pool[u]);
         return u;
     }
 };

@@ -1,7 +1,8 @@
 #pragma once
 #include "ds/unit_prod.hpp"
+#include "utility/memory_pool.hpp"
 
-template <typename ActedMonoid, bool PERSISTENT, int N, typename F = Unit_Prod<typename ActedMonoid::Monoid_X>>
+template <typename ActedMonoid, bool PERSISTENT, int N = -1, typename F = Unit_Prod<typename ActedMonoid::Monoid_X>>
 struct Dynamic_Lazy_SegTree {
     using AM = ActedMonoid;
     using MX = ActedMonoid::Monoid_X;
@@ -13,16 +14,13 @@ struct Dynamic_Lazy_SegTree {
         int l, r;
         X x;
         A lazy;
-    }* pool{new Node[N]};
-    int id{1};
+    };
+    Memory_Pool<Node, N> pool;
 
     i64 L, R;
     F default_prod;
-    Dynamic_Lazy_SegTree(i64 L, i64 R, F default_prod = {}): L(L), R(R), default_prod(default_prod) {}
-    int new_node(const X& x) {
-        pool[id] = {0, 0, x, MA::unit()};
-        return id++;
-    }
+    Dynamic_Lazy_SegTree(i64 L, i64 R, F default_prod = {}): L(L), R(R), default_prod(default_prod) { pool.new_node(); }
+    int new_node(const X& x) { return pool.new_node_id({0, 0, x, MA::unit()}); }
     int new_node(i64 l, i64 r) { return new_node(default_prod(l, r)); }
     int new_node() { return new_node(L, R); }
     int new_node(const vc<X>& a) {
@@ -184,10 +182,8 @@ struct Dynamic_Lazy_SegTree {
         return dfs(dfs, u, L, R);
     }
     int copy_node(int u) {
-        if (u && PERSISTENT) {
-            pool[id] = pool[u];
-            return id++;
-        }
+        if (u && PERSISTENT)
+            return pool.new_node_id(pool[u]);
         return u;
     }
     void pushdown(int u, i64 l, i64 r) {
