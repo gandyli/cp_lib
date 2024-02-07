@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <ctime>
 
-#if defined(LX_LOCAL) && !defined(CPH)
 namespace Timer {
     struct Timer {
         clock_t begin;
@@ -20,4 +19,3 @@ namespace Timer {
         }
     } _;
 } // namespace Timer
-#endif
