@@ -226,19 +226,18 @@ private:
         _shrink(c);
         return c;
     }
-    static vi _sub(const vi& a, const vi& b) {
-        vi c{a};
+    static vi _sub(vi a, const vi& b) {
         int t = 0;
         _for (i, len(a)) {
             if (i < len(b))
                 t += b[i];
-            c[i] -= t;
+            a[i] -= t;
             t = 0;
-            if (c[i] < 0)
-                c[i] += D, t = 1;
+            if (a[i] < 0)
+                a[i] += D, t = 1;
         }
-        _shrink(c);
-        return c;
+        _shrink(a);
+        return a;
     }
     static vi _mul_fft(const vi& a, const vi& b) {
         if (a.empty() || b.empty())
