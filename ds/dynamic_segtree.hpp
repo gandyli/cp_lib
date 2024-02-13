@@ -3,7 +3,7 @@
 #include "utility/memory_pool.hpp"
 
 template <typename Monoid, bool PERSISTENT, int N = -1, typename F = Unit_Prod<Monoid>>
-struct Dynamic_SegTree {
+struct Dynamic_SegTree: F {
     using M = Monoid;
     using X = M::value_type;
 
@@ -14,8 +14,8 @@ struct Dynamic_SegTree {
     Memory_Pool<Node, N> pool;
 
     i64 L, R;
-    F default_prod;
-    Dynamic_SegTree(i64 L, i64 R, F default_prod = {}): L(L), R(R), default_prod(default_prod) { pool.new_node(); }
+    Dynamic_SegTree(i64 L, i64 R, F default_prod = {}): F(default_prod), L(L), R(R) { pool.new_node(); }
+    auto default_prod(i64 l, i64 r) { return F::operator()(l, r); }
     int new_node(const X& x) { return pool.new_node_id({0, 0, x}); }
     int new_node(i64 l, i64 r) {
         return new_node(default_prod(l, r));
