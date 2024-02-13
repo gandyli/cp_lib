@@ -6,11 +6,11 @@ struct Memory_Pool {
     T* pool = new T[N];
     int id = 0;
     T* new_node(T x = {}) {
-        pool[id] = x;
+        pool[id] = std::move(x);
         return &pool[id++];
     }
     int new_node_id(T x = {}) {
-        pool[id] = x;
+        pool[id] = std::move(x);
         return id++;
     }
     T& operator[](int i) { return pool[i]; }
@@ -19,10 +19,7 @@ struct Memory_Pool {
 template <typename T>
 struct Memory_Pool<T, -1> {
     std::deque<T> pool;
-    T* new_node(T x = {}) {
-        pool.eb(std::move(x));
-        return &pool.eb(std::move(x));
-    }
+    T* new_node(T x = {}) { return &pool.eb(std::move(x)); }
     int new_node_id(T x = {}) {
         pool.eb(std::move(x));
         return len(pool) - 1;
