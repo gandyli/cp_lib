@@ -1,14 +1,14 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/range_kth_smallest"
 
 #include "all.hpp"
-#include "ds/dynamic_segtree.hpp"
+#include "ds/dynamic_segtree_sparse.hpp"
 #include "monoid/add.hpp"
 #include "math/binary_search.hpp"
 
 int main() {
     dR(int, n, m);
     dRV(int, a, n);
-    Dynamic_SegTree<Monoid_Add<int>, true, 4 * ten(6)> seg(0, n);
+    Dynamic_SegTree_Sparse<Monoid_Add<int>, true> seg(0, n);
     using np = decltype(seg)::np;
     auto I = argsort(a);
     vc<np> roots{seg.new_node()};

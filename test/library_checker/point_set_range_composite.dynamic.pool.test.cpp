@@ -12,7 +12,8 @@ int main() {
     using X = M::value_type;
     dRV(X, a, n);
     Dynamic_SegTree<M, false> st(0, n);
-    int root = st.new_node(a);
+    using np = decltype(st)::np;
+    np root = st.new_node(a);
     _for (q) {
         dR(int, t, x, y, z);
         if (t == 0) {

@@ -8,25 +8,26 @@ struct Dynamic_Array {
         Node* ch[2];
     };
     Memory_Pool<Node, N> pool;
+    using np = Node*;
 
     T x0;
     Dynamic_Array(T x0 = {}): x0(std::move(x0)) {}
 
-    Node* new_node() { return pool.new_node({x0, {nullptr, nullptr}}); }
-    Node* new_node(const vc<T>& a) {
-        Node* u = new_node();
+    np new_node() { return pool.new_node({x0, {nullptr, nullptr}}); }
+    np new_node(const vc<T>& a) {
+        np u = new_node();
         _for (i, len(a))
             u = set(u, i, a[i], false);
         return u;
     }
-    T get(Node* u, int i) const {
+    T get(np u, int i) const {
         if (!u)
             return x0;
         if (i == 0)
             return u->x;
         return get(u->ch[i & 1], (i - 1) >> 1);
     }
-    Node* set(Node* u, int i, T x, bool copy = true) {
+    np set(np u, int i, T x, bool copy = true) {
         if (!u)
             u = new_node();
         else if (copy && PERSISTENT)

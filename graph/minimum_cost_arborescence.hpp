@@ -13,7 +13,7 @@ namespace MinimumCostArborescenceImpl {
 
         vi calc(int root) {
             const int n = g.n, m = g.m;
-            vc<Node*> q(n);
+            vc<np> q(n);
             foreach (e, g.edges)
                 q[e.to] = meld(q[e.to], new_node(e.from, e.cost, e.id));
             vc<u8> used(n + m);
@@ -84,14 +84,15 @@ namespace MinimumCostArborescenceImpl {
             int s;
         };
         Memory_Pool<Node, N> pool;
+        using np = Node*;
 
-        Node* new_node(int to, T cost, int id) { return pool.new_node({nullptr, nullptr, {to, id, cost}, 0, 1}); }
-        static Node* add(Node* a, T x) {
+        np new_node(int to, T cost, int id) { return pool.new_node({nullptr, nullptr, {to, id, cost}, 0, 1}); }
+        static np add(np a, T x) {
             if (a)
                 a->e.cost += x, a->lazy += x;
             return a;
         }
-        Node* meld(Node* a, Node* b) {
+        np meld(np a, np b) {
             if (!a)
                 return b;
             if (!b)
@@ -105,7 +106,7 @@ namespace MinimumCostArborescenceImpl {
             a->s = (a->r ? a->r->s : 0) + 1;
             return a;
         }
-        Edge pop(Node*& a) {
+        Edge pop(np& a) {
             Edge e = a->e;
             a = meld(add(a->l, a->lazy), add(a->r, a->lazy));
             return e;

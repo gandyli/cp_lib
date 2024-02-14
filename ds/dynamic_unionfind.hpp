@@ -4,10 +4,10 @@
 template <bool PERSISTENT, int N = -1>
 struct Dynamic_UnionFind {
     Dynamic_Array<int, PERSISTENT, N> a;
-    using Node = Dynamic_Array<int, PERSISTENT, N>::Node;
+    using np = decltype(a)::np;
     Dynamic_UnionFind(): a(-1) {}
-    Node* new_node() { return a.new_node(); }
-    int get(Node* u, int x) {
+    np new_node() { return a.new_node(); }
+    int get(np u, int x) {
         loop {
             int p = a.get(u, x);
             if (p < 0)
@@ -15,8 +15,8 @@ struct Dynamic_UnionFind {
             x = p;
         }
     }
-    bool same(Node* u, int x, int y) { return get(u, x) == get(u, y); }
-    std::pair<Node*, bool> merge(Node* u, int x, int y) {
+    bool same(np u, int x, int y) { return get(u, x) == get(u, y); }
+    std::pair<np, bool> merge(np u, int x, int y) {
         x = get(u, x), y = get(u, y);
         if (x == y)
             return {u, false};

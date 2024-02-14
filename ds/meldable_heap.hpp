@@ -9,16 +9,17 @@ struct Meldable_Heap: public Compare {
         int s;
     };
     Memory_Pool<Node, N> pool;
+    using np = Node*;
 
     Meldable_Heap() = default;
     Meldable_Heap(const Compare& cmp): Compare(cmp) {}
-    Node* new_node(const T& x) { return pool.new_node({nullptr, nullptr, x, 1}); }
-    Node* copy_node(Node* a) {
+    np new_node(const T& x) { return pool.new_node({nullptr, nullptr, x, 1}); }
+    np copy_node(np a) {
         if (a && PERSISTENT)
             return pool.new_node(*a);
         return a;
     }
-    Node* meld(Node* a, Node* b) {
+    np meld(np a, np b) {
         if (!a)
             return b;
         if (!b)
@@ -33,12 +34,12 @@ struct Meldable_Heap: public Compare {
         a->s = (a->r ? a->r->s : 0) + 1;
         return a;
     }
-    Node* push(Node* a, const T& x) { return meld(a, new_node(x)); }
-    Node* pop(Node* a) { return meld(a->l, a->r); }
-    static T top(Node* a) { return a->x; }
-    static vc<T> get_all(Node* a) {
+    np push(np a, const T& x) { return meld(a, new_node(x)); }
+    np pop(np a) { return meld(a->l, a->r); }
+    static T top(np a) { return a->x; }
+    static vc<T> get_all(np a) {
         vc<T> r;
-        auto dfs = [&](auto&& dfs, Node* a) {
+        auto dfs = [&](auto&& dfs, np a) {
             if (!a)
                 return;
             r.eb(a->x);

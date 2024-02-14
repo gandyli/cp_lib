@@ -10,10 +10,10 @@ vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     if (dis[s] == inf<T>)
         return vc(k, inf<T>);
     using Heap = Meldable_Heap<std::pair<T, int>, true, N>;
-    using Node = Heap::Node;
+    using np = Heap::np;
     Heap heap;
 
-    vc<Node*> nodes(n);
+    vc<np> nodes(n);
     vc<bool> vis(n);
     vi st{t};
     vis[t] = true;
@@ -41,7 +41,7 @@ vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     r.reserve(k);
     if (nodes[s]) {
         auto cmp = [&](auto&& a, auto&& b) { return a.first > b.first; };
-        std::priority_queue<std::pair<T, Node*>, vc<std::pair<T, Node*>>, decltype(cmp)> q(cmp);
+        std::priority_queue<std::pair<T, np>, vc<std::pair<T, np>>, decltype(cmp)> q(cmp);
         q.emplace(base + heap.top(nodes[s]).first, nodes[s]);
         while (!q.empty()) {
             auto [d, n] = pop(q);
@@ -51,7 +51,7 @@ vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
                 q.emplace(d + (n->l->x.first) - (n->x.first), n->l);
             if (n->r)
                 q.emplace(d + (n->r->x.first) - (n->x.first), n->r);
-            Node* m = nodes[n->x.second];
+            np m = nodes[n->x.second];
             if (m)
                 q.emplace(d + m->x.first, m);
         }

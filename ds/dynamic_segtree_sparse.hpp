@@ -12,16 +12,17 @@ struct Dynamic_SegTree_Sparse {
         X prod, x;
     };
     Memory_Pool<Node, N> pool;
+    using np = Node*;
 
     i64 L, R;
     Dynamic_SegTree_Sparse(i64 L, i64 R): L(L), R(R) {}
-    Node* new_node() { return nullptr; }
-    Node* new_node(i64 idx, const X& x) { return pool.new_node({idx, nullptr, nullptr, x, x}); }
-    X prod(Node* u, i64 l, i64 r) {
+    np new_node() { return nullptr; }
+    np new_node(i64 idx, const X& x) { return pool.new_node({idx, nullptr, nullptr, x, x}); }
+    X prod(np u, i64 l, i64 r) {
         if (!u || l == r)
             return M::unit();
         X x = M::unit();
-        auto dfs = [&](auto&& dfs, Node* u, i64 l, i64 r, i64 ql, i64 qr) -> void {
+        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 ql, i64 qr) -> void {
             chkmax(ql, l), chkmin(qr, r);
             if (ql >= qr || !u)
                 return;
@@ -38,9 +39,9 @@ struct Dynamic_SegTree_Sparse {
         dfs(dfs, u, L, R, l, r);
         return x;
     }
-    X prod_all(Node* u) { return prod(u, L, R); }
-    Node* set(Node* u, i64 i, const X& x) {
-        auto dfs = [&](auto&& dfs, Node* u, i64 l, i64 r, i64 i, X x) -> Node* {
+    X prod_all(np u) { return prod(u, L, R); }
+    np set(np u, i64 i, const X& x) {
+        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 i, X x) -> np {
             if (!u)
                 return new_node(i, x);
             u = copy_node(u);
@@ -65,8 +66,8 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R, i, x);
     }
-    Node* multiply(Node* u, i64 i, const X& x) {
-        auto dfs = [&](auto&& dfs, Node* u, i64 l, i64 r, i64 i, X x) -> Node* {
+    np multiply(np u, i64 i, const X& x) {
+        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 i, X x) -> np {
             if (!u)
                 return new_node(i, x);
             u = copy_node(u);
@@ -91,9 +92,9 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R, i, x);
     }
-    Node* max_right(Node* u, auto&& check, i64 ql) {
+    np max_right(np u, auto&& check, i64 ql) {
         X x = M::unit();
-        auto dfs = [&](auto&& dfs, Node* u, i64 l, i64 r) -> i64 {
+        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> i64 {
             if (!u || r <= ql)
                 return R;
             if (check(M::op(x, u->prod))) {
@@ -113,9 +114,9 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R);
     }
-    Node* min_left(Node* u, auto&& check, i64 qr) {
+    np min_left(np u, auto&& check, i64 qr) {
         X x = M::unit();
-        auto dfs = [&](auto&& dfs, Node* u, i64 l, i64 r) -> i64 {
+        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> i64 {
             if (!u || qr <= l)
                 return L;
             if (check(M::op(u->prod, x))) {
@@ -135,14 +136,14 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R);
     }
-    void update(Node* u) {
+    void update(np u) {
         u->prod = u->x;
         if (u->l)
             u->prod = M::op(u->l->prod, u->prod);
         if (u->r)
             u->prod = M::op(u->prod, u->r->prod);
     }
-    Node* copy_node(Node* u) {
+    np copy_node(np u) {
         if (u && PERSISTENT)
             return pool.new_node(*u);
         return u;

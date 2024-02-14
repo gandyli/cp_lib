@@ -8,10 +8,12 @@ struct Sortable_Array {
         Node *l, *r;
         int s;
     }* pool{new Node[N]};
+    using np = Node*;
+    
     int id{};
     int n, m;
     FastSet s;
-    vc<Node*> root;
+    vc<np> root;
     vc<u8> rev;
     Sortable_Array(int m, const vi& a): n(len(a)), m(m) { init(a); }
     void set(int i, int x) {
@@ -21,7 +23,7 @@ struct Sortable_Array {
         set_rec(root[i], 0, m, x);
     }
     int get(int i) {
-        auto dfs = [&](auto&& dfs, Node* u, int l, int r, int k) -> int {
+        auto dfs = [&](auto&& dfs, np u, int l, int r, int k) -> int {
             if (l + 1 == r)
                 return l;
             int m = (l + r) >> 1;
@@ -38,7 +40,7 @@ struct Sortable_Array {
     }
     vi get_all() {
         vi a;
-        auto dfs = [&](auto&& dfs, Node* u, int l, int r, bool rev) {
+        auto dfs = [&](auto&& dfs, np u, int l, int r, bool rev) {
             if (!u || !u->s)
                 return;
             if (l + 1 == r) {
@@ -67,7 +69,7 @@ struct Sortable_Array {
             rebuild();
         split_at(l), split_at(r);
         loop {
-            Node* u = root[l];
+            np u = root[l];
             int i = s.next(l + 1);
             if (i == r)
                 break;
@@ -78,7 +80,7 @@ struct Sortable_Array {
     }
 
 private:
-    Node* new_node(int s) {
+    np new_node(int s) {
         pool[id] = {nullptr, nullptr, s};
         return &pool[id++];
     }
@@ -107,7 +109,7 @@ private:
             rev[a] = rev[x] = 1;
         }
     }
-    std::pair<Node*, Node*> split(Node* u, int l, int r, int k) {
+    std::pair<np, np> split(np u, int l, int r, int k) {
         if (k == 0)
             return {nullptr, u};
         if (k == u->s)
@@ -119,7 +121,7 @@ private:
         }
         int m = (l + r) >> 1;
         int s = u->l ? u->l->s : 0;
-        Node* v = new_node(0);
+        np v = new_node(0);
         if (k <= s) {
             auto [a, b] = split(u->l, l, m, k);
             v->l = b;
@@ -136,7 +138,7 @@ private:
         update(u), update(v);
         return {u, v};
     }
-    Node* merge(Node* u, Node* v, int l, int r) {
+    np merge(np u, np v, int l, int r) {
         if (!u)
             return v;
         if (!v)
@@ -151,8 +153,8 @@ private:
         update(u);
         return u;
     }
-    void update(Node* u) { u->s = (u->l ? u->l->s : 0) + (u->r ? u->r->s : 0); }
-    void set_rec(Node*& u, int l, int r, int k) {
+    void update(np u) { u->s = (u->l ? u->l->s : 0) + (u->r ? u->r->s : 0); }
+    void set_rec(np& u, int l, int r, int k) {
         if (!u)
             u = new_node(0);
         if (l + 1 == r) {

@@ -9,9 +9,9 @@ int main() {
     dR(int, n, m);
     dRV(int, a, n);
     Dynamic_SegTree_Sparse<Monoid_Add<int>, true, 4 * ten(6)> seg(0, n);
-    using Node = decltype(seg)::Node;
+    using np = decltype(seg)::np;
     auto I = argsort(a);
-    vc<Node*> roots{seg.new_node()};
+    vc<np> roots{seg.new_node()};
     _for (i, n)
         roots.eb(seg.set(roots.back(), I[i], 1));
     _for (m) {
