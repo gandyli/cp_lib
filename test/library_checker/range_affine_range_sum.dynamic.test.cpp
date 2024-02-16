@@ -9,7 +9,7 @@ int main() {
     dR(u32, n, q);
     using mint = MMInt998244353;
     dRV(mint, a, n);
-    Dynamic_Lazy_SegTree<ActedMonoid_Sum_Affine<mint>, false, 2 * ten(6)> st(0, n);
+    Dynamic_Lazy_SegTree<ActedMonoid_Sum_Affine<mint>, false, int, 2 * ten(6)> st(0, n);
     using np = decltype(st)::np;
     np root = st.new_node(a);
     _for (q) {

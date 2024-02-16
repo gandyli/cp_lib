@@ -8,7 +8,7 @@
 int main() {
     dR(int, n, m);
     dRV(int, a, n);
-    Dynamic_SegTree<Monoid_Add<int>, true, 4 * ten(6)> seg(0, n);
+    Dynamic_SegTree<Monoid_Add<int>, true, int, 4 * ten(6)> seg(0, n);
     using np = decltype(seg)::np;
     auto I = argsort(a);
     vc<np> roots{seg.new_node()};

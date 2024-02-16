@@ -1,28 +1,28 @@
 #pragma once
 #include "utility/memory_pool.hpp"
 
-template <typename Monoid, bool PERSISTENT, int N = -1>
+template <typename Monoid, bool PERSISTENT, typename T = int, int N = -1>
 struct Dynamic_SegTree_Sparse {
     using M = Monoid;
     using X = M::value_type;
 
     struct Node {
-        i64 idx;
+        T idx;
         Node *l, *r;
         X prod, x;
     };
     Memory_Pool<Node, N> pool;
     using np = Node*;
 
-    i64 L, R;
-    Dynamic_SegTree_Sparse(i64 L, i64 R): L(L), R(R) {}
+    T L, R;
+    Dynamic_SegTree_Sparse(T L, T R): L(L), R(R) {}
     np new_node() { return nullptr; }
-    np new_node(i64 idx, const X& x) { return pool.new_node({idx, nullptr, nullptr, x, x}); }
-    X prod(np u, i64 l, i64 r) {
+    np new_node(T idx, const X& x) { return pool.new_node({idx, nullptr, nullptr, x, x}); }
+    X prod(np u, T l, T r) {
         if (!u || l == r)
             return M::unit();
         X x = M::unit();
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 ql, i64 qr) -> void {
+        auto dfs = [&](auto&& dfs, np u, T l, T r, T ql, T qr) {
             chkmax(ql, l), chkmin(qr, r);
             if (ql >= qr || !u)
                 return;
@@ -30,7 +30,7 @@ struct Dynamic_SegTree_Sparse {
                 x = M::op(x, u->prod);
                 return;
             }
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             dfs(dfs, u->l, l, m, ql, qr);
             if (ql <= u->idx && u->idx < qr)
                 x = M::op(x, u->x);
@@ -40,8 +40,8 @@ struct Dynamic_SegTree_Sparse {
         return x;
     }
     X prod_all(np u) { return prod(u, L, R); }
-    np set(np u, i64 i, const X& x) {
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 i, X x) -> np {
+    np set(np u, T i, const X& x) {
+        auto dfs = [&](auto&& dfs, np u, T l, T r, T i, X x) -> np {
             if (!u)
                 return new_node(i, x);
             u = copy_node(u);
@@ -50,7 +50,7 @@ struct Dynamic_SegTree_Sparse {
                 update(u);
                 return u;
             }
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             if (i < m) {
                 if (u->idx < i)
                     swap(u->idx, i), swap(u->x, x);
@@ -66,8 +66,8 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R, i, x);
     }
-    np multiply(np u, i64 i, const X& x) {
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 i, X x) -> np {
+    np multiply(np u, T i, const X& x) {
+        auto dfs = [&](auto&& dfs, np u, T l, T r, T i, X x) -> np {
             if (!u)
                 return new_node(i, x);
             u = copy_node(u);
@@ -76,7 +76,7 @@ struct Dynamic_SegTree_Sparse {
                 update(u);
                 return u;
             }
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             if (i < m) {
                 if (u->idx < i)
                     swap(u->idx, i), swap(u->x, x);
@@ -92,17 +92,17 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R, i, x);
     }
-    np max_right(np u, auto&& check, i64 ql) {
+    np max_right(np u, auto&& check, T ql) {
         X x = M::unit();
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> i64 {
+        auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u || r <= ql)
                 return R;
             if (check(M::op(x, u->prod))) {
                 x = M::op(x, u->prod);
                 return R;
             }
-            i64 m = (l + r) >> 1;
-            i64 k = dfs(dfs, u->l, l, m);
+            T m = (l + r) >> 1;
+            T k = dfs(dfs, u->l, l, m);
             if (k != R)
                 return k;
             if (ql <= u->idx) {
@@ -114,17 +114,17 @@ struct Dynamic_SegTree_Sparse {
         };
         return dfs(dfs, u, L, R);
     }
-    np min_left(np u, auto&& check, i64 qr) {
+    np min_left(np u, auto&& check, T qr) {
         X x = M::unit();
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> i64 {
+        auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u || qr <= l)
                 return L;
             if (check(M::op(u->prod, x))) {
                 x = M::op(u->prod, x);
                 return L;
             }
-            i64 m = (l + r) >> 1;
-            i64 k = dfs(dfs, u->r, m, r);
+            T m = (l + r) >> 1;
+            T k = dfs(dfs, u->r, m, r);
             if (k != L)
                 return k;
             if (u->idx < qr) {

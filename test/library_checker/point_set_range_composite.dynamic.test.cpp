@@ -11,7 +11,7 @@ int main() {
     using M = Monoid_Affine<mint>;
     using X = M::value_type;
     dRV(X, a, n);
-    Dynamic_SegTree<M, false, 2 * ten(6)> st(0, n);
+    Dynamic_SegTree<M, false, int, 2 * ten(6)> st(0, n);
     using np = decltype(st)::np;
     np root = st.new_node(a);
     _for (q) {

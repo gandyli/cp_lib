@@ -2,7 +2,7 @@
 #include "ds/unit_prod.hpp"
 #include "utility/memory_pool.hpp"
 
-template <typename ActedMonoid, bool PERSISTENT, int N = -1, typename F = Unit_Prod<typename ActedMonoid::Monoid_X>>
+template <typename ActedMonoid, bool PERSISTENT, typename T = int, int N = -1, typename F = Unit_Prod<typename ActedMonoid::Monoid_X>>
 struct Dynamic_Lazy_SegTree {
     using AM = ActedMonoid;
     using MX = ActedMonoid::Monoid_X;
@@ -18,20 +18,23 @@ struct Dynamic_Lazy_SegTree {
     Memory_Pool<Node, N> pool;
     using np = Node*;
 
-    i64 L, R;
+    T L, R;
     F default_prod;
-    Dynamic_Lazy_SegTree(i64 L, i64 R, F default_prod = {}): L(L), R(R), default_prod(default_prod) {}
+    Dynamic_Lazy_SegTree(T L, T R, F default_prod = {}): L(L), R(R), default_prod(default_prod) {}
     np new_node(const X& x) { return pool.new_node({nullptr, nullptr, x, MA::unit()}); }
-    np new_node(i64 l, i64 r) { return new_node(default_prod(l, r)); }
+    np new_node(T l, T r) { return new_node(default_prod(l, r)); }
     np new_node() { return new_node(L, R); }
     np new_node(const vc<X>& a) {
         ASSERT(L == 0 && R == len(a));
-        auto dfs = [&](auto&& dfs, i64 l, i64 r) -> np {
+        return new_node([&](T i) { return a[i]; });
+    }
+    np new_node(std::invocable<T> auto&& f) {
+        auto dfs = [&](auto&& dfs, T l, T r) -> np {
             if (l == r)
-                return 0;
+                return nullptr;
             if (l + 1 == r)
-                return new_node(a[l]);
-            i64 m = (l + r) >> 1;
+                return new_node(f(l));
+            T m = (l + r) >> 1;
             np lr = dfs(dfs, l, m), rr = dfs(dfs, m, r);
             X x = MX::op(lr->x, rr->x);
             np u = new_node(x);
@@ -40,8 +43,8 @@ struct Dynamic_Lazy_SegTree {
         };
         return dfs(dfs, L, R);
     }
-    np set(np u, i64 i, const X& x) {
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> np {
+    np set(np u, T i, const X& x) {
+        auto dfs = [&](auto&& dfs, np u, T l, T r) -> np {
             if (l + 1 == r) {
                 u = copy_node(u);
                 u->x = x;
@@ -49,7 +52,7 @@ struct Dynamic_Lazy_SegTree {
                 return u;
             }
             pushdown(u, l, r);
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             if (!u->l)
                 u->l = new_node(l, m);
             if (!u->r)
@@ -64,8 +67,8 @@ struct Dynamic_Lazy_SegTree {
         };
         return dfs(dfs, u, L, R);
     }
-    np multiply(np u, i64 i, const X& x) {
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> np {
+    np multiply(np u, T i, const X& x) {
+        auto dfs = [&](auto&& dfs, np u, T l, T r) -> np {
             if (l + 1 == r) {
                 u = copy_node(u);
                 u->x = MX::op(u->x, x);
@@ -73,7 +76,7 @@ struct Dynamic_Lazy_SegTree {
                 return u;
             }
             pushdown(u, l, r);
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             if (!u->l)
                 u->l = new_node(l, m);
             if (!u->r)
@@ -88,11 +91,11 @@ struct Dynamic_Lazy_SegTree {
         };
         return dfs(dfs, u, L, R);
     }
-    X prod(np u, i64 l, i64 r) {
+    X prod(np u, T l, T r) {
         if (!u || l == r)
             return MX::unit();
         X x = MX::unit();
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 ql, i64 qr, A lazy) -> void {
+        auto dfs = [&](auto&& dfs, np u, T l, T r, T ql, T qr, A lazy) -> void {
             chkmax(ql, l), chkmin(qr, r);
             if (ql >= qr)
                 return;
@@ -104,7 +107,7 @@ struct Dynamic_Lazy_SegTree {
                 x = MX::op(x, AM::act(u->x, lazy, r - l));
                 return;
             }
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             lazy = MA::op(u->lazy, lazy);
             dfs(dfs, u->l, l, m, ql, qr, lazy);
             dfs(dfs, u->r, m, r, ql, qr, lazy);
@@ -113,10 +116,10 @@ struct Dynamic_Lazy_SegTree {
         return x;
     }
     X prod_all(np u) { return prod(u, L, R); }
-    np apply(np u, i64 l, i64 r, const A& a) {
+    np apply(np u, T l, T r, const A& a) {
         if (l == r)
             return u;
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r, i64 ql, i64 qr) -> np {
+        auto dfs = [&](auto&& dfs, np u, T l, T r, T ql, T qr) {
             if (!u)
                 u = new_node(l, r);
             chkmax(ql, l), chkmin(qr, r);
@@ -129,7 +132,7 @@ struct Dynamic_Lazy_SegTree {
                 return u;
             }
             pushdown(u, l, r);
-            i64 m = (l + r) >> 1;
+            T m = (l + r) >> 1;
             u = copy_node(u);
             u->l = dfs(dfs, u->l, l, m, ql, qr);
             u->r = dfs(dfs, u->r, m, r, ql, qr);
@@ -138,9 +141,9 @@ struct Dynamic_Lazy_SegTree {
         };
         return dfs(dfs, u, L, R, l, r);
     }
-    i64 max_right(np u, auto&& check, i64 ql) {
+    T max_right(np u, auto&& check, T ql) {
         X x = MX::unit();
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> i64 {
+        auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u)
                 u = new_node(l, r);
             if (r <= ql)
@@ -152,17 +155,17 @@ struct Dynamic_Lazy_SegTree {
             if (l + 1 == r)
                 return l;
             pushdown(u, l, r);
-            i64 m = (l + r) >> 1;
-            i64 k = dfs(dfs, u->l, l, m);
+            T m = (l + r) >> 1;
+            T k = dfs(dfs, u->l, l, m);
             if (k != R)
                 return k;
             return dfs(dfs, u->r, m, r);
         };
         return dfs(dfs, u, L, R);
     }
-    i64 min_left(np u, auto&& check, i64 qr) {
+    T min_left(np u, auto&& check, T qr) {
         X x = MX::unit();
-        auto dfs = [&](auto&& dfs, np u, i64 l, i64 r) -> i64 {
+        auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u)
                 u = new_node(l, r);
             if (qr <= l)
@@ -174,8 +177,8 @@ struct Dynamic_Lazy_SegTree {
             if (l + 1 == r)
                 return r;
             pushdown(u, l, r);
-            i64 m = (l + r) >> 1;
-            i64 k = dfs(dfs, u->r, m, r);
+            T m = (l + r) >> 1;
+            T k = dfs(dfs, u->r, m, r);
             if (k != L)
                 return k;
             return dfs(dfs, u->l, l, m);
@@ -187,10 +190,10 @@ struct Dynamic_Lazy_SegTree {
             return pool.new_node(*u);
         return u;
     }
-    void pushdown(np u, i64 l, i64 r) {
+    void pushdown(np u, T l, T r) {
         if (u->lazy == MA::unit())
             return;
-        i64 m = (l + r) >> 1;
+        T m = (l + r) >> 1;
         u->l = u->l ? copy_node(u->l) : new_node(l, m);
         u->l->x = AM::act(u->l->x, u->lazy, m - l);
         u->l->lazy = MA::op(u->l->lazy, u->lazy);
