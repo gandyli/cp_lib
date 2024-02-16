@@ -98,9 +98,7 @@ struct DynamicMontgomeryReductionContext {
 
     struct Guard {
         Guard(const Guard&) = delete;
-        Guard(Guard&&) = delete;
         Guard& operator=(const Guard&) = delete;
-        Guard& operator=(Guard&&) = delete;
         ~Guard() { _reduction_env.pop_back(); }
 
     private:
