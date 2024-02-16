@@ -5,9 +5,8 @@ template <typename TREE>
 auto auxiliary_tree(const TREE& tree, vc<int> V) {
     sort(V, [&](int x, int y) { return tree.lid[x] < tree.lid[y]; });
     int n = len(V);
-    _for (i, n - 1) {
+    _for (i, n - 1)
         V.eb(tree.lca(V[i], V[i + 1]));
-    }
     V.eb(tree.lca(V[n - 1], V[0]));
     V.eb(tree.id[0]);
     sort(V, [&](int x, int y) { return tree.lid[x] < tree.lid[y]; });
@@ -22,16 +21,13 @@ auto auxiliary_tree(const TREE& tree, vc<int> V) {
                 break;
             st.pop_back();
         }
-        int p = V[st.back()];
-        int u = V[i];
-        if constexpr (TREE::graph_type::is_weighted()) {
+        int p = V[st.back()], u = V[i];
+        if constexpr (TREE::graph_type::is_weighted())
             g.add(st.back(), i, tree.wdep[u] - tree.wdep[p]);
-        }
-        else {
+        else
             g.add(st.back(), i, tree.dep[u] - tree.dep[p]);
-        }
         st.eb(i);
     }
     g.build();
-    return std::pair{g, V};
+    return std::pair{std::move(g), std::move(V)};
 }
