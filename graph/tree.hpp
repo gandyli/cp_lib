@@ -42,11 +42,12 @@ private:
     }
 
 public:
-    using T = G::cost_type;
+    using graph_type = G;
+    using cost_type = G::cost_type;
     int n, _id{};
     G& g;
     vi lid, rid, dep, top, fa, id, vtoe;
-    vc<T> wdep;
+    vc<cost_type> wdep;
     Tree(G& g, int root = 0)
         : n(g.n), g(g),
           lid(n),
@@ -116,7 +117,7 @@ public:
         return (dep[x] <= dep[u] && dep[x] >= dep[w] && k_ancestor(u, dep[u] - dep[x]) == x) || (dep[x] <= dep[v] && dep[x] >= dep[w] && k_ancestor(v, dep[v] - dep[x]) == x);
     }
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
-    T wdist(int u, int v) const requires (G::is_weighted())
+    cost_type wdist(int u, int v) const requires (G::is_weighted())
     { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
     vc<pi> path_decomposition(int u, int v, bool edge) const {
         vc<pi> up, down;
