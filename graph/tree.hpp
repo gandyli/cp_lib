@@ -119,7 +119,7 @@ public:
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
     cost_type wdist(int u, int v) const requires (G::is_weighted())
     { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
-    vc<pi> path_decomposition(int u, int v, bool edge) const {
+    vc<pi> path_decomposition(int u, int v, bool edge = false) const {
         vc<pi> up, down;
         while (top[u] != top[v])
             if (lid[u] < lid[v]) {
@@ -140,7 +140,7 @@ public:
     }
     vi path(int u, int v) const {
         vi r;
-        for (auto&& [a, b]: path_decomposition(u, v, false))
+        for (auto&& [a, b]: path_decomposition(u, v))
             if (a <= b)
                 _for (i, a, b + 1)
                     r.eb(id[i]);
