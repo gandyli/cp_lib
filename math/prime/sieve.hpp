@@ -36,7 +36,7 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
                     j += p << 1;
                 pp.pos[t] = j / 30;
             }
-            sprimes.push_back(pp);
+            sprimes.eb(pp);
         }
 
     vc<u8> pre(prod, 0xff);

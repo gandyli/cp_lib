@@ -42,34 +42,22 @@ void fft4(vc<mint>& a, int k) {
     mint one(1);
     mint imag = ntt.dw[1];
     while (v) {
-        // jh = 0
-        {
-            int j0 = 0;
-            int j1 = v;
-            int j2 = j1 + v;
-            int j3 = j2 + v;
-            for (; j0 < v; j0++, j1++, j2++, j3++) {
-                mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
+        for (int j0 = 0, j1 = v, j2 = j1 + v, j3 = j2 + v; j0 < v; j0++, j1++, j2++, j3++) {
+            mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
+            mint t0p2 = t0 + t2, t1p3 = t1 + t3;
+            mint t0m2 = t0 - t2, t1m3 = (t1 - t3) * imag;
+            a[j0] = t0p2 + t1p3, a[j1] = t0p2 - t1p3;
+            a[j2] = t0m2 + t1m3, a[j3] = t0m2 - t1m3;
+        }
+        mint ww = one, xx = one * ntt.dw[2], wx = one;
+        for (int jh = 4; jh < u;) {
+            ww = xx * xx, wx = ww * xx;
+            for (int j0 = jh * v, j1 = j0 + v, j2 = j1 + v, j3 = j2 + v, je = j1; j0 < je; j0++, j1++, j2++, j3++) {
+                mint t0 = a[j0], t1 = a[j1] * xx, t2 = a[j2] * ww, t3 = a[j3] * wx;
                 mint t0p2 = t0 + t2, t1p3 = t1 + t3;
                 mint t0m2 = t0 - t2, t1m3 = (t1 - t3) * imag;
                 a[j0] = t0p2 + t1p3, a[j1] = t0p2 - t1p3;
                 a[j2] = t0m2 + t1m3, a[j3] = t0m2 - t1m3;
-            }
-        }
-        // jh >= 1
-        mint ww = one, xx = one * ntt.dw[2], wx = one;
-        for (int jh = 4; jh < u;) {
-            ww = xx * xx, wx = ww * xx;
-            int j0 = jh * v;
-            int je = j0 + v;
-            int j2 = je + v;
-            for (; j0 < je; j0++, j2++) {
-                mint t0 = a[j0], t1 = a[j0 + v] * xx, t2 = a[j2] * ww,
-                     t3 = a[j2 + v] * wx;
-                mint t0p2 = t0 + t2, t1p3 = t1 + t3;
-                mint t0m2 = t0 - t2, t1m3 = (t1 - t3) * imag;
-                a[j0] = t0p2 + t1p3, a[j0 + v] = t0p2 - t1p3;
-                a[j2] = t0m2 + t1m3, a[j2 + v] = t0m2 - t1m3;
             }
             xx *= ntt.dw[__builtin_ctz(jh += 4)];
         }
@@ -91,39 +79,27 @@ void ifft4(vc<mint>& a, int k) {
     mint one(1);
     mint imag = ntt.dy[1];
     while (u) {
-        // jh = 0
-        {
-            int j0 = 0;
-            int j1 = v;
-            int j2 = v + v;
-            int j3 = j2 + v;
-            for (; j0 < v; j0++, j1++, j2++, j3++) {
-                mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
-                mint t0p1 = t0 + t1, t2p3 = t2 + t3;
-                mint t0m1 = t0 - t1, t2m3 = (t2 - t3) * imag;
-                a[j0] = t0p1 + t2p3, a[j2] = t0p1 - t2p3;
-                a[j1] = t0m1 + t2m3, a[j3] = t0m1 - t2m3;
-            }
+        for (int j0 = 0, j1 = v, j2 = j1 + v, j3 = j2 + v; j0 < v; j0++, j1++, j2++, j3++) {
+            mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
+            mint t0p1 = t0 + t1, t2p3 = t2 + t3;
+            mint t0m1 = t0 - t1, t2m3 = (t2 - t3) * imag;
+            a[j0] = t0p1 + t2p3, a[j2] = t0p1 - t2p3;
+            a[j1] = t0m1 + t2m3, a[j3] = t0m1 - t2m3;
         }
-        // jh >= 1
         mint ww = one, xx = one * ntt.dy[2], yy = one;
         u <<= 2;
         for (int jh = 4; jh < u;) {
             ww = xx * xx, yy = xx * imag;
-            int j0 = jh * v;
-            int je = j0 + v;
-            int j2 = je + v;
-            for (; j0 < je; j0++, j2++) {
-                mint t0 = a[j0], t1 = a[j0 + v], t2 = a[j2], t3 = a[j2 + v];
+            for (int j0 = jh * v, j1 = j0 + v, j2 = j1 + v, j3 = j2 + v, je = j1; j0 < je; j0++, j1++, j2++, j3++) {
+                mint t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
                 mint t0p1 = t0 + t1, t2p3 = t2 + t3;
                 mint t0m1 = (t0 - t1) * xx, t2m3 = (t2 - t3) * yy;
                 a[j0] = t0p1 + t2p3, a[j2] = (t0p1 - t2p3) * ww;
-                a[j0 + v] = t0m1 + t2m3, a[j2 + v] = (t0m1 - t2m3) * ww;
+                a[j1] = t0m1 + t2m3, a[j3] = (t0m1 - t2m3) * ww;
             }
             xx *= ntt.dy[__builtin_ctz(jh += 4)];
         }
-        u >>= 4;
-        v <<= 2;
+        u >>= 4, v <<= 2;
     }
     if (k & 1) {
         u = 1 << (k - 1);
