@@ -3,23 +3,22 @@
 
 template <typename T, typename U>
 constexpr auto binary_gcd(T _a, U _b) {
-    using CU = make_unsigned_t<std::common_type_t<T, U>>;
-    CU a = _a >= 0 ? _a : -_a, b = _b >= 0 ? _b : -_b;
+    using S = make_signed_t<std::common_type_t<T, U>>;
+    S a = _a >= 0 ? _a : -_a, b = _b >= 0 ? _b : -_b;
     if (a == 0)
         return b;
     if (b == 0)
         return a;
     int i = std::__countr_zero(a);
-    a >>= i;
     int j = std::__countr_zero(b);
-    b >>= j;
     int k = min(i, j);
-    loop {
-        if (a > b)
-            swap(a, b);
-        b -= a;
-        if (b == 0)
-            return a << k;
-        b >>= std::__countr_zero(b);
+    b >>= j;
+    while (a != 0) {
+        a >>= i;
+        S diff = b - a;
+        i = std::__countr_zero(diff);
+        chkmin(b, a);
+        a = max(diff, -diff);
     }
+    return b << k;
 }

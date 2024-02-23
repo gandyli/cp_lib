@@ -38,6 +38,14 @@ struct make_unsigned<i128> {
 template <typename T>
 using make_unsigned_t = make_unsigned<T>::type;
 template <typename T>
+struct make_signed: public std::make_signed<T> {};
+template <>
+struct make_signed<u128> {
+    using type = i128;
+};
+template <typename T>
+using make_signed_t = make_signed<T>::type;
+template <typename T>
 concept tupleLike = requires { typename std::tuple_element_t<0, std::decay_t<T>>; } && !requires (T t) { t[0]; };
 template <typename T>
 concept Signed = std::signed_integral<T> || std::is_same_v<T, i128>;
