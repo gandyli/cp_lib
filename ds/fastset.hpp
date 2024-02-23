@@ -41,8 +41,7 @@ struct FastSet {
         }
     }
     int prev(u32 x) const {
-        if (x >= n)
-            x = n - 1;
+        chkmin(x, n - 1);
         _for (i, lg) {
             u64 d = a[i][x / B] << (B - x % B - 1);
             if (!d) {
