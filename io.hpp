@@ -1,5 +1,5 @@
 #pragma once
-#include "template.hpp"
+#include "utility/itos_table.hpp"
 
 #define FASTIO
 #ifdef CHECK_EOF
@@ -314,16 +314,6 @@ public:
         else
             memcpy(op, s, n), op += n;
     }
-    static constexpr auto O = [] {
-        std::array<u32, 10000> O{};
-        int x = 0;
-        _for (i, 10)
-            _for (j, 10)
-                _for (k, 10)
-                    _for (l, 10)
-                        O[x++] = i + j * 0x100 + k * 0x10000 + l * 0x1000000 + 0x30303030;
-        return O;
-    }();
 #endif
     void output(std::string_view s) { output(fopen(s.data(), "wb")); }
     void output(FILE* f) { out = f; }
@@ -348,6 +338,7 @@ public:
         auto L = [&](int x) { return x == 1 ? 0 : ten(x - 1); };
         auto R = [&](int x) { return ten(x) - 1; };
 
+        auto&& O = itos_table;
 #define de(t)                          \
     case L(t)... R(t):                 \
         *(u32*)op = O[x / ten((t)-4)]; \

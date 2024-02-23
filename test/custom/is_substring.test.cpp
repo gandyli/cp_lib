@@ -11,7 +11,6 @@ str gen(int n) {
     return s;
 }
 void test() {
-    using namespace std::string_literals;
     _for (1000)
         _for (n, 1, 10)
             _for (m, 1, 10) {

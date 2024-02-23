@@ -51,10 +51,8 @@ struct FastSet {
                 continue;
             }
             x -= __builtin_clzll(d);
-            _for_r (j, i) {
-                x *= B;
-                x += B - __builtin_clzll(a[j][x / B]) - 1;
-            }
+            _for_r (j, i)
+                x = x * B + B - __builtin_clzll(a[j][x]) - 1;
             return x;
         }
         return -1;
@@ -71,10 +69,8 @@ struct FastSet {
                 continue;
             }
             x += __builtin_ctzll(d);
-            _for_r (j, i) {
-                x *= B;
-                x += __builtin_ctzll(a[j][x / B]);
-            }
+            _for_r (j, i)
+                x = x * B + __builtin_ctzll(a[j][x]);
             return x;
         }
         return n;
