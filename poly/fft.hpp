@@ -6,12 +6,13 @@ namespace CFFT {
     struct Cp {
         T x{}, y{};
         Cp operator+(const Cp& c) const { return {x + c.x, y + c.y}; }
-        Cp& operator+=(const Cp& c) {
-            x += c.x, y += c.y;
-            return *this;
-        }
+        Cp& operator+=(const Cp& c) { return *this = *this + c; }
         Cp operator-(const Cp& c) const { return {x - c.x, y - c.y}; }
+        Cp& operator-=(const Cp& c) { return *this = *this - c; }
         Cp operator*(const Cp& c) const { return {x * c.x - y * c.y, x * c.y + y * c.x}; }
+        Cp operator*=(const Cp& c) { return *this = *this * c; }
+        Cp operator*(T z) const { return {x * z, y * z}; }
+        Cp operator*=(T z) { return *this = *this * z; }
         Cp operator-() const { return {-x, -y}; }
         Cp conj() const { return {x, -y}; }
         Cp rotl() const { return {-y, x}; }
@@ -19,25 +20,17 @@ namespace CFFT {
     using C = Cp<f64>;
     vc<C> w;
 
-    inline void genw(int i, int b, Cp<ld> z, const vc<Cp<ld>>& base) {
-        if (b == -1)
-            w[i].x = z.x, w[i].y = z.y;
-        else {
-            genw(i, b - 1, z, base);
-            genw(i | (1 << b), b - 1, z * base[b], base);
-        }
-    }
     void setw(int k) {
         if (len(w) >= (1 << --k))
             return;
         w.resize(1 << k);
-        vc<Cp<ld>> base(k);
-        const ld arg = std::numbers::pi_v<ld> / (1 << k);
-        for (int i = 0, j = 1 << (k - 1); j; i++, j >>= 1) {
-            std::complex<ld> z = exp(std::complex<ld>(0, 1) * (arg * j));
-            base[i] = {z.real(), z.imag()};
+        w[0] = {1, 0};
+        for (int i = 1; i < (1 << k); i <<= 1) {
+            auto arg = std::numbers::pi / (i << 1);
+            w[i] = {cos(arg), sin(arg)};
         }
-        genw(0, k - 1, {1, 0}, base);
+        _for (i, 1, 1 << k)
+            w[i] = w[i & (i - 1)] * w[lowbit(i)];
     }
     void fft(vc<C>& a, int k) {
         if (len(a) <= 1)
@@ -78,9 +71,7 @@ namespace CFFT {
         if (len(a) <= 1)
             return;
         if (k == 1) {
-            C a1 = a[1];
-            a[1] = a[0] - a[1];
-            a[0] = a[0] + a1;
+            a[0] += std::exchange(a[1], a[0] - a[1]);
             return;
         }
         int u = 1 << (k - 2), v = 1;
