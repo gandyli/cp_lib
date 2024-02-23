@@ -107,16 +107,6 @@ vc<U> convolution(const vc<T>& a, const vc<T>& b) {
     int n = len(a), m = len(b);
     if (!n || !m)
         return {};
-    {
-        constexpr i64 LIM = ten(15);
-        i64 sa = 0, sb = 0;
-        _for (i, n)
-            chkmin(sa += std::abs(a[i]), LIM);
-        _for (i, m)
-            chkmin(sb += std::abs(b[i]), LIM);
-        if (i128(sa) * sb <= LIM)
-            return convolution_fft<T, U, true>(a, b);
-    }
     if (min(n, m) <= 900)
         return convolution_karatsuba<T, U>(a, b);
     return convolution_garner<T, U>(a, b);

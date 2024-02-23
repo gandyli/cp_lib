@@ -7,26 +7,26 @@ vc<U> convolution_karatsuba(const vc<T>& f, const vc<T>& g) {
     if (min(n, m) <= 30)
         return convolution_naive<T, U>(f, g);
     int mi = ceil(max(n, m), 2);
-    vc<T> f1, f2, g1, g2;
+    vc<U> f1, f2, g1, g2;
     if (n < mi)
-        f1 = f;
+        f1 = {all(f)};
     else {
         f1 = {f.begin(), f.begin() + mi};
-        f2 = {f.begin() + mi, f.end()};
+        f2 = {mi + all(f)};
     }
     if (m < mi)
-        g1 = g;
+        g1 = {all(g)};
     else {
         g1 = {g.begin(), g.begin() + mi};
-        g2 = {g.begin() + mi, g.end()};
+        g2 = {mi + all(g)};
     }
-    auto a = convolution_karatsuba<T, U>(f1, g1);
-    auto b = convolution_karatsuba<T, U>(f2, g2);
+    auto a = convolution_karatsuba(f1, g1);
+    auto b = convolution_karatsuba(f2, g2);
     _for (i, len(f2))
         f1[i] += f2[i];
     _for (i, len(g2))
         g1[i] += g2[i];
-    auto c = convolution_karatsuba<T, U>(f1, g1);
+    auto c = convolution_karatsuba(f1, g1);
     vc<U> r(n + m - 1);
     _for (i, len(a))
         r[i] += a[i], c[i] -= a[i];
