@@ -31,8 +31,8 @@ struct Graph {
     class OutgoingEdges {
     public:
         OutgoingEdges(const Graph* G, int l, int r): G(G), l(l), r(r) {}
-        const edge_type* begin() const { return l == r ? nullptr : &G->csr_edges[l]; }
-        const edge_type* end() const { return l == r ? nullptr : &G->csr_edges[r]; }
+        const edge_type* begin() const { return G->csr_edges.data() + l; }
+        const edge_type* end() const { return G->csr_edges.data() + r; }
 
     private:
         const Graph* G;

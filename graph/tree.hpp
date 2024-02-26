@@ -134,8 +134,7 @@ public:
             down.eb(lid[u] + edge, lid[v]);
         else if (lid[v] + edge <= lid[u])
             up.eb(lid[u], lid[v] + edge);
-        reverse(down);
-        up.insert(up.end(), all(down));
+        up.insert(up.end(), rall(down));
         return up;
     }
     vi path(int u, int v) const {
