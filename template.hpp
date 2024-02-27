@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 using namespace std::ranges;
+using namespace std::literals;
 
 // NOLINTBEGIN
 #define FOR1(a) for (std::decay_t<decltype(a)> _ = 0; _ < (a); _++)
