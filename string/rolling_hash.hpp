@@ -4,7 +4,7 @@
 #include "math/binary_search.hpp"
 
 template <typename MINT = MMInt61>
-class Rollinghash {
+struct Rollinghash {
     using mint = MINT;
     static vc<mint> p;
     static u64 generateBase() { return rnd(1, mint::mod()); }
@@ -26,7 +26,6 @@ class Rollinghash {
     }
     vc<mint> h;
 
-public:
     Rollinghash(random_access_range auto&& s) { build(s); }
     Rollinghash(int n, std::invocable<int> auto&& f) { build(n, f); }
     static mint hash(auto&& s) {

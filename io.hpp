@@ -339,11 +339,11 @@ public:
         auto R = [&](int x) { return ten(x) - 1; };
 
         auto&& O = itos_table;
-#define de(t)                          \
-    case L(t)... R(t):                 \
-        *(u32*)op = O[x / ten((t)-4)]; \
-        op += 4;                       \
-        x %= ten((t)-4);               \
+#define de(t)                            \
+    case L(t)... R(t):                   \
+        *(u32*)op = O[x / ten((t) - 4)]; \
+        op += 4;                         \
+        x %= ten((t) - 4);               \
         [[fallthrough]]
 
         u64 y = x;

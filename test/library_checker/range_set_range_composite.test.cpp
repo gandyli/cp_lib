@@ -18,7 +18,8 @@ int main() {
         if (t == 0) {
             dR(int, l, r, c, d);
             seg.apply(l, r, {c, d});
-        } else {
+        }
+        else {
             dR(int, l, r, x);
             print(Mono::eval(seg.prod(l, r), x));
         }

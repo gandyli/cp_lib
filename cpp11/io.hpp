@@ -323,11 +323,11 @@ public:
         if (std::end(pbuf) - pp < 64)
             flush();
 
-#define de(t)                            \
-    case L(t)... R(t):                   \
-        *(u32*)(pp) = D[x / ten((t)-4)]; \
-        pp += 4;                         \
-        x %= ten((t)-4);
+#define de(t)                              \
+    case L(t)... R(t):                     \
+        *(u32*)(pp) = D[x / ten((t) - 4)]; \
+        pp += 4;                           \
+        x %= ten((t) - 4);
 
         u64 y = x;
         switch (y) {

@@ -9,7 +9,7 @@ struct Sortable_Array {
         int s;
     }* pool{new Node[N]};
     using np = Node*;
-    
+
     int id{};
     int n, m;
     FastSet s;

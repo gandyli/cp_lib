@@ -148,7 +148,8 @@ auto read_graph(int n, int m, int off = 1) {
         if constexpr (g.is_weighted()) {
             dR(T, c);
             g.add(a, b, c);
-        } else
+        }
+        else
             g.add(a, b);
     }
     g.build();

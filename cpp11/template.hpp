@@ -6,9 +6,9 @@
 #define FOR2(i, a) for (typename std::decay<decltype(a)>::type i = 0; i < (a); i++)
 #define FOR3(i, a, b) for (auto i = a; i < (b); i++)
 #define FOR4(i, a, b, c) for (auto i = a; i < (b); i += (c))
-#define FOR1_R(a) for (auto i = (a)-1; i >= 0; i--)
-#define FOR2_R(i, a) for (auto i = (a)-1; i >= 0; i--)
-#define FOR3_R(i, a, b) for (auto i = (b)-1; i >= (a); i--)
+#define FOR1_R(a) for (auto i = (a) - 1; i >= 0; i--)
+#define FOR2_R(i, a) for (auto i = (a) - 1; i >= 0; i--)
+#define FOR3_R(i, a, b) for (auto i = (b) - 1; i >= (a); i--)
 #define overload4(a, b, c, d, e, ...) e
 #define overload3(a, b, c, d, ...) d
 #define _for(...) overload4(__VA_ARGS__, FOR4, FOR3, FOR2, FOR1)(__VA_ARGS__)
