@@ -2,9 +2,9 @@
 #include "monoid/rollinghash.hpp"
 #include "monoid/add.hpp"
 
+template <typename mint = MMInt61>
 struct ActedMonoid_Rollinghash_Add {
-    using mint = MMInt61;
-    using Monoid_X = Monoid_Rollinghash;
+    using Monoid_X = Monoid_Rollinghash<mint>;
     using Monoid_A = Monoid_Add<mint>;
     using X = Monoid_X::value_type;
     using A = Monoid_A::value_type;

@@ -2,8 +2,8 @@
 #include "random/base.hpp"
 #include "modint/mint61.hpp"
 
+template <typename mint = MMInt61>
 struct Monoid_Rollinghash {
-    using mint = MMInt61;
     using value_type = std::pair<mint, mint>;
     using X = value_type;
 
