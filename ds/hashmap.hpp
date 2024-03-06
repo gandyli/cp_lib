@@ -4,10 +4,11 @@
 template <typename K, typename V, int LG = 20, bool KEEP_IS = false>
 struct HashMap {
     static constexpr int N = 1 << LG;
-    K* key = new K[N];
-    V* val = new V[N];
+    K* key;
+    V* val;
     vi IS;
     std::bitset<N> vis;
+    HashMap(): key(new K[N]), val(new V[N]) {}
     int index(const K& k) const {
         int i = hash{}(k) >> (64 - LG);
         while (vis[i] && key[i] != k)

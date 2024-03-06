@@ -3,9 +3,9 @@
 
 template <typename T, int N, bool MID = true>
 struct Deque {
-    T* a = new T[N];
+    T* a;
     int l, r;
-    Deque() {
+    Deque(): a(new T[N]) {
         if constexpr (MID)
             l = r = N / 2;
         else

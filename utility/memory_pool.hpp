@@ -3,8 +3,9 @@
 
 template <typename T, int N>
 struct Memory_Pool {
-    T* pool = new T[N];
+    T* pool;
     int id = 0;
+    Memory_Pool(): pool(new T[N]) {}
     T* new_node(T x = {}) {
         pool[id] = std::move(x);
         return &pool[id++];
