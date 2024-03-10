@@ -9,6 +9,6 @@ int main() {
     dR(int, n);
     dR(i64, k);
     dRV(mint, a, n, n);
-    io.displayArray(matrix_pow(a, k), '\n');
+    print(matrix_pow(a, k));
     return 0;
 }

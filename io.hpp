@@ -410,7 +410,10 @@ public:
         writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, prec).ptr - buf);
     }
     void write(std::string_view s) { writestr(s.data(), s.size()); }
-    void print_range(auto f, auto l, char d = ' ') {
+    template <typename I, typename T = std::iter_value_t<I>>
+    static constexpr char default_delim = tupleLike<T> || (input_range<T> && !requires (range_value_t<T> x) { {x} -> std::same_as<char&>; }) ? '\n' : ' ';
+    template <std::input_iterator I, std::sentinel_for<I> S>
+    void print_range(I f, S l, char d = default_delim<I>) {
         if (f != l)
             for (write(*f++); f != l; write(*f++))
                 putch(d);
@@ -434,9 +437,10 @@ public:
         ((putch(' '), write(FORWARD(y))), ...);
         print();
     }
-    template <std::input_iterator I>
-    void displayArray(I f, I l, char d = ' ') { print_range(f, l, d), print(); }
-    void displayArray(input_range auto&& r, char d = ' ') { displayArray(all(r), d); }
+    template <std::input_iterator I, std::sentinel_for<I> S>
+    void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
+    template <input_range R>
+    void displayArray(R&& r, char d = default_delim<iterator_t<R>>) { displayArray(all(r), d); }
     operator bool() const { return status; }
 } io;
 #ifdef LX_LOCAL

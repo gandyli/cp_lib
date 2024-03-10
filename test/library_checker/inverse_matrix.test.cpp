@@ -10,7 +10,7 @@ int main() {
     dRV(mint, a, n, n);
     auto [b, det] = matrix_inv(a);
     if (det != 0)
-        io.displayArray(b, '\n');
+        print(b);
     else
         print(-1);
     return 0;

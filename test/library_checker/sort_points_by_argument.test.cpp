@@ -8,6 +8,6 @@ int main() {
     sort(a, [&](auto&& x, auto&& y) {
         return atan2l(x.second, x.first) < atan2l(y.second, y.first);
     });
-    io.displayArray(a, '\n');
+    print(a);
     return 0;
 }

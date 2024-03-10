@@ -9,6 +9,6 @@ int main() {
     dR(int, n, m, k);
     dRV(mint, a, n, m);
     dRV(mint, b, m, k);
-    io.displayArray(matrix_mul(a, b), '\n');
+    print(matrix_mul(a, b));
     return 0;
 }
