@@ -28,7 +28,7 @@ struct Weighted_UnionFind {
         return {x, r};
     }
     std::pair<int, X> operator[](int x) { return get(x); }
-    bool same(int x, int y) { return (*this)[x].first == (*this)[y].first; }
+    bool same(int x, int y) { return get(x).first == get(y).first; }
     bool merge(int x, int y, X z) {
         auto [x0, vx] = get(x);
         auto [y0, vy] = get(y);
