@@ -28,8 +28,7 @@ struct Graph {
     vc<edge_type> csr_edges;
 
     vi _deg, _indeg, _outdeg;
-    class OutgoingEdges {
-    public:
+    struct OutgoingEdges {
         OutgoingEdges(const Graph* G, int l, int r): G(G), l(l), r(r) {}
         const edge_type* begin() const { return G->csr_edges.data() + l; }
         const edge_type* end() const { return G->csr_edges.data() + r; }

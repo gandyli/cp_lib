@@ -3,7 +3,6 @@
 
 template <typename G>
 class Tree {
-private:
     void dfs1(int u) {
         auto& size = rid;
         size[u] = 1;

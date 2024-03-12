@@ -37,7 +37,7 @@
 #define EV (-1)
 #endif
 
-class IO {
+struct IO {
     static constexpr usize bufSize = 1 << 20;
     static constexpr bool isdigit(int c) { return '0' <= c && c <= '9'; }
     static constexpr bool blank(int c) { return c <= ' '; }
@@ -52,7 +52,6 @@ class IO {
 #endif
 #endif
 
-public:
 #ifdef LX_DEBUG
     int getch() { return fgetc(in); }
     int getch_unchecked() { return getch(); }
@@ -346,8 +345,7 @@ public:
         x %= ten((t) - 4);               \
         [[fallthrough]]
 
-        u64 y = x;
-        switch (y) {
+        switch (u64(x)) {
             de(18);
             de(14);
             de(10);
