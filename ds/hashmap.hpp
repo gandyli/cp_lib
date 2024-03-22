@@ -32,7 +32,7 @@ struct HashMap {
     }
     bool contains(const K& k) const {
         int i = index(k);
-        return vis[i] && key[i] == k;
+        return vis[i];
     }
     void clear() {
         vis.reset();
