@@ -7,7 +7,12 @@ template <typename MINT = MMInt61>
 struct Rollinghash {
     using mint = MINT;
     static vc<mint> p;
-    static u64 generateBase() { return rnd(1, mint::mod()); }
+    static u64 generateBase() {
+        if constexpr (Modint<mint>)
+            return rnd(2, mint::mod());
+        else
+            return 2 * rnd(2, std::numeric_limits<mint>::max() / 2) + 1;
+    }
     static const mint base;
     void build(auto&& s) {
         build(len(s), [&](int i) { return s[i]; });
