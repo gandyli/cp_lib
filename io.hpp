@@ -409,7 +409,7 @@ struct IO {
     }
     void write(std::string_view s) { writestr(s.data(), s.size()); }
     template <typename I, typename T = std::iter_value_t<I>>
-    static constexpr char default_delim = tupleLike<T> || (input_range<T> && !requires (range_value_t<T> x) { {x} -> std::same_as<char&>; }) ? '\n' : ' ';
+    static constexpr char default_delim = tupleLike<T> || input_range<T> ? '\n' : ' ';
     template <std::input_iterator I, std::sentinel_for<I> S>
     void print_range(I f, S l, char d = default_delim<I>) {
         if (f != l)
