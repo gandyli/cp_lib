@@ -40,8 +40,7 @@ vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     vc<T> r{base};
     r.reserve(k);
     if (nodes[s]) {
-        auto cmp = [&](auto&& a, auto&& b) { return a.first > b.first; };
-        std::priority_queue<std::pair<T, np>, vc<std::pair<T, np>>, decltype(cmp)> q(cmp);
+        std::priority_queue<std::pair<T, np>, vc<std::pair<T, np>>, decltype([](auto&& a, auto&& b) { return a.first > b.first; })> q;
         q.emplace(base + heap.top(nodes[s]).first, nodes[s]);
         while (!q.empty()) {
             auto [d, n] = pop(q);
