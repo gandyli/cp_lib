@@ -42,7 +42,7 @@ struct FractionBase {
     friend bool operator==(const R&, const R&) = default;
     friend auto operator<=>(const R& l, const R& r) { return U{l.x} * r.y <=> U{l.y} * r.x; }
 #ifdef FASTIO
-    IO& read(IO& io) { return io.read(x, y); }
+    void read(IO& io) { io.read(x, y); }
     void write(IO& io) const {
         io.write(x);
         if (x != 0 && y != 1)

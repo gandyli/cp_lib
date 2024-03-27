@@ -6,7 +6,7 @@
 
 int main() {
     dR(int, n, q);
-    SegTree<Monoid_Add<i64>> st(n, [&](int) { return io.read<int>(); });
+    SegTree<Monoid_Add<i64>> st(n, [&](int) { return io.read(); });
     _for (q) {
         dR(int, t, x, y);
         if (t == 0) {

@@ -6,7 +6,7 @@
 
 int main() {
     dR(int, n, m);
-    Disjoint_Sparse_Table<Monoid_Min<int>> st(n, [&](int) { return io.read<int>(); });
+    Disjoint_Sparse_Table<Monoid_Min<int>> st(n, [&](int) { return io.read(); });
     _for (m) {
         dR(int, l, r);
         print(st.prod(l, r));

@@ -6,7 +6,7 @@
 
 int main() {
     dR(int, n, q);
-    FenwickTree<Monoid_Add<i64>> bit(n, [&](int) { return io.read<int>(); });
+    FenwickTree<Monoid_Add<i64>> bit(n, [&](int) { return io.read(); });
     _for (q) {
         dR(int, t, x, y);
         if (t == 0) {

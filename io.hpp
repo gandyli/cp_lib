@@ -279,7 +279,7 @@ struct IO {
         return *this;
     }
     IO& read(tupleLike auto& t) {
-        return std::apply([&](auto&... t) { (read(t), ...); }, t), *this;
+        return std::apply([&](auto&... t) { read(t...); }, t), *this;
     }
     IO& read(forward_range auto&& r) { return readArray(FORWARD(r)); }
     template <typename T>
@@ -325,7 +325,7 @@ struct IO {
     void write(T x) {
         make_unsigned_t<T> y = x;
         if (x < 0)
-            putch('-'), write(y = -y);
+            write('-', y = -y);
         else
             write(y);
     }
@@ -413,14 +413,11 @@ struct IO {
     template <std::input_iterator I, std::sentinel_for<I> S>
     void print_range(I f, S l, char d = default_delim<I>) {
         if (f != l)
-            for (write(*f++); f != l; write(*f++))
-                putch(d);
+            for (write(*f++); f != l; write(d, *f++)) {}
     }
     template <tupleLike T>
     void write(T&& t) {
-        [&]<auto... I>(std::index_sequence<I...>) {
-            (..., (!I ? void() : putch(' '), write(std::get<I>(t))));
-        }(std::make_index_sequence<std::tuple_size_v<std::decay_t<T>>>());
+        std::apply([&](auto&& x, auto&&... y) { write(FORWARD(x)), (write(' ', FORWARD(y)), ...); }, FORWARD(t));
     }
     template <input_range R>
     requires (!std::same_as<range_value_t<R>, char>)
@@ -430,11 +427,7 @@ struct IO {
     void write(T&& t) { t.write(*this); }
     void writeln(auto&&... x) { write(FORWARD(x)...), print(); }
     void print() { putch('\n'); }
-    void print(auto&& x, auto&&... y) {
-        write(FORWARD(x));
-        ((putch(' '), write(FORWARD(y))), ...);
-        print();
-    }
+    void print(auto&&... x) { write(std::forward_as_tuple(FORWARD(x)...), '\n'); }
     template <std::input_iterator I, std::sentinel_for<I> S>
     void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
     template <input_range R>
