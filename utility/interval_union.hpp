@@ -8,7 +8,7 @@ vc<std::pair<T, T>> interval_union(vc<std::pair<T, T>> a) {
     sort(a);
     vc<std::pair<T, T>> b;
     T l = -inf<T>, r = -inf<T>;
-    for (auto&& [x, y]: a)
+    foreach (x, y, a)
         if (x > r) {
             if (l != -inf<T>)
                 b.eb(l, r);

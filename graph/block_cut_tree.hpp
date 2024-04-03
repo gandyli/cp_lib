@@ -39,7 +39,7 @@ Graph<> block_cut_tree(const UndirectedGraph auto& g) {
             st.clear();
         }
     Graph tree(m, len(edges));
-    for (auto&& [a, b]: edges)
+    foreach (a, b, edges)
         tree.add(a, b);
     tree.build();
     return tree;

@@ -20,7 +20,7 @@ void test(int n) {
     auto ret = interval_union(a);
     _for (i, len(ret) - 1)
         assert(ret[i].second < ret[i + 1].first);
-    for (auto&& [l, r]: ret)
+    foreach (l, r, ret)
         _for (i, l, r) {
             assert(v[i]);
             v[i] = 0;

@@ -7,7 +7,7 @@ void test(auto&& a, auto&& b) {
     int lcs = longest_common_subsequence(a, b);
     auto r = longest_common_subsequence_result(a, b);
     assert(len(r) == lcs);
-    for (auto&& [x, y]: r)
+    foreach (x, y, r)
         assert(a[x] == b[y]);
     _for (i, lcs - 1) {
         assert(r[i].first < r[i + 1].first);

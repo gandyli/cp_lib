@@ -19,7 +19,7 @@ auto K_shortest_path(const DirectedGraph auto& g, int s, int t, int K) {
     vi par(n, -1);
 
     while (len(res) < K) {
-        for (auto&& [es, ng_es]: nodes) {
+        foreach (es, ng_es, nodes) {
             fill(par, -1);
             _for (i, n)
                 ng_v[i] = false;

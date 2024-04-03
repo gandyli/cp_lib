@@ -10,10 +10,10 @@ Graph<T> manhattan_mst(vc<std::pair<T, T>>& a) {
     vi I(n);
     iota(all(I), 0);
     _for (2) {
-        for (auto&& [x, y]: a)
+        foreach (x, y, a)
             x = -x;
         _for (2) {
-            for (auto&& [x, y]: a)
+            foreach (x, y, a)
                 swap(x, y);
             sort(I, [&](int i, int j) {
                 return a[i].first + a[i].second < a[j].first + a[j].second;
@@ -38,7 +38,7 @@ Graph<T> manhattan_mst(vc<std::pair<T, T>>& a) {
     });
     Graph<T> mst(n);
     UnionFind uf(n);
-    for (auto&& [c, i, j]: dat)
+    foreach (c, i, j, dat)
         if (uf.merge(i, j))
             mst.add(i, j, c);
     mst.build();

@@ -138,7 +138,7 @@ public:
     }
     vi path(int u, int v) const {
         vi r;
-        for (auto&& [a, b]: path_decomposition(u, v))
+        foreach (a, b, path_decomposition(u, v))
             if (a <= b)
                 _for (i, a, b + 1)
                     r.eb(id[i]);

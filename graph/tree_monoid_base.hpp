@@ -111,14 +111,14 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
     }
     X prod_path(int u, int v) const {
         X r = MX::unit();
-        for (auto&& [x, y]: tree.path_decomposition(u, v, edge))
+        foreach (x, y, tree.path_decomposition(u, v, edge))
             r = MX::op(r, prod(x, y));
         return r;
     }
     X prod_subtree(int u) const { return ds.prod(tree.lid[u] + edge, tree.rid[u]); }
     X prod_all() const { return prod_subtree(tree.id[0]); }
     void apply_path(int u, int v, const A& a) {
-        for (auto&& [x, y]: tree.path_decomposition(u, v, edge))
+        foreach (x, y, tree.path_decomposition(u, v, edge))
             if (x <= y)
                 UPDATE(apply, x, y + 1, a);
             else
@@ -136,7 +136,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
             if (!check(MX::unit()))
                 return -1;
             int lca = tree.lca(u, v);
-            for (auto&& [x, y]: tree.path_decomposition(u, lca, edge)) {
+            foreach (x, y, tree.path_decomposition(u, lca, edge)) {
                 ASSERT(x >= y);
                 X t = prod(x, y);
                 if (check(MX::op(r, t))) {
@@ -152,7 +152,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
                     return p == x + 1 ? u : tree.fa[tree.id[p]];
                 }
             }
-            for (auto&& [x, y]: tree.path_decomposition(lca, v, edge)) {
+            foreach (x, y, tree.path_decomposition(lca, v, edge)) {
                 ASSERT(x <= y);
                 X t = prod(x, y);
                 if (check(MX::op(r, t))) {
@@ -168,7 +168,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
         else {
             if (!check(prod(tree.lid[u], tree.lid[u])))
                 return -1;
-            for (auto&& [x, y]: tree.path_decomposition(u, v, edge)) {
+            foreach (x, y, tree.path_decomposition(u, v, edge)) {
                 X t = prod(x, y);
                 if (check(MX::op(r, t))) {
                     r = MX::op(r, t);
