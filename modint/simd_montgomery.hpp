@@ -11,7 +11,7 @@ __attribute__((target("sse4.2"))) inline __m128i my128_mulhi_epu32(const __m128i
     __m128i prod02 = _mm_mul_epu32(a, b);
     __m128i prod13 = _mm_mul_epu32(a13, b13);
     __m128i prod = _mm_unpackhi_epi64(_mm_unpacklo_epi32(prod02, prod13),
-                                      _mm_unpackhi_epi32(prod02, prod13));
+      _mm_unpackhi_epi32(prod02, prod13));
     return prod;
 }
 
@@ -41,7 +41,7 @@ __attribute__((target("avx2"))) inline __m256i my256_mulhi_epu32(const __m256i& 
     __m256i prod02 = _mm256_mul_epu32(a, b);
     __m256i prod13 = _mm256_mul_epu32(a13, b13);
     __m256i prod = _mm256_unpackhi_epi64(_mm256_unpacklo_epi32(prod02, prod13),
-                                         _mm256_unpackhi_epi32(prod02, prod13));
+      _mm256_unpackhi_epi32(prod02, prod13));
     return prod;
 }
 

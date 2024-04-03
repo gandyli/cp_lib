@@ -23,7 +23,7 @@ int main() {
     FenwickTree<Monoid_Add<int>> ft(m);
     auto add_l = [&](int i) {
         Ans += ft.prod(a[i]);
-        ft.multiply(a[i], 1); 
+        ft.multiply(a[i], 1);
     };
     auto add_r = [&](int i) {
         Ans += ft.prod(a[i] + 1, m);

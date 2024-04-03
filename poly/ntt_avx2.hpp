@@ -101,13 +101,13 @@ __attribute__((target("avx2"))) void ntt(mint* a, int n) {
                         const __m128i T1M3 = montgomery_mul_128(
                           montgomery_sub_128(T1, T3, m2, m0), Imag, r, m1);
                         _mm_storeu_si128((__m128i*)(a + j0),
-                                         montgomery_add_128(T0P2, T1P3, m2, m0));
+                          montgomery_add_128(T0P2, T1P3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j1),
-                                         montgomery_sub_128(T0P2, T1P3, m2, m0));
+                          montgomery_sub_128(T0P2, T1P3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j2),
-                                         montgomery_add_128(T0M2, T1M3, m2, m0));
+                          montgomery_add_128(T0M2, T1M3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j3),
-                                         montgomery_sub_128(T0M2, T1M3, m2, m0));
+                          montgomery_sub_128(T0M2, T1M3, m2, m0));
                     }
                 }
                 else {
@@ -134,13 +134,13 @@ __attribute__((target("avx2"))) void ntt(mint* a, int n) {
                         const __m128i T1M3 = montgomery_mul_128(
                           montgomery_sub_128(MT1, MT3, m2, m0), Imag, r, m1);
                         _mm_storeu_si128((__m128i*)(a + j0),
-                                         montgomery_add_128(T0P2, T1P3, m2, m0));
+                          montgomery_add_128(T0P2, T1P3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j1),
-                                         montgomery_sub_128(T0P2, T1P3, m2, m0));
+                          montgomery_sub_128(T0P2, T1P3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j2),
-                                         montgomery_add_128(T0M2, T1M3, m2, m0));
+                          montgomery_add_128(T0M2, T1M3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j3),
-                                         montgomery_sub_128(T0M2, T1M3, m2, m0));
+                          montgomery_sub_128(T0M2, T1M3, m2, m0));
                     }
                 }
                 xx *= ntt.dw[__builtin_ctz((jh += 4))];
@@ -171,13 +171,13 @@ __attribute__((target("avx2"))) void ntt(mint* a, int n) {
                         const __m256i T1M3 = montgomery_mul_256(
                           montgomery_sub_256(T1, T3, m2, m0), Imag, r, m1);
                         _mm256_storeu_si256((__m256i*)(a + j0),
-                                            montgomery_add_256(T0P2, T1P3, m2, m0));
+                          montgomery_add_256(T0P2, T1P3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j1),
-                                            montgomery_sub_256(T0P2, T1P3, m2, m0));
+                          montgomery_sub_256(T0P2, T1P3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j2),
-                                            montgomery_add_256(T0M2, T1M3, m2, m0));
+                          montgomery_add_256(T0M2, T1M3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j3),
-                                            montgomery_sub_256(T0M2, T1M3, m2, m0));
+                          montgomery_sub_256(T0M2, T1M3, m2, m0));
                     }
                 }
                 else {
@@ -204,13 +204,13 @@ __attribute__((target("avx2"))) void ntt(mint* a, int n) {
                         const __m256i T1M3 = montgomery_mul_256(
                           montgomery_sub_256(MT1, MT3, m2, m0), Imag, r, m1);
                         _mm256_storeu_si256((__m256i*)(a + j0),
-                                            montgomery_add_256(T0P2, T1P3, m2, m0));
+                          montgomery_add_256(T0P2, T1P3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j1),
-                                            montgomery_sub_256(T0P2, T1P3, m2, m0));
+                          montgomery_sub_256(T0P2, T1P3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j2),
-                                            montgomery_add_256(T0M2, T1M3, m2, m0));
+                          montgomery_add_256(T0M2, T1M3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j3),
-                                            montgomery_sub_256(T0M2, T1M3, m2, m0));
+                          montgomery_sub_256(T0M2, T1M3, m2, m0));
                     }
                 }
                 xx *= ntt.dw[__builtin_ctz((jh += 4))];
@@ -278,13 +278,13 @@ __attribute__((target("avx2"))) void intt(mint* a, int n, int normalize = true) 
                         const __m128i T2M3 = montgomery_mul_128(
                           montgomery_sub_128(T2, T3, m2, m0), Imag, r, m1);
                         _mm_storeu_si128((__m128i*)(a + j0),
-                                         montgomery_add_128(T0P1, T2P3, m2, m0));
+                          montgomery_add_128(T0P1, T2P3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j2),
-                                         montgomery_sub_128(T0P1, T2P3, m2, m0));
+                          montgomery_sub_128(T0P1, T2P3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j1),
-                                         montgomery_add_128(T0M1, T2M3, m2, m0));
+                          montgomery_add_128(T0M1, T2M3, m2, m0));
                         _mm_storeu_si128((__m128i*)(a + j3),
-                                         montgomery_sub_128(T0M1, T2M3, m2, m0));
+                          montgomery_sub_128(T0M1, T2M3, m2, m0));
                     }
                 }
                 else {
@@ -309,17 +309,17 @@ __attribute__((target("avx2"))) void intt(mint* a, int n, int normalize = true) 
                         __m128i T2M3 = montgomery_mul_128(
                           montgomery_sub_128(T2, T3, m2, m0), YY, r, m1);
                         _mm_storeu_si128((__m128i*)(a + j0),
-                                         montgomery_add_128(T0P1, T2P3, m2, m0));
+                          montgomery_add_128(T0P1, T2P3, m2, m0));
                         _mm_storeu_si128(
                           (__m128i*)(a + j2),
                           montgomery_mul_128(montgomery_sub_128(T0P1, T2P3, m2, m0), WW,
-                                             r, m1));
+                            r, m1));
                         _mm_storeu_si128((__m128i*)(a + j1),
-                                         montgomery_add_128(T0M1, T2M3, m2, m0));
+                          montgomery_add_128(T0M1, T2M3, m2, m0));
                         _mm_storeu_si128(
                           (__m128i*)(a + j3),
                           montgomery_mul_128(montgomery_sub_128(T0M1, T2M3, m2, m0), WW,
-                                             r, m1));
+                            r, m1));
                     }
                 }
                 xx *= ntt.dy[__builtin_ctz(jh += 4)];
@@ -350,13 +350,13 @@ __attribute__((target("avx2"))) void intt(mint* a, int n, int normalize = true) 
                         const __m256i T2M3 = montgomery_mul_256(
                           montgomery_sub_256(T2, T3, m2, m0), Imag, r, m1);
                         _mm256_storeu_si256((__m256i*)(a + j0),
-                                            montgomery_add_256(T0P1, T2P3, m2, m0));
+                          montgomery_add_256(T0P1, T2P3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j2),
-                                            montgomery_sub_256(T0P1, T2P3, m2, m0));
+                          montgomery_sub_256(T0P1, T2P3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j1),
-                                            montgomery_add_256(T0M1, T2M3, m2, m0));
+                          montgomery_add_256(T0M1, T2M3, m2, m0));
                         _mm256_storeu_si256((__m256i*)(a + j3),
-                                            montgomery_sub_256(T0M1, T2M3, m2, m0));
+                          montgomery_sub_256(T0M1, T2M3, m2, m0));
                     }
                 }
                 else {
@@ -381,17 +381,17 @@ __attribute__((target("avx2"))) void intt(mint* a, int n, int normalize = true) 
                         const __m256i T2M3 = montgomery_mul_256(
                           montgomery_sub_256(T2, T3, m2, m0), YY, r, m1);
                         _mm256_storeu_si256((__m256i*)(a + j0),
-                                            montgomery_add_256(T0P1, T2P3, m2, m0));
+                          montgomery_add_256(T0P1, T2P3, m2, m0));
                         _mm256_storeu_si256(
                           (__m256i*)(a + j2),
                           montgomery_mul_256(montgomery_sub_256(T0P1, T2P3, m2, m0), WW,
-                                             r, m1));
+                            r, m1));
                         _mm256_storeu_si256((__m256i*)(a + j1),
-                                            montgomery_add_256(T0M1, T2M3, m2, m0));
+                          montgomery_add_256(T0M1, T2M3, m2, m0));
                         _mm256_storeu_si256(
                           (__m256i*)(a + j3),
                           montgomery_mul_256(montgomery_sub_256(T0M1, T2M3, m2, m0), WW,
-                                             r, m1));
+                            r, m1));
                     }
                 }
                 xx *= ntt.dy[__builtin_ctz(jh += 4)];

@@ -95,8 +95,8 @@ namespace pdqsort_detail {
 
     template <typename Iter>
     inline void swap_offsets(Iter first, Iter last,
-                             u8* offsets_l, u8* offsets_r,
-                             usize num, bool use_swaps) {
+      u8* offsets_l, u8* offsets_r,
+      usize num, bool use_swaps) {
         if (use_swaps)
             _for (i, num)
                 iter_swap(first + offsets_l[i], last - offsets_r[i]);
@@ -214,8 +214,8 @@ namespace pdqsort_detail {
 
                 usize num = min(num_l, num_r);
                 swap_offsets(offsets_l_base, offsets_r_base,
-                             offsets_l + start_l, offsets_r + start_r,
-                             num, num_l == num_r);
+                  offsets_l + start_l, offsets_r + start_r,
+                  num, num_l == num_r);
                 num_l -= num;
                 num_r -= num;
                 start_l += num;

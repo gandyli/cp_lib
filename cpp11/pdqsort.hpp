@@ -109,8 +109,8 @@ namespace pdqsort_detail {
 
     template <typename Iter>
     inline void swap_offsets(Iter first, Iter last,
-                             u8* offsets_l, u8* offsets_r,
-                             usize num, bool use_swaps) {
+      u8* offsets_l, u8* offsets_r,
+      usize num, bool use_swaps) {
         if (use_swaps) {
             for (usize i = 0; i < num; i++) {
                 std::iter_swap(first + offsets_l[i], last - offsets_r[i]);
@@ -232,8 +232,8 @@ namespace pdqsort_detail {
 
                 usize num = std::min(num_l, num_r);
                 swap_offsets(offsets_l_base, offsets_r_base,
-                             offsets_l + start_l, offsets_r + start_r,
-                             num, num_l == num_r);
+                  offsets_l + start_l, offsets_r + start_r,
+                  num, num_l == num_r);
                 num_l -= num;
                 num_r -= num;
                 start_l += num;
@@ -420,8 +420,8 @@ inline void pdqsort(Iter begin, Iter end, Comp comp) {
         return;
 
     pdqsort_detail::pdqsort_loop<Iter, Comp,
-                                 pdqsort_detail::is_default_compare_v<typename std::decay<Comp>::type> &&
-                                   std::is_arithmetic<typename std::iterator_traits<Iter>::value_type>::value>(
+      pdqsort_detail::is_default_compare_v<typename std::decay<Comp>::type> &&
+        std::is_arithmetic<typename std::iterator_traits<Iter>::value_type>::value>(
       begin, end, comp, std::__lg(end - begin));
 }
 

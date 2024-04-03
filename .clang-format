@@ -2,7 +2,7 @@
 Language:        Cpp
 # BasedOnStyle:  LLVM
 AccessModifierOffset: -4
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: DontAlign
 AlignArrayOfStructures: None
 AlignConsecutiveAssignments:
   Enabled:         false
@@ -103,6 +103,7 @@ ForEachMacros:
   - _for
   - _for_r
   - foreach
+  - loop
 IfMacros:
   - KJ_IF_MAYBE
 IncludeBlocks:   Preserve
@@ -221,6 +222,8 @@ StatementAttributeLikeMacros:
 StatementMacros:
   - Q_UNUSED
   - QT_REQUIRE_VERSION
+Macros:
+  - BLK = blk->*[&]
 TabWidth:        4
 UseTab:          Never
 VerilogBreakBetweenInstancePorts: true
