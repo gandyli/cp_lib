@@ -27,7 +27,6 @@ struct FenwickTree {
     void build(int n, std::invocable<int> auto&& f) {
         this->n = n;
         a.assign(n, M::unit());
-        sum = M::unit();
         _for (i, n)
             a[i] = f(i);
         _for (i, 1, n + 1) {
@@ -77,26 +76,58 @@ struct FenwickTree {
         return M::op(vr, M::inverse(vl));
     }
     X prod_all() const { return sum; }
-    int max_right(auto&& check) const {
+    int max_right(auto&& check, int l = 0) const {
         ASSERT(check(M::unit()));
-        int i = 0;
+        int i = l;
         X t = M::unit();
-        int k = 1;
-        while ((k << 1) <= n)
-            k <<= 1;
-        while (k) {
-            if (i + k <= n) {
-                int nt = M::op(t, a[i + k - 1]);
+        int k = BLK {
+            loop {
+                if (i & 1)
+                    t = M::op(t, M::inverse(a[--i]));
+                if (i == 0)
+                    return std::__lg(n) + 1;
+                int k = __builtin_ctz(i) - 1;
+                if (i + (1 << k) > n)
+                    return k;
+                if (!check(M::op(t, a[i + (1 << k) - 1])))
+                    return k;
+                t = M::op(t, M::inverse(a[i - 1]));
+                i -= lowbit(i);
+            }
+        };
+        while (k--) {
+            if (i + (1 << k) <= n) {
+                X nt = M::op(t, a[i + (1 << k) - 1]);
                 if (check(nt)) {
                     t = nt;
-                    i += k;
+                    i += 1 << k;
                 }
             }
-            k >>= 1;
         }
         return i;
     }
-    int kth(int x) {
-        return max_right([&](const X& y) { return y <= x; });
+    int min_left(auto&& check, int r) const {
+        assert(check(M::unit()));
+        int i = r;
+        int k = 0;
+        X t = M::unit();
+        while (i && check(t)) {
+            t = M::op(t, a[i - 1]);
+            k = __builtin_ctz(i);
+            i -= lowbit(i);
+        }
+        if (i == 0)
+            return 0;
+        while (k--) {
+            X nt = M::op(t, M::inverse(a[i + (1 << k) - 1]));
+            if (!check(nt)) {
+                t = nt;
+                i += 1 << k;
+            }
+        }
+        return i + 1;
+    }
+    int kth(int x, int l = 0) {
+        return max_right([&](const X& y) { return y <= x; }, l);
     }
 };
