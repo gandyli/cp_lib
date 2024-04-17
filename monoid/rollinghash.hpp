@@ -13,5 +13,5 @@ struct Monoid_Rollinghash {
     static constexpr X op(const X& a, const X& b) { return {a.first * b.first, a.second * b.first + b.second}; }
     static constexpr X from_element(auto&& x) { return {base, x}; }
     static constexpr X unit() { return {1, 0}; }
-    static constexpr bool commute = false;
+    static constexpr bool commute() { return false; }
 };

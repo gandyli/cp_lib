@@ -32,7 +32,7 @@ struct Beats_SumMin_AddChmax {
         }
         static constexpr X from_element(auto&& x) { return x; }
         static constexpr X unit() { return {0, inf<T>, 0, inf<T>}; }
-        static constexpr bool commute = true;
+        static constexpr bool commute() { return true; }
     };
     struct AddChmax {
         using value_type = std::pair<T, T>;
@@ -40,7 +40,7 @@ struct Beats_SumMin_AddChmax {
         static constexpr X op(const X& a, const X& b) { return {a.first + b.first, Max(a.second + b.first, b.second)}; }
         static constexpr X from_element(auto&& x) { return x; }
         static constexpr X unit() { return {0, -inf<T>}; }
-        static constexpr bool commute = false;
+        static constexpr bool commute() { return false; }
     };
     struct Beats {
         using Monoid_X = SumMin;

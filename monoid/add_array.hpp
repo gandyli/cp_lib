@@ -22,5 +22,5 @@ struct Monoid_AddArray {
     }
     static constexpr X from_element(auto&& x) { return x; }
     static constexpr X unit() { return {}; }
-    static constexpr bool commute = true;
+    static constexpr bool commute() { return true; }
 };

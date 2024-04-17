@@ -17,5 +17,5 @@ struct Monoid_Min_Idx {
     }
     static constexpr X from_element(auto&& x) { return {x, -1}; }
     static constexpr X unit() { return {inf<T>, -1}; }
-    static constexpr bool commute = true;
+    static constexpr bool commute() { return true; }
 };

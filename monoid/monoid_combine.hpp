@@ -10,5 +10,5 @@ struct Monoid_Combine {
     }
     static constexpr X from_element(auto&& x) { return {M::from_element(x)...}; }
     static constexpr X unit() { return {M::unit()...}; }
-    static constexpr bool commute = (M::commute && ...);
+    static constexpr bool commute() { return (M::commute() && ...); }
 };

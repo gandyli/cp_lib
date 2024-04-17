@@ -8,5 +8,5 @@ struct Merge_Vector_Space {
     static X op(const X& a, const X& b) { return X::merge(a, b); }
     static X from_element(auto&& x) { return x; }
     static X unit() { return {}; }
-    static constexpr bool commute = true;
+    static constexpr bool commute() { return true; }
 };

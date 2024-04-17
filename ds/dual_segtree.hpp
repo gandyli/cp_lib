@@ -32,7 +32,7 @@ struct Dual_SegTree {
         if (l == r)
             return;
         l += sz, r += sz;
-        if constexpr (!M::commute)
+        if constexpr (!M::commute())
             _for_r (i, 1, lg + 1) {
                 if (((l >> i) << i) != l)
                     push(l >> i);

@@ -36,7 +36,7 @@ namespace Tree_Monoid_Base_Helper {
 } // namespace Tree_Monoid_Base_Helper
 
 template <template <typename> typename DS, typename TREE, typename Monoid, bool edge = false>
-struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_Base_Helper::MonoidX<Monoid>::type::commute> {
+struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_Base_Helper::MonoidX<Monoid>::type::commute()> {
     using M = Monoid;
     using MX = Tree_Monoid_Base_Helper::MonoidX<M>::type;
     using MA = Tree_Monoid_Base_Helper::MonoidA<M>::type;
@@ -46,7 +46,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
 #define UPDATE(method, ...)                \
     do {                                   \
         ds.method(__VA_ARGS__);            \
-        if constexpr (!MX::commute)        \
+        if constexpr (!MX::commute())        \
             this->rds.method(__VA_ARGS__); \
     } while (false)
     mutable DS<M> ds;
@@ -145,7 +145,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
                 }
                 else {
                     int p;
-                    if constexpr (MX::commute)
+                    if constexpr (MX::commute())
                         p = ds.min_left(check0, x + 1);
                     else
                         p = this->rds.min_left(check0, x + 1);
@@ -180,7 +180,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
                         return p == x ? u : tree.id[p - 1];
                     }
                     int p;
-                    if constexpr (MX::commute)
+                    if constexpr (MX::commute())
                         p = ds.min_left(check0, x + 1);
                     else
                         p = this->rds.min_left(check0, x + 1);
@@ -193,7 +193,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
 
 private:
     X prod(int x, int y) const {
-        if constexpr (MX::commute)
+        if constexpr (MX::commute())
             return x <= y ? ds.prod(x, y + 1) : ds.prod(y, x + 1);
         else
             return x <= y ? ds.prod(x, y + 1) : this->rds.prod(y, x + 1);

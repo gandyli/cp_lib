@@ -8,5 +8,5 @@ struct Monoid_Assign {
     static constexpr X op(const X& a, const X& b) { return b == none ? a : b; }
     static constexpr X from_element(auto&& x) { return x; }
     static constexpr X unit() { return none; }
-    static constexpr bool commute = false;
+    static constexpr bool commute() { return false; }
 };
