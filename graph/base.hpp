@@ -11,6 +11,10 @@ struct Edge {
 template <>
 struct Edge<void> {
     int from, to, id;
+    struct {
+        char _[0];
+        operator int() const { return 1; }
+    } cost;
     operator int() const { return to; }
 };
 
