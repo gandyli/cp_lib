@@ -17,7 +17,7 @@ vi vs_to_es(const auto& g, const vi& vs) {
     };
     _for (i, m) {
         u64 k = get(g.edges[i].from, g.edges[i].to);
-        nxt[i] = mp[k], mp[k] = i;
+        nxt[i] = std::exchange(mp[k], i);
     }
     vi es(len(vs) - 1);
     _for (i, len(es)) {
