@@ -20,6 +20,7 @@ struct RemovableQueue: private Q {
         return Q::top();
     }
     void push(T x) { Q::push(std::move(x)); }
+    void emplace(auto&&... args) { Q::emplace(FORWARD(args)...); }
     void remove(T x) { rq.push(std::move(x)); }
 
 private:
