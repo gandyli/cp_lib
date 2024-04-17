@@ -86,7 +86,7 @@ public:
                 r.eb(v);
         return r;
     }
-    virtual int lca(int u, int v) const {
+    int lca(int u, int v) const {
         while (top[u] != top[v]) {
             if (lid[u] < lid[v])
                 swap(u, v);
@@ -116,7 +116,7 @@ public:
         return (dep[x] <= dep[u] && dep[x] >= dep[w] && k_ancestor(u, dep[u] - dep[x]) == x) || (dep[x] <= dep[v] && dep[x] >= dep[w] && k_ancestor(v, dep[v] - dep[x]) == x);
     }
     int dist(int u, int v) const { return dep[u] + dep[v] - dep[lca(u, v)] * 2; }
-    cost_type wdist(int u, int v) const requires (G::is_weighted())
+    auto wdist(int u, int v) const requires (G::is_weighted())
     { return wdep[u] + wdep[v] - wdep[lca(u, v)] * 2; }
     vc<pi> path_decomposition(int u, int v, bool edge = false) const {
         vc<pi> up, down;

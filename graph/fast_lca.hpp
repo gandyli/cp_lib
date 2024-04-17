@@ -1,14 +1,13 @@
 #pragma once
-#include "ds/static_range_product.hpp"
 #include "ds/sparse_table.hpp"
 #include "monoid/min.hpp"
 #include "graph/tree.hpp"
 
 template <typename G>
 struct Fast_Lca_Tree: Tree<G> {
-    Static_Range_Product<Sparse_Table, Monoid_Min<int>> st;
+    Sparse_Table<Monoid_Min<int>> st;
     vi pos;
-    using Tree<G>::n, Tree<G>::lca;
+    using Tree<G>::n;
     Fast_Lca_Tree(G& g, int root = 0): Tree<G>(g, root), pos(n) {
         vi a(n << 1);
         _for (i, n) {
@@ -26,4 +25,8 @@ struct Fast_Lca_Tree: Tree<G> {
             swap(u, v);
         return this->id[st.prod(u, v + 1)];
     }
+    int lca(int u, int v, int r) const { return lca(u, v) ^ lca(u, r) ^ lca(v, r); }
+    int dist(int u, int v) const { return this->dep[u] + this->dep[v] - this->dep[lca(u, v)] * 2; }
+    auto wdist(int u, int v) const requires (G::is_weighted())
+    { return this->wdep[u] + this->wdep[v] - this->wdep[lca(u, v)] * 2; }
 };
