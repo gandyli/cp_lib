@@ -7,7 +7,7 @@ struct Sortable_Array {
     struct Node {
         Node *l, *r;
         int s;
-    }* pool{new Node[N]};
+    }* pool;
     using np = Node*;
 
     int id{};
@@ -15,7 +15,7 @@ struct Sortable_Array {
     FastSet s;
     vc<np> root;
     vc<u8> rev;
-    Sortable_Array(int m, const vi& a): n(len(a)), m(m) { init(a); }
+    Sortable_Array(int m, const vi& a): pool(new Node[N]), n(len(a)), m(m) { init(a); }
     void set(int i, int x) {
         split_at(i), split_at(i + 1);
         rev[i] = 0;
