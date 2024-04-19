@@ -68,11 +68,11 @@ constexpr auto Max(const auto& x, const auto& y, const auto&... arg) { return x 
 constexpr auto Min(const auto& x, const auto& y, const auto&... arg) { return x < y ? Min(x, arg...) : Min(y, arg...); }
 constexpr bool chkmax(auto& d, const auto&... x) {
     auto t = Max(x...);
-    return t > d ? d = t, true : false;
+    return d < t && (d = t, true);
 }
 constexpr bool chkmin(auto& d, const auto&... x) {
     auto t = Min(x...);
-    return t < d ? d = t, true : false;
+    return d > t && (d = t, true);
 }
 constexpr auto sum(input_range auto&& r) { return std::accumulate(all(r), range_value_t<decltype(r)>{}); }
 constexpr auto sum(input_range auto&& r, auto init) { return std::accumulate(all(r), init); }
