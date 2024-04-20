@@ -65,7 +65,7 @@ struct FenwickTree_01Base {
         return ans;
     }
     int prod_all() const { return ft.prod_all(); }
-    int kth(int k, int l = 0) {
+    int kth(int k, int l = 0) const {
         if (k >= prod_all())
             return n;
         k += std::popcount(dat[l >> 6] & ((1ULL << (l & 63)) - 1));
@@ -82,7 +82,7 @@ struct FenwickTree_01Base {
         k = bsearch([&](int mi) { return (p - std::popcount(x >> mi)) <= k; }, 0, 64);
         return 64 * i + k;
     }
-    int next(int i) {
+    int next(int i) const {
         int j = i >> 6;
         i &= 63;
         u64 x = dat[j] & ~((1ULL << i) - 1);
@@ -93,7 +93,7 @@ struct FenwickTree_01Base {
             return n;
         return 64 * j + __builtin_ctzll(dat[j]);
     }
-    int prev(int i) {
+    int prev(int i) const {
         if (i == n)
             i--;
         int j = i >> 6;

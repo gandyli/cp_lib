@@ -25,7 +25,7 @@ struct Range_Add_Range_Sum {
         bit.multiply(l, {M::power(y, l), x});
         bit.multiply(r, {M::power(x, r), y});
     }
-    X prod(int l, int r) {
+    X prod(int l, int r) const {
         auto [a, b] = bit.prod(l);
         auto [c, d] = bit.prod(r);
         X x = M::op(M::power(b, l), a);

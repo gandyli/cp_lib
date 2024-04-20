@@ -33,7 +33,6 @@ struct Range_Assignment_SegTree {
         _for_r (i, 1, sz)
             update(i);
     }
-    void update(int i) { a[i] = M::op(a[i << 1], a[i << 1 | 1]); }
     void set(int i, const X& x) {
         i += sz;
         _for_r (j, 1, lg + 1)
@@ -159,6 +158,7 @@ struct Range_Assignment_SegTree {
     }
 
 private:
+    void update(int i) { a[i] = M::op(a[i << 1], a[i << 1 | 1]); }
     void apply(int i, int x) {
         a[i] = cache[x];
         if (i < sz) {

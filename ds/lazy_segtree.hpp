@@ -36,7 +36,6 @@ struct Lazy_SegTree_Base {
         _for_r (i, 1, sz)
             update(i);
     }
-    void update(int i) { a[i] = MX::op(a[i << 1], a[i << 1 | 1]); }
     void set(int i, const X& x) {
         i += sz;
         _for_r (j, 1, lg + 1)
@@ -160,6 +159,7 @@ struct Lazy_SegTree_Base {
     }
 
 private:
+    void update(int i) { a[i] = MX::op(a[i << 1], a[i << 1 | 1]); }
     void apply(int i, const A& x) {
         a[i] = AM::act(a[i], x, 1 << (lg - std::__lg(i)));
         if (i < sz) {

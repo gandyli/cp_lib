@@ -31,7 +31,6 @@ struct SegTree {
         _for_r (i, 1, sz)
             update(i);
     }
-    void update(int i) { a[i] = M::op(a[i << 1], a[i << 1 | 1]); }
     void set(int i, const X& x) {
         a[i += sz] = x;
         while (i >>= 1)
@@ -96,4 +95,7 @@ struct SegTree {
         } while (r & (r + 1));
         return 0;
     }
+
+private:
+    void update(int i) { a[i] = M::op(a[i << 1], a[i << 1 | 1]); }
 };
