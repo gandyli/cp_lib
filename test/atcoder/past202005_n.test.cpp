@@ -7,7 +7,7 @@ int main() {
     dR(int, n, q);
     vi a(n);
     iota(all(a), 1);
-    Sortable_Array<2 * ten(7)> sa(n + 1, a); 
+    Sortable_Array<2 * ten(7)> sa(n + 1, a);
     _for (q) {
         dR(int, t, x, y);
         if (t == 1) {

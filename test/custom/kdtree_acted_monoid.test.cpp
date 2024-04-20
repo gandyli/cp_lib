@@ -10,7 +10,7 @@ void test() {
         int M = rnd(1, 100), N = rnd(1, 100);
         using AM = ActedMonoid_SumMax_Add<int>;
         using Mono = AM::Monoid_X;
-        
+
         vi dat[100][100];
         vi X, Y;
         vc<Mono::value_type> V;

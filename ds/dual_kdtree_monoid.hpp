@@ -68,7 +68,6 @@ private:
         X = rearrange(X, I), Y = rearrange(Y, I), raw_idx = rearrange(raw_idx, I);
         build(i << 1, {X.begin(), X.begin() + m}, {Y.begin(), Y.begin() + m}, {raw_idx.begin(), raw_idx.begin() + m}, !div_x);
         build(i << 1 | 1, {X.begin() + m, X.end()}, {Y.begin() + m, Y.end()}, {raw_idx.begin() + m, raw_idx.end()}, !div_x);
-        
     }
     void apply(int i, const A& a) { lazy[i] = M::op(lazy[i], a); }
     void push(int i) {

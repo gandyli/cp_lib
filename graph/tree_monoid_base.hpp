@@ -46,7 +46,7 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
 #define UPDATE(method, ...)                \
     do {                                   \
         ds.method(__VA_ARGS__);            \
-        if constexpr (!MX::commute())        \
+        if constexpr (!MX::commute())      \
             this->rds.method(__VA_ARGS__); \
     } while (false)
     mutable DS<M> ds;
