@@ -181,5 +181,3 @@ private:
         return r;
     }
 };
-template <typename ActedMonoid>
-using Lazy_SegTree = Range_Assignment_SegTree<ActedMonoid>;
