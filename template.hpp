@@ -108,10 +108,17 @@ auto veci(usize n, auto&&... s) {
 }
 template <typename T>
 vi argsort(const vc<T>& a) {
-    vi p(len(a));
-    iota(all(p), 0);
-    sort(p, [&](int i, int j) { return std::pair{a[i], i} < std::pair{a[j], j}; });
-    return p;
+    vi I(len(a));
+    iota(all(I), 0);
+    sort(I, [&](int i, int j) { return std::pair{a[i], i} < std::pair{a[j], j}; });
+    return I;
+}
+template <typename T>
+vc<T> rearrange(const vc<T>& a, const vi& I) {
+    vc<T> b(len(a));
+    _for (i, len(a))
+        b[i] = a[I[i]];
+    return b;
 }
 vi sshift(const str& s, char c = 'a') {
     vi a(len(s));
