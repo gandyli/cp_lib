@@ -20,6 +20,6 @@ struct Rollback_Array {
         his.eb(x, a[x]);
         a[x] = y;
     }
-    T get(int x) const { return a[x]; }
-    T operator[](int x) const { return get(x); }
+    const T& get(int x) const { return a[x]; }
+    const T& operator[](int x) const { return get(x); }
 };
