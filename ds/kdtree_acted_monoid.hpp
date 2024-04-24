@@ -20,7 +20,7 @@ struct KDTree_ActedMonoid {
         lg = get_lg(n);
         closed_range.resize(1 << (lg + 1));
         dat.assign(1 << (lg + 1), MX::unit());
-        lazy.assign(1 << (lg + 1), MA::unit());
+        lazy.assign(1 << lg, MA::unit());
         size.resize(1 << (lg + 1));
         build(1, Xs, Ys, Vs);
     }
