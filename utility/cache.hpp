@@ -7,7 +7,7 @@ template <typename, typename>
 struct Cache;
 template <typename R, typename... Args, typename F>
 struct Cache<R(Args...), F>: F {
-    pbds::unordered_map<std::tuple<Args...>, R, hash> mp;
+    pbds::unordered_map<std::tuple<Args...>, R, Hash> mp;
     explicit Cache(const F& f): F(f) {}
     R operator()(auto&&... args) {
         auto t = std::tuple{FORWARD(args)...};

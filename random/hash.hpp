@@ -1,9 +1,9 @@
 #pragma once
 #include "seed.hpp"
 
-struct hash {
+struct Hash {
     template <typename T>
-    static void hash_combine(u64& seed, const T& v) { seed ^= hash{}(v) + 0x9e3779b97f4a7c15 + (seed << 12) + (seed >> 4); }
+    static void hash_combine(u64& seed, const T& v) { seed ^= Hash{}(v) + 0x9e3779b97f4a7c15 + (seed << 12) + (seed >> 4); }
     template <Integer T>
     u64 operator()(const T& x) const {
         if constexpr (sizeof(T) == 16) {
@@ -34,4 +34,4 @@ struct hash {
             hash_combine(v, x);
         return v;
     }
-};
+} hash;

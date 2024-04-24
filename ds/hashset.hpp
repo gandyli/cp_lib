@@ -1,26 +1,43 @@
 #pragma once
 #include "random/hash.hpp"
 
-template <typename K, int LG = 20, bool KEEP_IS = false>
+template <typename K, typename V>
 struct HashSet {
-    static constexpr int N = 1 << LG;
-    K* key;
-    vi IS;
-    std::bitset<N> vis;
-    HashSet(): key(new K[N]) {}
+    u32 cap, mask, shift;
+    vc<K> key;
+    vc<bool> vis;
+    HashSet(int n = 0) { build(n); }
+    void build(int n) {
+        int k = 8;
+        while (k < n * 2)
+            k <<= 1;
+        cap = k / 2;
+        mask = k - 1;
+        shift = 64 - std::__lg(k);
+        key.resize(k);
+        vis.assign(k, false);
+    }
+    void extend() {
+        HashSet<K, V> hs(len(key) * 2);
+        _for (i, len(key))
+            if (vis[i])
+                hs.insert(key[i]);
+        *this = std::move(hs);
+    }
     int index(const K& k) const {
-        int i = hash{}(k) >> (64 - LG);
+        int i = hash(k) >> shift;
         while (vis[i] && key[i] != k)
-            i = (i + 1) & (N - 1);
+            i = (i + 1) & mask;
         return i;
     }
     bool insert(const K& k) {
+        if (!cap)
+            extend();
         int i = index(k);
         if (!vis[i]) {
             vis[i] = true;
             key[i] = k;
-            if constexpr (KEEP_IS)
-                IS.eb(i);
+            cap--;
             return true;
         }
         return false;
@@ -29,15 +46,11 @@ struct HashSet {
         int i = index(k);
         return vis[i];
     }
-    void clear() {
-        vis.reset();
-        if constexpr (KEEP_IS)
-            IS.clear();
+    void clear() { build(0); }
+    int size() const { return len(key) - cap; }
+    void enumerate(auto&& f) const {
+        _for (i, len(vis))
+            if (vis[i])
+                f(key[i]);
     }
-    void enumerate(auto&& f) const requires KEEP_IS
-    {
-        foreach (i, IS)
-            f(key[i]);
-    }
-    ~HashSet() { delete[] key; }
 };
