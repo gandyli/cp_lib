@@ -66,6 +66,7 @@ struct MontgomeryModInt {
         r.x = x;
         return r;
     }
+    static constexpr mint from_int(int_type x) { return from_raw(mr().reduce(mr().mbase2() * int_double_t(x))); }
     constexpr int_type raw() const { return x; }
 #ifdef FASTIO
     void read(IO& io) {
