@@ -1,7 +1,7 @@
 #pragma once
 #include "random/hash.hpp"
 
-template <typename K, typename V>
+template <typename K>
 struct HashSet {
     u32 cap, mask, shift;
     vc<K> key;
@@ -9,7 +9,7 @@ struct HashSet {
     HashSet(int n = 0) { build(n); }
     void reserve(int n) {
         if (n > len(key)) {
-            HashSet<K, V> hs(n);
+            HashSet<K> hs(n);
             _for (i, len(key))
                 if (vis[i])
                     hs.insert(key[i]);
