@@ -11,7 +11,7 @@ vc<str> split(const str& s, char sep = ' ') {
     return ans;
 }
 
-vc<str> split(const str& s, str seps = " ,") {
+vc<str> split(const str& s, str seps) {
     vc<str> ans{{}};
     foreach (c, s)
         if (count(seps, c))
