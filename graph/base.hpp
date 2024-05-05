@@ -1,5 +1,5 @@
 #pragma once
-#include "io.hpp"
+#include "template.hpp"
 
 template <typename T>
 struct Edge {
@@ -108,6 +108,7 @@ struct Graph {
         return g0;
     }
 
+#ifdef FASTIO
     void write(IO& io) const requires (!is_weighted())
     {
         io.print("from to id");
@@ -122,6 +123,7 @@ struct Graph {
             foreach (e, (*this)[i])
                 io.print(e.from, e.to, e.cost, e.id);
     }
+#endif
 
 private:
     void calc_deg() {
@@ -143,6 +145,7 @@ concept UndirectedGraph = !DirectedGraph<G>;
 template <typename G>
 concept WeightedGraph = G::is_weighted();
 
+#ifdef FASTIO
 template <typename T = void, bool directed = false>
 auto read_graph(int n, int m, int off = 1) {
     Graph<T, directed> g(n, m);
@@ -160,3 +163,4 @@ auto read_graph(int n, int m, int off = 1) {
 }
 template <typename T = void, bool directed = false>
 auto read_tree(int n, int off = 1) { return read_graph<T, directed>(n, n - 1, off); }
+#endif

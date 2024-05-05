@@ -1,34 +1,10 @@
 #pragma once
 #include "utility/itos_table.hpp"
 
-#define FASTIO
-#ifdef CHECK_EOF
-#define ECHK0 *ip ? *ip++ : 0
-#define ECHK1     \
-    if (ch == EV) \
-        return set(false), *this;
-#define ECHK2 \
-    if (!*ip) \
-        return set(false), *this;
-#define ECHK3 &&ch != -1
-#define ECHK4 &&*ip
-#define ECHK5     \
-    if (ch == -1) \
-        return set(false);
-#define ECHK6 \
-    if (!*ip) \
-        return set(false);
-#else
-#define ECHK0 *ip++
-#define ECHK1
-#define ECHK2
-#define ECHK3
-#define ECHK4
-#define ECHK5
-#define ECHK6
-#endif
+#ifndef FASTIO
+#define FASTIO 1
 
-#if defined(__unix__) && !defined(LX_DEBUG) && !defined(LX_LOCAL)
+#if defined(__unix__) && !defined(LX_LOCAL)
 #define USE_MMAP
 #define EV 0
 #include <sys/mman.h>
@@ -44,66 +20,32 @@ struct IO {
 
     u32 prec = 12;
     FILE *in, *out;
-    bool status;
-#ifndef LX_DEBUG
     char obuf[bufSize], *ip, *op = obuf;
+
 #ifndef USE_MMAP
     char ibuf[bufSize], *eip;
-#endif
-#endif
-
-#ifdef LX_DEBUG
-    int getch() { return fgetc(in); }
-    int getch_unchecked() { return getch(); }
-    int unget(int c = -1) { return ungetc(c, in); }
-    int peek() { return unget(getch()); }
-    void input(FILE* f) { in = f, set(); }
+    bool eoi = false;
+    void load() {
+        if (eoi) [[unlikely]]
+            return;
+        int sz = eip - ip;
+        memcpy(ibuf, ip, sz);
+        eip = ibuf + sz + fread(ibuf + sz, 1, bufSize - sz, in);
+        if (eip == ibuf + sz) [[unlikely]]
+            eoi = true;
+        ip = ibuf;
+    }
     void skipws() {
         int ch = getch();
-        while (blank(ch) ECHK3)
+        while (blank(ch))
             ch = getch();
-        unget(ch);
-    }
-    void ireadstr(char* s, usize n) { fread(s, 1, n, in); }
-#elif defined(USE_MMAP)
-    void skipws() {
-        while (blank(*ip) ECHK4)
-            ip++;
-        ECHK6
-    }
-    int unget(int = 0) = delete;
-    int getch() { return ECHK0; }
-    int getch_unchecked() { return *ip++; }
-    int peek() { return *ip; }
-    void input(FILE* f) {
-        struct stat st;
-        int fd;
-        in = f;
-        if (in)
-            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), set();
-    }
-    void ireadstr(char* s, usize n) { memcpy(s, ip, n), ip += n; }
-    static constexpr auto I = [] {
-        std::array<u32, 0x10000> I{};
-        fill(I, -1);
-        _for (i, 10)
-            _for (j, 10)
-                I[i + j * 0x100 + 0x3030] = i * 10 + j;
-        return I;
-    }();
-#else
-    void skipws() {
-        int ch = getch();
-        while (blank(ch) ECHK3)
-            ch = getch();
-        ECHK5
         unget();
     }
     int unget(int = 0) { return *ip--; }
     int getch() { return (ip == eip ? (eip = (ip = ibuf) + fread(ibuf, 1, bufSize, in)) : nullptr), ip == eip ? -1 : *ip++; }
     int getch_unchecked() { return *ip++; }
     int peek() { return (ip == eip ? (eip = (ip = ibuf) + fread(ibuf, 1, bufSize, in)) : nullptr), ip == eip ? -1 : *ip; }
-    void input(FILE* f) { in = f, ip = eip = ibuf, set(); }
+    void input(FILE* f) { in = f, ip = eip = ibuf; }
     void ireadstr(char* s, usize n) {
         if (usize len = eip - ip; n > len) [[unlikely]] {
             memcpy(s, ip, len);
@@ -115,19 +57,40 @@ struct IO {
         else
             memcpy(s, ip, n), ip += n;
     }
+#else
+    void skipws() {
+        while (blank(*ip))
+            ip++;
+    }
+    int unget(int = 0) = delete;
+    int getch() { return *ip++; }
+    int getch_unchecked() { return *ip++; }
+    int peek() { return *ip; }
+    void input(FILE* f) {
+        struct stat st;
+        int fd;
+        in = f;
+        if (in)
+            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    }
+    void ireadstr(char* s, usize n) { memcpy(s, ip, n), ip += n; }
 #endif
+    static constexpr auto I = [] {
+        std::array<u32, 0x10000> I{};
+        fill(I, -1);
+        _for (i, 10)
+            _for (j, 10)
+                I[i + j * 0x100 + 0x3030] = i * 10 + j;
+        return I;
+    }();
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
-    void set(bool s = true) { status = s; }
+    void set(bool = true) {}
     IO(FILE* i = stdin, FILE* o = stdout) { input(i), output(o); }
     ~IO() { flush(); }
     template <typename... Args>
     requires (sizeof...(Args) > 1)
     IO& read(Args&... x) {
-#ifdef CHECK_EOF
-        (read(x) && ...);
-#else
         (read(x), ...);
-#endif
         return *this;
     }
     template <Signed T>
@@ -137,25 +100,22 @@ struct IO {
         bool sign = false;
 #ifndef USE_MMAP
         int ch = getch();
-        while (!isdigit(ch) ECHK3)
+        while (!isdigit(ch))
             sign = ch == '-', ch = getch();
-        ECHK1
-        t = 0;
-        while (isdigit(ch))
-            t = t * 10 + (ch ^ 48), ch = getch();
-        unget(ch);
+        if (eip - ip < 64) [[unlikely]]
+            load();
+        t = ch ^ 48;
 #else
-        while (!isdigit(*ip) ECHK4)
+        while (!isdigit(*ip))
             sign = *ip++ == '-';
-        ECHK2
         t = *ip++ ^ 48;
+#endif
         u16* tip = (u16*)ip;
         while (~I[*tip])
             t = t * 100 + I[*tip++];
         ip = (char*)tip;
         if (isdigit(*ip))
             t = t * 10 + (*ip++ ^ 48);
-#endif
         x = sign ? -t : t;
         return *this;
     }
@@ -163,24 +123,22 @@ struct IO {
         x = 0;
 #ifndef USE_MMAP
         int ch = getch();
-        while (!isdigit(ch) ECHK3)
+        while (!isdigit(ch))
             ch = getch();
-        ECHK1
-        while (isdigit(ch))
-            x = x * 10 + (ch ^ 48), ch = getch();
-        unget(ch);
+        if (eip - ip < 64) [[unlikely]]
+            load();
+        x = ch ^ 48;
 #else
-        while (!isdigit(*ip) ECHK4)
+        while (!isdigit(*ip))
             ip++;
-        ECHK2
         x = *ip++ ^ 48;
+#endif
         u16* tip = (u16*)ip;
         while (~I[*tip])
             x = x * 100 + I[*tip++];
         ip = (char*)tip;
         if (isdigit(*ip))
             x = x * 10 + (*ip++ ^ 48);
-#endif
         return *this;
     }
     IO& read(std::floating_point auto& x) {
@@ -197,13 +155,12 @@ struct IO {
     IO& read(char& ch) {
         skipws();
         ch = getch();
-        ECHK1
         return *this;
     }
 #ifdef USE_MMAP
     usize next_size() const {
         char* ip = this->ip;
-        while (!blank(*ip) ECHK4)
+        while (!blank(*ip))
             ip++;
         return ip - this->ip;
     }
@@ -231,7 +188,6 @@ struct IO {
     IO& read(char* s) {
         skipws();
         int ch = peek();
-        ECHK1
         while (!blank(ch))
             *s++ = ch, getch_unchecked(), ch = peek();
         *s = 0;
@@ -240,10 +196,9 @@ struct IO {
     IO& read(str& s) {
         skipws();
         int ch = peek();
-        ECHK1
-        s.erase();
+        s.clear();
         while (!blank(ch))
-            s.append(1, ch), getch_unchecked(), ch = peek();
+            s.push_back(ch), getch_unchecked(), ch = peek();
         return *this;
     }
     IO& readstr(str& s, usize n) {
@@ -260,22 +215,17 @@ struct IO {
         return *this;
     }
     IO& readline(char* s) {
-        char* t = s;
         int ch = getch();
         while (ch != '\n' && ch != EV)
             *s++ = ch, ch = getch();
         *s = 0;
-        if (s == t && ch == EV)
-            set(false);
         return *this;
     }
     IO& readline(str& s) {
-        s.erase();
+        s.clear();
         int ch = getch();
         while (ch != '\n' && ch != EV)
-            s.append(1, ch), ch = getch();
-        if (s.empty() && ch == EV)
-            set(false);
+            s.push_back(ch), ch = getch();
         return *this;
     }
     IO& read(tupleLike auto& t) {
@@ -298,12 +248,6 @@ struct IO {
         return *this;
     }
 
-#ifdef LX_DEBUG
-    void flush() { fflush(out), set(); }
-    void putch_unchecked(char c) { fputc(c, out); }
-    void putch(char c) { putch_unchecked(c); }
-    void writestr(const char* s, usize n) { fwrite(s, 1, n, out); }
-#else
     void flush() { fwrite(obuf, 1, op - obuf, out), op = obuf; }
     void putch_unchecked(char c) { *op++ = c; }
     void putch(char c) { (op == end(obuf) ? flush() : void()), putch_unchecked(c); }
@@ -313,14 +257,13 @@ struct IO {
         else
             memcpy(op, s, n), op += n;
     }
-#endif
     void output(std::string_view s) { output(fopen(s.data(), "wb")); }
     void output(FILE* f) { out = f; }
     void setprec(u32 n = 6) { prec = n; }
     template <typename... Args>
     requires (sizeof...(Args) > 1)
     void write(Args&&... x) { (write(FORWARD(x)), ...); }
-    void write() const {}
+    void write() {}
     template <Signed T>
     void write(T x) {
         make_unsigned_t<T> y = x;
@@ -330,7 +273,6 @@ struct IO {
             write(y);
     }
     void write(std::unsigned_integral auto x) {
-#ifndef LX_DEBUG
         if (end(obuf) - op < 64) [[unlikely]]
             flush();
 
@@ -386,15 +328,10 @@ struct IO {
             break;
         }
 #undef de
-#else
-        write(u128(x));
-#endif
     }
     void write(u128 x) {
-#ifndef LX_DEBUG
         if (end(obuf) - op < 64) [[unlikely]]
             flush();
-#endif
         static int s[40], t = 0;
         do
             s[t++] = x % 10, x /= 10;
@@ -432,16 +369,8 @@ struct IO {
     void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
     template <input_range R>
     void displayArray(R&& r, char d = default_delim<iterator_t<R>>) { displayArray(all(r), d); }
-    operator bool() const { return status; }
+    operator bool() const { return true; }
 } io;
-#ifdef LX_LOCAL
-IO err(nullptr, stderr);
-#define dbg(x) err.print(#x, '=', x)
-#else
-#define dbg(x) \
-    do {       \
-    } while (false)
-#endif
 #define dR(type, ...) \
     type __VA_ARGS__; \
     io.read(__VA_ARGS__)
@@ -462,3 +391,4 @@ void YES(bool v = true) { io.write(v ? "YES\n" : "NO\n"); }
 inline void NO(bool v = true) { YES(!v); }
 void Yes(bool v = true) { io.write(v ? "Yes\n" : "No\n"); }
 inline void No(bool v = true) { Yes(!v); }
+#endif
