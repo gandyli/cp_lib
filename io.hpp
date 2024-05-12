@@ -31,7 +31,7 @@ struct IO {
         int sz = eip - ip;
         memcpy(ibuf, ip, sz);
         eip = ibuf + sz + fread(ibuf + sz, 1, bufSize - sz, in);
-        if (eip == ibuf + sz) [[unlikely]]
+        if (eip != end(ibuf)) [[unlikely]]
             eoi = true;
         ip = ibuf;
     }
@@ -42,9 +42,9 @@ struct IO {
         unget();
     }
     int unget(int = 0) { return *ip--; }
-    int getch() { return (ip == eip ? (eip = (ip = ibuf) + fread(ibuf, 1, bufSize, in)) : nullptr), ip == eip ? -1 : *ip++; }
+    int getch() { return (ip == eip ? load() : void()), ip == eip ? -1 : *ip++; }
     int getch_unchecked() { return *ip++; }
-    int peek() { return (ip == eip ? (eip = (ip = ibuf) + fread(ibuf, 1, bufSize, in)) : nullptr), ip == eip ? -1 : *ip; }
+    int peek() { return (ip == eip ? load() : void()), ip == eip ? -1 : *ip; }
     void input(FILE* f) { in = f, ip = eip = ibuf; }
     void ireadstr(char* s, usize n) {
         if (usize len = eip - ip; n > len) [[unlikely]] {
