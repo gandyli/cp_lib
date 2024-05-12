@@ -11,4 +11,7 @@ struct Timer {
         auto ed = std::chrono::high_resolution_clock::now();
         return ed - st;
     }
+    auto us() const { return std::chrono::duration_cast<std::chrono::microseconds>(operator()()).count(); }
+    auto ms() const { return std::chrono::duration_cast<std::chrono::milliseconds>(operator()()).count(); }
+    auto s() const { return std::chrono::duration_cast<std::chrono::seconds>(operator()()).count(); }
 };
