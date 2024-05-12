@@ -28,11 +28,11 @@ struct HashMapBase {
     iterator end() const { return {this, len(kv)}; }
     vc<K> keys() const {
         auto&& r = *this | views::keys;
-        return {all(r)};
+        return {r.begin(), r.end()};
     }
     vc<V> values() const {
         auto&& r = *this | views::values;
-        return {all(r)};
+        return {r.begin(), r.end()};
     }
     vc<std::pair<K, V>> items() const { return {begin(), end()}; }
 };
