@@ -71,7 +71,7 @@ struct HashMap: HashMapBase<K, V> {
         int i = index(k);
         return vis[i];
     }
-    void clear() { build(0); }
+    void clear() { std::fill(all(vis), false), cap = len(kv) / 2; }
     int size() const { return len(kv) / 2 - cap; }
 
 private:

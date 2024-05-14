@@ -32,8 +32,8 @@ struct HashSet {
         int i = index(k);
         return vis[i];
     }
-    void clear() { build(0); }
-    int size() const { return len(key) - cap; }
+    void clear() { std::fill(all(vis), false), cap = len(key) / 2; }
+    int size() const { return len(key) / 2 - cap; }
     void enumerate(auto&& f) const {
         _for (i, len(vis))
             if (vis[i])
