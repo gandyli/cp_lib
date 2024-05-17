@@ -59,7 +59,7 @@ auto dijkstra(const auto& g, const vi& s) {
     vc dis(n, inf<T>);
     vi par(n, -1);
     vi root(n, -1);
-    std::priority_queue<std::pair<T, int>, vc<std::pair<T, int>>, std::greater<>> q;
+    PQG<std::pair<T, int>> q;
     foreach (s, s) {
         dis[s] = 0;
         root[s] = s;
