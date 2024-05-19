@@ -17,7 +17,7 @@ struct MontgomeryReduction {
     constexpr T mbase() const { return _mbase; }
     constexpr T mbase2() const { return _mbase2; }
     constexpr T mbase3() const { return _mbase3; }
-    constexpr T reduce(int_double_t t) const { return (t + int_double_t(T(t) * _mod_neg_inv) * _mod) >> base_width; }
+    constexpr T reduce(int_double_t t) const { return T((t + int_double_t(T(t) * _mod_neg_inv) * _mod) >> base_width); }
     constexpr T shrink(T x) const { return x >= _mod * 2 ? x - _mod * 2 : x; }
     constexpr T strict_shrink(T x) const { return x >= _mod ? x - _mod : x; }
     static constexpr T inv_base(T x) {

@@ -12,7 +12,7 @@ struct MontgomeryModInt {
 
     constexpr MontgomeryModInt() = default;
     constexpr MontgomeryModInt(Signed auto y) {
-        using S = std::make_signed_t<int_type>;
+        using S = make_signed_t<int_type>;
         S v = y % S(mod());
         x = mr().reduce(mr().mbase2() * int_double_t(v < 0 ? v + mod() : v));
     }
@@ -81,7 +81,7 @@ struct MontgomeryModInt {
 private:
     int_type x{};
 };
-template <std::unsigned_integral T, T Mod>
+template <Unsigned T, T Mod>
 requires (Mod % 2 == 1 && Mod <= std::numeric_limits<T>::max() / 4)
 struct StaticMontgomeryReductionContext {
     using int_type = T;
@@ -92,7 +92,7 @@ private:
     static constexpr auto _reduction = mr_type(Mod);
 };
 
-template <std::unsigned_integral T>
+template <Unsigned T>
 struct DynamicMontgomeryReductionContext {
     using int_type = T;
     using mr_type = MontgomeryReduction<T>;
