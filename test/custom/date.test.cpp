@@ -6,6 +6,7 @@
 void test() {
     using DT = Date<int>;
     const Date d(2014, 5, 17);
+    [[maybe_unused]] Date<int> tmp;
     Date d1(d);
     Date d2(d1.to_int());
 

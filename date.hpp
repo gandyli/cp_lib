@@ -23,6 +23,7 @@ struct Date {
         }
         day++;
     }
+    Date() = default;
     static bool is_leap_year(T y) { return (y % 4 == 0 && y % 100) || y % 400 == 0; }
     Date& operator+=(T x) { return *this = *this + x; }
     Date operator+(T x) const { return {to_int() + x}; }
