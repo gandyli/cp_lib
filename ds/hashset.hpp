@@ -16,13 +16,13 @@ struct HashSet {
             *this = std::move(hs);
         }
     }
-    bool insert(const K& k) {
+    bool insert(K k) {
         if (!cap)
             extend();
         int i = index(k);
         if (!vis[i]) {
             vis[i] = true;
-            key[i] = k;
+            key[i] = std::move(k);
             cap--;
             return true;
         }

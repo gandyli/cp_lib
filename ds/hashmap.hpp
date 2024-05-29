@@ -52,13 +52,13 @@ struct HashMap: HashMapBase<K, V> {
             *this = std::move(mp);
         }
     }
-    V& operator[](const K& k) {
+    V& operator[](K k) {
         if (!cap)
             extend();
         int i = index(k);
         if (!vis[i]) {
             vis[i] = true;
-            kv[i] = {k, {}};
+            kv[i] = {std::move(k), {}};
             cap--;
         }
         return kv[i].second;
