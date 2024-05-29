@@ -39,9 +39,8 @@ struct IO {
         int ch = getch();
         while (blank(ch))
             ch = getch();
-        unget();
+        ip--;
     }
-    int unget(int = 0) { return *ip--; }
     int getch() { return (ip == eip ? load() : void()), ip == eip ? -1 : *ip++; }
     int getch_unchecked() { return *ip++; }
     int peek() { return (ip == eip ? load() : void()), ip == eip ? -1 : *ip; }
@@ -62,7 +61,6 @@ struct IO {
         while (blank(*ip))
             ip++;
     }
-    int unget(int = 0) = delete;
     int getch() { return *ip++; }
     int getch_unchecked() { return *ip++; }
     int peek() { return *ip; }
