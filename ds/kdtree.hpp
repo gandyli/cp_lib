@@ -36,7 +36,7 @@ struct KDTree {
     }
     template <typename U>
     auto nearest_neighbor_search(T x, T y) {
-        std::pair<int, T> res{-1, -1};
+        std::pair<int, U> res{-1, -1};
         auto best_dist_squared = [&](int i, T x, T y) {
             auto& [xmin, xmax, ymin, ymax] = closed_range[i];
             U dx = x - clamp(x, xmin, xmax);
