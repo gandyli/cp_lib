@@ -1,19 +1,17 @@
 #pragma once
-#include "utility/pbds.hpp"
-#include "random/hash.hpp"
+#include "ds/hashmap.hpp"
 
 // https://codeforces.com/blog/entry/124683
 template <typename, typename>
 struct Cache;
 template <typename R, typename... Args, typename F>
 struct Cache<R(Args...), F>: F {
-    pbds::unordered_map<std::tuple<Args...>, R, Hash> mp;
+    HashMap<std::tuple<Args...>, R> mp;
     explicit Cache(const F& f): F(f) {}
     R operator()(auto&&... args) {
         auto t = std::tuple{FORWARD(args)...};
-        auto it = mp.find(t);
-        if (it != mp.end())
-            return it->second;
+        if (mp.contains(t))
+            return mp[t];
         return mp[t] = F::operator()(*this, FORWARD(args)...);
     }
 };

@@ -12,7 +12,7 @@ struct HashSet {
             HashSet<K> hs(n);
             _for (i, len(key))
                 if (vis[i])
-                    hs.insert(key[i]);
+                    hs.insert(std::move(key[i]));
             *this = std::move(hs);
         }
     }
@@ -24,6 +24,15 @@ struct HashSet {
             vis[i] = true;
             key[i] = std::move(k);
             cap--;
+            return true;
+        }
+        return false;
+    }
+    bool erase(const K& k) {
+        int i = index(k);
+        if (vis[i]) {
+            vis[i] = false;
+            cap++;
             return true;
         }
         return false;

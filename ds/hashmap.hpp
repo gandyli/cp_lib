@@ -48,7 +48,7 @@ struct HashMap: HashMapBase<K, V> {
             HashMap<K, V> mp(n);
             _for (i, len(kv))
                 if (vis[i])
-                    mp[kv[i].first] = kv[i].second;
+                    mp[std::move(kv[i].first)] = std::move(kv[i].second);
             *this = std::move(mp);
         }
     }
@@ -62,6 +62,15 @@ struct HashMap: HashMapBase<K, V> {
             cap--;
         }
         return kv[i].second;
+    }
+    bool erase(const K& k) {
+        int i = index(k);
+        if (vis[i]) {
+            vis[i] = false;
+            cap++;
+            return true;
+        }
+        return false;
     }
     V get(const K& k, V d = {}) const {
         int i = index(k);
