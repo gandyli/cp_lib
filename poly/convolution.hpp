@@ -7,7 +7,7 @@ vc<mint> convolution_ntt(const vc<mint>& a, const vc<mint>& b) {
     int n = len(a), m = len(b);
     int k = get_lg(n + m - 1), sz = 1 << k;
     vc<mint> s(sz);
-    _for (i, len(a))
+    _for (i, n)
         s[i] = a[i];
     fft4(s, k);
     if (a == b)
@@ -15,7 +15,7 @@ vc<mint> convolution_ntt(const vc<mint>& a, const vc<mint>& b) {
             s[i] *= s[i];
     else {
         vc<mint> t(sz);
-        _for (i, len(b))
+        _for (i, m)
             t[i] = b[i];
         fft4(t, k);
         _for (i, sz)
