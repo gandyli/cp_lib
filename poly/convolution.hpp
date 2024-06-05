@@ -86,7 +86,7 @@ vc<U> convolution(const vc<T>& a, const vc<T>& b) {
     int n = len(a), m = len(b);
     if (!n || !m)
         return {};
-    if (min(n, m) <= 900)
+    if (min(n, m) <= 100)
         return convolution_karatsuba<T, U>(a, b);
     return convolution_garner<T, U>(a, b);
 }
@@ -98,5 +98,5 @@ vc<mint> convolution(const vc<mint>& a, const vc<mint>& b) {
     if (min(n, m) > 40)
         if constexpr (StaticModint<mint> && __builtin_ctz(mint::mod() - 1) >= 20)
             return convolution_ntt(a, b);
-    return min(n, m) <= 340 ? convolution_karatsuba(a, b) : convolution_garner(a, b);
+    return min(n, m) <= 40 ? convolution_karatsuba(a, b) : convolution_garner(a, b);
 }
