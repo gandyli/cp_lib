@@ -1,7 +1,6 @@
 #pragma once
 #include "modint/barrett_reduction.hpp"
-#include "math/mod_inverse.hpp"
-#include "math/power.hpp"
+#include "modint/modint_common.hpp"
 
 template <typename Context>
 struct BarrettModInt {

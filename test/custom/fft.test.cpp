@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/aplusb"
 
 #include "all.hpp"
+#include "poly/ntt_avx2.hpp"
 #include "poly/convolution_fft.hpp"
 #include "poly/convolution.hpp"
 #include "random/base.hpp"

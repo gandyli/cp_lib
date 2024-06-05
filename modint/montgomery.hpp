@@ -1,7 +1,6 @@
 #pragma once
 #include "modint/montgomery_reduction.hpp"
-#include "math/mod_inverse.hpp"
-#include "math/power.hpp"
+#include "modint/modint_common.hpp"
 
 template <typename Context>
 struct MontgomeryModInt {
@@ -43,7 +42,7 @@ struct MontgomeryModInt {
         return r;
     }
     constexpr mint& operator-=(const mint& rhs) {
-        x = mr().shrink(x + mod() * 2 - rhs.x);
+        x = mr().shrink(x + mr().mod2() - rhs.x);
         return *this;
     }
     constexpr mint& operator*=(const mint& rhs) {
@@ -53,7 +52,7 @@ struct MontgomeryModInt {
     constexpr mint inv() const { return from_raw(mr().reduce(int_double_t(mr().mbase3()) * mod_inverse(x, mod()))); }
     constexpr mint& operator/=(const mint& rhs) { return *this *= rhs.inv(); }
     constexpr mint operator+() const { return *this; }
-    constexpr mint operator-() const { return from_raw(!x ? 0 : mod() * 2 - x); }
+    constexpr mint operator-() const { return from_raw(!x ? 0 : mr().mod2() - x); }
     friend constexpr mint operator+(mint lhs, const mint& rhs) { return lhs += rhs; }
     friend constexpr mint operator-(mint lhs, const mint& rhs) { return lhs -= rhs; }
     friend constexpr mint operator*(mint lhs, const mint& rhs) { return lhs *= rhs; }

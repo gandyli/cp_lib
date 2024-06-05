@@ -17,7 +17,7 @@ namespace ArbitraryNTT {
     template <typename T>
     void crt(auto&& c0, auto&& c1, auto&& c2, auto&& r, u64 w1, u64 w2) {
         _for (i, len(r)) {
-            u64 n1 = c1[i].val(), n2 = c2[i].val(), a = c0[i].val();
+            u64 n1 = val(c1[i]), n2 = val(c2[i]), a = val(c0[i]);
             u64 b = (n1 + m1 - a) * r01 % m1;
             u64 c = ((n2 + m2 - a) * r02r12 + (m2 - b) * r12) % m2;
             r[i] = a + b * w1 + T(c) * w2;

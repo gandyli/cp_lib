@@ -12,7 +12,7 @@ struct NTT {
         if (lvl < 3)
             return;
         mint w[lvl], y[lvl];
-        w[lvl - 1] = power(pr, (mod - 1) / (1 << lvl));
+        w[lvl - 1] = power(pr, (mod - 1) >> lvl);
         y[lvl - 1] = w[lvl - 1].inv();
         _for_r (i, 1, lvl - 1)
             w[i] = w[i + 1] * w[i + 1], y[i] = y[i + 1] * y[i + 1];
