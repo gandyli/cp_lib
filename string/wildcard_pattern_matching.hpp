@@ -2,7 +2,7 @@
 #include "poly/middle_product.hpp"
 #include "random/base.hpp"
 
-vc<bool> wildcard_pattern_matching(const str& s, const str& t, char wildcard = '?') {
+vc<u8> wildcard_pattern_matching(const str& s, const str& t, char wildcard = '?') {
     using mint = MMInt998244353;
     int shift = rnd(0, mint::mod());
     int n = len(s), m = len(t);
@@ -25,7 +25,7 @@ vc<bool> wildcard_pattern_matching(const str& s, const str& t, char wildcard = '
     auto h1 = middle_product(f1, g3);
     auto h2 = middle_product(f2, g2);
     auto h3 = middle_product(f3, g1);
-    vc<bool> ans(n - m + 1);
+    vc<u8> ans(n - m + 1);
     _for (i, n - m + 1)
         ans[i] = h1[i] == h2[i] + h2[i] - h3[i];
     return ans;
