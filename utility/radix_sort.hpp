@@ -26,10 +26,7 @@ namespace RadixSortImpl {
                 tmp_size *= 2;
             tmp = new T[tmp_size];
         }
-        memset(c0, 0, sizeof(c0));
-        memset(c1, 0, sizeof(c1));
-        memset(c2, 0, sizeof(c2));
-        memset(c3, 0, sizeof(c3));
+        fill(c0, 0), fill(c1, 0), fill(c2, 0), fill(c3, 0);
         _for (i, n) {
             c0[p[i] & mask]++;
             c1[(p[i] >> b) & mask]++;
@@ -51,28 +48,28 @@ namespace RadixSortImpl {
         _for_r (i, n)
             p[--c3[tmp[i] >> b * 3 & mask]] = tmp[i];
         if constexpr (sizeof(T) == 8) {
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[p[i] >> b * 4 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             _for_r (i, n)
                 tmp[--c0[p[i] >> b * 4 & mask]] = p[i];
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[tmp[i] >> b * 5 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             _for_r (i, n)
                 p[--c0[tmp[i] >> b * 5 & mask]] = tmp[i];
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[p[i] >> b * 6 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             _for_r (i, n)
                 tmp[--c0[p[i] >> b * 6 & mask]] = p[i];
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[tmp[i] >> b * 7 & mask]++;
             _for (i, powb - 1)
@@ -106,28 +103,28 @@ namespace RadixSortImpl {
                 tmp_size *= 2;
             tmp = new std::pair<T, U>[tmp_size];
         }
-        memset(c0, 0, sizeof(c0));
+        fill(c0, 0);
         _for (i, n)
             c0[p[i].first & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
         _for_r (i, n)
             tmp[--c0[p[i].first & mask]] = p[i];
-        memset(c0, 0, sizeof(c0));
+        fill(c0, 0);
         _for (i, n)
             c0[tmp[i].first >> b & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
         _for_r (i, n)
             p[--c0[tmp[i].first >> b & mask]] = tmp[i];
-        memset(c0, 0, sizeof(c0));
+        fill(c0, 0);
         _for (i, n)
             c0[p[i].first >> b * 2 & mask]++;
         _for (i, powb - 1)
             c0[i + 1] += c0[i];
         _for_r (i, n)
             tmp[--c0[p[i].first >> b * 2 & mask]] = p[i];
-        memset(c0, 0, sizeof(c0));
+        fill(c0, 0);
         _for (i, n)
             c0[tmp[i].first >> b * 3 & mask]++;
         _for (i, powb - 1)
@@ -136,28 +133,28 @@ namespace RadixSortImpl {
             p[--c0[tmp[i].first >> b * 3 & mask]] = tmp[i];
 
         if constexpr (sizeof(T) == 8) {
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[p[i].first >> b * 4 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             _for_r (i, n)
                 tmp[--c0[p[i].first >> b * 4 & mask]] = p[i];
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[tmp[i].first >> b * 5 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             _for_r (i, n)
                 p[--c0[tmp[i].first >> b * 5 & mask]] = tmp[i];
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[p[i].first >> b * 6 & mask]++;
             _for (i, powb - 1)
                 c0[i + 1] += c0[i];
             _for_r (i, n)
                 tmp[--c0[p[i].first >> b * 6 & mask]] = p[i];
-            memset(c0, 0, sizeof(c0));
+            fill(c0, 0);
             _for (i, n)
                 c0[tmp[i].first >> b * 7 & mask]++;
             _for (i, powb - 1)

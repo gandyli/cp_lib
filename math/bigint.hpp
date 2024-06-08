@@ -60,8 +60,8 @@ struct bigint {
             io.putch('-');
         io.write(dat.back());
         _for_r (i, len(dat) - 1) {
-            io.writestr((const char*)&itos_table[dat[i] / B], logD - 4);
-            io.writestr((const char*)&itos_table[dat[i] % B], 4);
+            io.writestr(&itos_table[dat[i] / B], logD - 4);
+            io.writestr(&itos_table[dat[i] % B], 4);
         }
     }
 #endif
@@ -166,8 +166,8 @@ struct bigint {
             r += '-';
         r += _itos(dat.back(), false);
         _for_r (i, len(dat) - 1) {
-            r.append((const char*)&itos_table[dat[i] / B], logD - 4);
-            r.append((const char*)&itos_table[dat[i] % B], 4);
+            r.append(&itos_table[dat[i] / B], logD - 4);
+            r.append(&itos_table[dat[i] % B], 4);
         }
         return r;
     }
