@@ -121,7 +121,8 @@ vc<T> rearrange(const vc<T>& a, const vi& I) {
         b[i] = a[I[i]];
     return b;
 }
-vi sshift(const str& s, char c = 'a') {
+template <input_range R>
+vi shift(R&& s, range_value_t<R> c) {
     vi a(len(s));
     _for (i, len(s))
         a[i] = s[i] - c;
