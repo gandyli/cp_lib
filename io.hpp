@@ -20,18 +20,18 @@ struct IO {
 
     u32 prec = 12;
     FILE *in, *out;
-    char obuf[bufSize], *ip, *op = obuf;
+    char obuf[bufSize], *ip, *eip, *op = obuf;
 
 #ifndef USE_MMAP
-    char ibuf[bufSize], *eip;
+    char ibuf[bufSize + 8];
     bool eoi = false;
     void load() {
         if (eoi) [[unlikely]]
             return;
-        int sz = eip - ip;
+        usize sz = eip - ip;
         memcpy(ibuf, ip, sz);
         eip = ibuf + sz + fread(ibuf + sz, 1, bufSize - sz, in);
-        if (eip != end(ibuf)) [[unlikely]]
+        if (eip != ibuf + bufSize) [[unlikely]]
             eoi = true;
         ip = ibuf;
     }
@@ -69,18 +69,10 @@ struct IO {
         int fd;
         in = f;
         if (in)
-            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), eip = ip + st.st_size;
     }
     void ireadstr(char* s, usize n) { memcpy(s, ip, n), ip += n; }
 #endif
-    static constexpr auto I = [] {
-        std::array<u32, 0x10000> I{};
-        fill(I, -1);
-        _for (i, 10)
-            _for (j, 10)
-                I[i + j * 0x100 + 0x3030] = i * 10 + j;
-        return I;
-    }();
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
     void set(bool = true) {}
     IO(FILE* i = stdin, FILE* o = stdout) { input(i), output(o); }
@@ -91,52 +83,67 @@ struct IO {
         (read(x), ...);
         return *this;
     }
+    template <Unsigned T>
+    void parse_int(T& x) {
+        loop {
+            u64 v;
+            memcpy(&v, ip, 8);
+            if ((v -= 0x3030303030303030) & 0x8080808080808080)
+                break;
+            v = (v * 10 + (v >> 8)) & 0xff00ff00ff00ff;
+            v = (v * 100 + (v >> 16)) & 0xffff0000ffff;
+            v = (v * 10000 + (v >> 32)) & 0xffffffff;
+            x = 100000000 * x + v;
+            ip += 8;
+        }
+        {
+            u32 v;
+            memcpy(&v, ip, 4);
+            if (!((v -= 0x30303030) & 0x80808080)) {
+                v = (v * 10 + (v >> 8)) & 0xff00ff;
+                v = (v * 100 + (v >> 16)) & 0xffff;
+                x = 10000 * x + v;
+                ip += 4;
+            }
+        }
+        {
+            u16 v;
+            memcpy(&v, ip, 2);
+            if (!((v -= 0x3030) & 0x8080)) {
+                v = (v * 10 + (v >> 8)) & 0xff;
+                x = 100 * x + v;
+                ip += 2;
+            }
+        }
+        if (isdigit(*ip))
+            x = 10 * x + (*ip++ ^ 48);
+    }
     template <Signed T>
     IO& read(T& x) {
-        x = 0;
-        make_unsigned_t<T> t;
-        bool sign = false;
+        skipws();
 #ifndef USE_MMAP
-        int ch = getch();
-        while (!isdigit(ch))
-            sign = ch == '-', ch = getch();
         if (eip - ip < 64) [[unlikely]]
             load();
-        t = ch ^ 48;
-#else
-        while (!isdigit(*ip))
-            sign = *ip++ == '-';
-        t = *ip++ ^ 48;
 #endif
-        u16* tip = (u16*)ip;
-        while (~I[*tip])
-            t = t * 100 + I[*tip++];
-        ip = (char*)tip;
-        if (isdigit(*ip))
-            t = t * 10 + (*ip++ ^ 48);
-        x = sign ? -t : t;
+        make_unsigned_t<T> t{};
+        if (*ip == '-') {
+            ip++;
+            parse_int(t);
+            t = -t;
+        }
+        else
+            parse_int(t);
+        x = t;
         return *this;
     }
     IO& read(Unsigned auto& x) {
         x = 0;
+        skipws();
 #ifndef USE_MMAP
-        int ch = getch();
-        while (!isdigit(ch))
-            ch = getch();
         if (eip - ip < 64) [[unlikely]]
             load();
-        x = ch ^ 48;
-#else
-        while (!isdigit(*ip))
-            ip++;
-        x = *ip++ ^ 48;
 #endif
-        u16* tip = (u16*)ip;
-        while (~I[*tip])
-            x = x * 100 + I[*tip++];
-        ip = (char*)tip;
-        if (isdigit(*ip))
-            x = x * 10 + (*ip++ ^ 48);
+        parse_int(x);
         return *this;
     }
     IO& read(std::floating_point auto& x) {
@@ -262,80 +269,64 @@ struct IO {
     requires (sizeof...(Args) > 1)
     void write(Args&&... x) { (write(FORWARD(x)), ...); }
     void write() {}
+
+    struct WriteInt {
+        IO& io;
+        template <int N = 4>
+        void lead(u64 x) {
+            if constexpr (N > 1)
+                if (x < ten(N - 1)) {
+                    lead<N - 1>(x);
+                    return;
+                }
+            io.op = std::copy_n(&itos_table[x * 4 + (4 - N)], N, io.op);
+        }
+        template <int N>
+        void wt4(u64 x) {
+            if constexpr (N > 0) {
+                io.op = std::copy_n(&itos_table[x / ten(N - 4) * 4], 4, io.op);
+                wt4<N - 4>(x % ten(N - 4));
+            }
+        }
+        template <int N = 4>
+        void wt(u64 x) {
+            if constexpr (N < 20)
+                if (ten(N) <= x) {
+                    wt<N + 4>(x);
+                    return;
+                }
+            lead(x / ten(N - 4));
+            wt4<N - 4>(x % ten(N - 4));
+        }
+        void write(std::unsigned_integral auto x) { wt(x); }
+        void write(u128 x) {
+            if (x < ten<u128>(16))
+                wt(x);
+            else if (x < ten<u128>(32)) {
+                wt(x / ten<u128>(16));
+                wt4<16>(x % ten<u128>(16));
+            }
+            else {
+                wt(x / ten<u128>(32));
+                x %= ten<u128>(32);
+                wt4<16>(x / ten<u128>(16));
+                wt4<16>(x % ten<u128>(16));
+            }
+        }
+    };
     template <Signed T>
     void write(T x) {
+        if (end(obuf) - op < 64) [[unlikely]]
+            flush();
         make_unsigned_t<T> y = x;
         if (x < 0)
-            write('-', y = -y);
-        else
-            write(y);
+            *op++ = '-', y = -y;
+        WriteInt{*this}.write(y);
     }
-    void write(std::unsigned_integral auto x) {
+    void write(Unsigned auto x) {
         if (end(obuf) - op < 64) [[unlikely]]
             flush();
-
-        auto L = [&](int x) { return x == 1 ? 0 : ten(x - 1); };
-        auto R = [&](int x) { return ten(x) - 1; };
-
-        auto&& O = itos_table;
-#define de(t)                            \
-    case L(t)... R(t):                   \
-        *(u32*)op = O[x / ten((t) - 4)]; \
-        op += 4;                         \
-        x %= ten((t) - 4);               \
-        [[fallthrough]]
-
-        switch (u64(x)) {
-            de(18);
-            de(14);
-            de(10);
-            de(6);
-        case L(2)... R(2):
-            *(u32*)op = O[x * 100];
-            op += 2;
-            break;
-
-            de(17);
-            de(13);
-            de(9);
-            de(5);
-        case L(1)... R(1):
-            *op++ = x ^ 48;
-            break;
-
-        default:
-            *(u32*)op = O[x / ten(16)];
-            op += 4;
-            x %= ten(16);
-            [[fallthrough]];
-            de(16);
-            de(12);
-            de(8);
-        case L(4)... R(4):
-            *(u32*)op = O[x];
-            op += 4;
-            break;
-
-            de(19);
-            de(15);
-            de(11);
-            de(7);
-        case L(3)... R(3):
-            *(u32*)op = O[x * 10];
-            op += 3;
-            break;
-        }
-#undef de
-    }
-    void write(u128 x) {
-        if (end(obuf) - op < 64) [[unlikely]]
-            flush();
-        static int s[40], t = 0;
-        do
-            s[t++] = x % 10, x /= 10;
-        while (x);
-        while (t)
-            putch_unchecked(s[--t] ^ 48);
+        WriteInt{*this}.write(x);
     }
     void write(char c) { putch(c); }
     void write(std::floating_point auto x) {
