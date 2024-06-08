@@ -20,10 +20,10 @@ struct IO {
 
     u32 prec = 12;
     FILE *in, *out;
-    char obuf[bufSize], *ip, *eip, *op = obuf;
+    char obuf[bufSize], *ip, *op = obuf;
 
 #ifndef USE_MMAP
-    char ibuf[bufSize + 8];
+    char ibuf[bufSize + 8], *eip;
     bool eoi = false;
     void load() {
         if (eoi) [[unlikely]]
@@ -69,7 +69,7 @@ struct IO {
         int fd;
         in = f;
         if (in)
-            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0), eip = ip + st.st_size;
+            fd = fileno(in), fstat(fd, &st), ip = (char*)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     }
     void ireadstr(char* s, usize n) { memcpy(s, ip, n), ip += n; }
 #endif
