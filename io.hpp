@@ -1,6 +1,10 @@
 #pragma once
 #include "utility/itos_table.hpp"
 
+#ifdef LX_DEBUG
+#include <io2.hpp>
+#endif
+
 #ifndef FASTIO
 #define FASTIO 1
 
