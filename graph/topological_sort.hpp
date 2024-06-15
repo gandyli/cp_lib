@@ -1,7 +1,7 @@
 #pragma once
 #include "graph/base.hpp"
 
-vi toposort(const DirectedGraph auto& g) {
+std::optional<vi> toposort(const DirectedGraph auto& g) {
     const int n = g.n;
     vc<bool> vis(n), ins(n);
     vi r;
@@ -21,7 +21,7 @@ vi toposort(const DirectedGraph auto& g) {
     };
     _for (i, n)
         if (!vis[i] && !dfs(dfs, i))
-            return {};
+            return std::nullopt;
     reverse(r);
     return r;
 }
