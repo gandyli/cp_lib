@@ -71,7 +71,7 @@ struct bitset {
         u64 x = a[j] & ~0ULL << (i & 63);
         if (x)
             return j * 64 + std::countr_zero(x);
-        while (++j < len(a))
+        while (++j < a.size())
             if (a[j])
                 return j * 64 + std::countr_zero(a[j]);
         return n;
