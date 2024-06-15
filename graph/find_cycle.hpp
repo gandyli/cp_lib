@@ -66,7 +66,7 @@ FindCycleResult find_cycle(const DirectedGraph auto& g) {
 FindCycleResult find_cycle(const UndirectedGraph auto& g, bool minimal = false) {
     const int n = g.n, m = g.m;
     vi dep(n, -1);
-    vc<bool> vis(m);
+    vcb vis(m);
     vi par(n, -1);
     auto dfs = [&](auto&& dfs, int u, int d) {
         dep[u] = d;
@@ -74,7 +74,7 @@ FindCycleResult find_cycle(const UndirectedGraph auto& g, bool minimal = false) 
             if (!vis[v.id]) {
                 if (dep[v] != -1)
                     return minimal ? u : v.id;
-                vis[v.id] = true;
+                vis[v.id] = 1;
                 par[v] = v.id;
                 int t = dfs(dfs, v, d + 1);
                 if (t != -1)

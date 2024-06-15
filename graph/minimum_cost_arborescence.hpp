@@ -58,15 +58,15 @@ namespace MinimumCostArborescenceImpl {
                         used[u] = 2;
                 }
             vi r;
-            vc<bool> done(nxt);
-            done[root] = true;
+            vcb done(nxt);
+            done[root] = 1;
             _for_r (u, nxt)
                 if (!done[u]) {
                     int id = best[u].id;
                     r.eb(id);
                     int v = g.edges[id].to;
                     while (v != -1 && !done[v])
-                        done[v] = true, v = par[v];
+                        done[v] = 1, v = par[v];
                 }
             return r;
         }

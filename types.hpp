@@ -23,6 +23,7 @@ using vvvc = vc<vvc<T>>;
 using vi = vc<int>;
 using vvi = vc<vi>;
 using vvvi = vc<vvi>;
+using vcb = vc<u8>;
 using pi = std::pair<int, int>;
 using str = std::string;
 template <typename T>

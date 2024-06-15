@@ -9,12 +9,12 @@ auto two_edge_component(const UndirectedGraph auto& g) {
     const int n = g.n, m = g.m;
     vi par(n, -2), dp(n), V;
     V.reserve(n);
-    vc<bool> used(m);
+    vcb used(m);
     auto dfs = [&](auto&& dfs, int u) -> void {
         V.eb(u);
         foreach (v, g[u])
             if (!used[v.id]) {
-                used[v.id] = true;
+                used[v.id] = 1;
                 if (par[v] == -2) {
                     par[v] = u;
                     dfs(dfs, v);

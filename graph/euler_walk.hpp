@@ -31,7 +31,7 @@ EulerWalkResult euler_walk(const auto& g, int s = -1) {
         return {{s}, {}};
     vi D(n), is(all(g.indptr) - 1), st{s}, vs;
     D[s]++;
-    vc<bool> vis(m);
+    vcb vis(m);
     while (!st.empty()) {
         int u = st.back(), &i = is[u];
         if (i == g.indptr[u + 1]) {
@@ -41,7 +41,7 @@ EulerWalkResult euler_walk(const auto& g, int s = -1) {
         }
         auto v = g.csr_edges[i++];
         if (!vis[v.id]) {
-            vis[v.id] = true;
+            vis[v.id] = 1;
             D[u]--, D[v]++;
             st.eb(v);
         }

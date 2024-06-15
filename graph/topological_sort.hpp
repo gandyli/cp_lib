@@ -3,19 +3,19 @@
 
 std::optional<vi> toposort(const DirectedGraph auto& g) {
     const int n = g.n;
-    vc<bool> vis(n), ins(n);
+    vcb vis(n), ins(n);
     vi r;
     auto dfs = [&](auto&& dfs, int u) {
         if (ins[u])
             return false;
         if (!vis[u]) {
-            ins[u] = true;
+            ins[u] = 1;
             foreach (v, g[u])
                 if (!dfs(dfs, v))
                     return false;
-            vis[u] = true;
+            vis[u] = 1;
             r.eb(u);
-            ins[u] = false;
+            ins[u] = 0;
         }
         return true;
     };

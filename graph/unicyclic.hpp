@@ -8,7 +8,7 @@ struct UnicyclicGraph {
     G& g;
     int n, root, out_eid, bottom;
     vi to, cycle;
-    vc<u8> in_cycle;
+    vcb in_cycle;
     UnicyclicGraph(G& g): g(g), n(g.n), to(n, -1), in_cycle(n) {
         ASSERT(n == g.m);
         UnionFind uf(n);
@@ -21,7 +21,7 @@ struct UnicyclicGraph {
                 break;
             }
         }
-        vc<u8> vis(n);
+        vcb vis(n);
         vi q{root};
         while (!q.empty()) {
             int u = pop(q);

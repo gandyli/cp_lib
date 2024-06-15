@@ -66,8 +66,8 @@ struct MaxFlow {
         }
     }
     T flow() { return ans; }
-    vc<bool> cut() {
-        vc<bool> r(n);
+    vcb cut() {
+        vcb r(n);
         _for (i, n)
             r[i] = level[i] != -1;
         return r;
@@ -77,21 +77,21 @@ struct MaxFlow {
         _for (i, n)
             foreach (e, g[i])
                 to[i].insert(to[i].end(), e.flow, e.to);
-        vc<bool> vis(n);
+        vcb vis(n);
         vvi r(ans);
         _for (i, ans) {
             auto&& path = r[i];
             path = {s};
-            vis[s] = true;
+            vis[s] = 1;
             while (path.back() != t) {
                 int u = pop(to[path.back()]);
                 while (vis[u])
-                    vis[pop(path)] = false;
+                    vis[pop(path)] = 0;
                 path.eb(u);
-                vis[u] = true;
+                vis[u] = 1;
             }
             foreach (u, path)
-                vis[u] = false;
+                vis[u] = 0;
         }
         return r;
     }

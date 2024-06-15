@@ -46,7 +46,7 @@ struct Suffix_Array {
         return isa[l0 + m] < isa[l1 + m] ? -1 : 1;
     }
 
-    static void induced_sort(const vi& a, int val_range, vi& sa, const vc<bool>& sl,
+    static void induced_sort(const vi& a, int val_range, vi& sa, const vcb& sl,
       const vi& lms_idx) {
         vi l(val_range), r(val_range);
         foreach (c, a) {
@@ -73,7 +73,7 @@ struct Suffix_Array {
     vi SA_IS(const vi& a, int val_range) {
         const int n = len(a);
         vi sa(n), lms_idx;
-        vc<bool> sl(n);
+        vcb sl(n);
         _for_r (i, n - 1) {
             sl[i] = (a[i] > a[i + 1] || (a[i] == a[i + 1] && sl[i + 1]));
             if (sl[i] && !sl[i + 1])

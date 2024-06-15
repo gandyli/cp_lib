@@ -14,9 +14,9 @@ vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
     Heap heap;
 
     vc<np> nodes(n);
-    vc<bool> vis(n);
+    vcb vis(n);
     vi st{t};
-    vis[t] = true;
+    vis[t] = 1;
     while (!st.empty()) {
         int u = pop(st);
         bool done = false;
@@ -32,7 +32,7 @@ vc<T> K_shortest_walk(const DirectedGraph auto& g, int s, int t, int k) {
         foreach (v, rg[u])
             if (!vis[v] && par[v] == u) {
                 nodes[v] = heap.meld(nodes[v], nodes[u]);
-                vis[v] = true;
+                vis[v] = 1;
                 st.eb(v);
             }
     }

@@ -139,7 +139,7 @@ namespace impl {
         mint _a24;
     };
     vc<u64> ecm_blocks(int smooth_bound) {
-        vc<bool> sieve(smooth_bound + 1, true);
+        vcb sieve(smooth_bound + 1, true);
         vc<u64> blocks{1};
         _for (p, 2, smooth_bound + 1) {
             if (sieve[p]) {
@@ -152,7 +152,7 @@ namespace impl {
                     pw *= p;
                 }
                 _for (i, p * p, smooth_bound + 1, p)
-                    sieve[i] = false;
+                    sieve[i] = 0;
             }
         }
         return blocks;

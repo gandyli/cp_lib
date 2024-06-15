@@ -4,7 +4,7 @@
 template <typename K, typename V>
 struct HashMapBase {
     vc<std::pair<K, V>> kv;
-    vc<bool> vis;
+    vcb vis;
     struct iterator {
         using difference_type = int;
         using value_type = std::pair<K, V>;
@@ -57,7 +57,7 @@ struct HashMap: HashMapBase<K, V> {
             extend();
         int i = index(k);
         if (!vis[i]) {
-            vis[i] = true;
+            vis[i] = 1;
             kv[i] = {std::move(k), {}};
             cap--;
         }
@@ -66,7 +66,7 @@ struct HashMap: HashMapBase<K, V> {
     bool erase(const K& k) {
         int i = index(k);
         if (vis[i]) {
-            vis[i] = false;
+            vis[i] = 0;
             cap++;
             return true;
         }
@@ -80,7 +80,7 @@ struct HashMap: HashMapBase<K, V> {
         int i = index(k);
         return vis[i];
     }
-    void clear() { std::fill(all(vis), false), cap = len(kv) / 2; }
+    void clear() { fill(vis, 0), cap = len(kv) / 2; }
     int size() const { return len(kv) / 2 - cap; }
 
 private:
@@ -92,7 +92,7 @@ private:
         mask = k - 1;
         shift = 64 - std::__lg(k);
         kv.resize(k);
-        vis.assign(k, false);
+        vis.assign(k, 0);
     }
     void extend() { reserve(len(kv) * 2); }
     int index(const K& k) const {
@@ -114,7 +114,7 @@ struct HashMap<char, V>: HashMapBase<char, V> {
     V& operator[](const K& k) {
         int i = index(k);
         if (!vis[i]) {
-            vis[i] = true;
+            vis[i] = 1;
             kv[i] = {k, {}};
             sz++;
         }
@@ -128,7 +128,7 @@ struct HashMap<char, V>: HashMapBase<char, V> {
         int i = index(k);
         return vis[i];
     }
-    void clear() { vis.assign(128, false), sz = 0; }
+    void clear() { vis.assign(128, 0), sz = 0; }
     int size() const { return sz; }
     int index(char c) { return u8(c); }
 };

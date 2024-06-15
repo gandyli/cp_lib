@@ -17,7 +17,7 @@ auto dijkstra_dense(const auto& g, int s = 0) {
     const int n = g.n;
     vc dis(n, inf<T>);
     vi par(n, -1);
-    vc<bool> vis(n);
+    vcb vis(n);
     dis[s] = 0;
     loop {
         int u = -1;
@@ -26,7 +26,7 @@ auto dijkstra_dense(const auto& g, int s = 0) {
                 u = i;
         if (u == -1)
             break;
-        vis[u] = true;
+        vis[u] = 1;
         foreach (v, g[u])
             if (chkmin(dis[v], dis[u] + v.cost))
                 par[v] = u;

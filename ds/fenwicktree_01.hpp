@@ -47,8 +47,8 @@ struct FenwickTree_01Base {
             remove(i);
     }
     bool get(int i) const { return dat[i >> 6] >> (i & 63) & 1; }
-    vc<bool> get_all() const {
-        vc<bool> a(n);
+    vcb get_all() const {
+        vcb a(n);
         _for (i, n)
             a[i] = get(i);
         return a;

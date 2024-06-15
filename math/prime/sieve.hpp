@@ -11,11 +11,11 @@ auto prime_sieve(int n, int Q = 17, int L = 1 << 15) {
     auto approx_prime_count = [](int n) -> int { return n > 60184 ? n / (log(n) - 1.1) : max(1., n / (log(n) - 1.11)) + 1; };
 
     const int v = int(sqrt(n)) + 1, vv = int(sqrt(sqrt(n))) + 1;
-    vc<bool> isp(v, true);
+    vcb isp(v, 1);
     _for (i, 2, vv)
         if (isp[i])
             _for (j, i * i, v, i)
-                isp[j] = false;
+                isp[j] = 0;
 
     const int rsize = approx_prime_count(n + 30);
     vi primes{2, 3, 5};

@@ -5,7 +5,7 @@ template <typename K>
 struct HashSet {
     u32 cap, mask, shift;
     vc<K> key;
-    vc<bool> vis;
+    vcb vis;
     HashSet(int n = 0) { build(n); }
     void reserve(int n) {
         if (n > len(key)) {
@@ -21,7 +21,7 @@ struct HashSet {
             extend();
         int i = index(k);
         if (!vis[i]) {
-            vis[i] = true;
+            vis[i] = 1;
             key[i] = std::move(k);
             cap--;
             return true;
@@ -31,7 +31,7 @@ struct HashSet {
     bool erase(const K& k) {
         int i = index(k);
         if (vis[i]) {
-            vis[i] = false;
+            vis[i] = 0;
             cap++;
             return true;
         }
@@ -41,7 +41,7 @@ struct HashSet {
         int i = index(k);
         return vis[i];
     }
-    void clear() { std::fill(all(vis), false), cap = len(key) / 2; }
+    void clear() { fill(vis, 0), cap = len(key) / 2; }
     int size() const { return len(key) / 2 - cap; }
     void enumerate(auto&& f) const {
         _for (i, len(vis))
@@ -63,7 +63,7 @@ private:
         mask = k - 1;
         shift = 64 - std::__lg(k);
         key.resize(k);
-        vis.assign(k, false);
+        vis.assign(k, 0);
     }
     void extend() { reserve(len(key) * 2); }
     int index(const K& k) const {
