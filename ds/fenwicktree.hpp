@@ -107,7 +107,7 @@ struct FenwickTree {
         return i;
     }
     int min_left(auto&& check, int r) const {
-        assert(check(M::unit()));
+        ASSERT(check(M::unit()));
         int i = r;
         int k = 0;
         X t = M::unit();

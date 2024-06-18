@@ -1,9 +1,9 @@
 #pragma once
 #include "template.hpp"
 
-template <typename Z, bool EXTEND = true>
+template <typename mint, bool EXTEND = true>
 struct Comb {
-    vc<Z> f, g, h;
+    vc<mint> f, g, h;
 
     Comb() requires EXTEND
         : f{1}, g{1}, h{1} {}
@@ -12,7 +12,7 @@ struct Comb {
         int n = len(f);
         if (m == -1)
             m = n * 2;
-        chkmin(m, Z::mod());
+        chkmin(m, mint::mod());
         if (m <= n)
             return;
         f.resize(m);
@@ -27,7 +27,7 @@ struct Comb {
             h[i] = g[i] * f[i - 1];
         }
     }
-    Z fac(int x) {
+    mint fac(int x) {
         if (x < 0)
             return {};
         if constexpr (EXTEND)
@@ -35,7 +35,7 @@ struct Comb {
                 extend();
         return f[x];
     }
-    Z finv(int x) {
+    mint finv(int x) {
         if (x < 0)
             return {};
         if constexpr (EXTEND)
@@ -43,7 +43,7 @@ struct Comb {
                 extend();
         return g[x];
     }
-    Z inv(int x) {
+    mint inv(int x) {
         if (x < 0)
             return -inv(-x);
         if constexpr (EXTEND)
@@ -51,20 +51,20 @@ struct Comb {
                 extend();
         return h[x];
     }
-    Z C(int n, int m) {
+    mint C(int n, int m) {
         if (n < m || m < 0)
             return 0;
         return fac(n) * finv(m) * finv(n - m);
     }
-    Z P(int n, int m) {
+    mint P(int n, int m) {
         if (n < m || m < 0)
             return 0;
         return fac(n) * finv(n - m);
     }
     template <Integer T>
-    Z multinomial(const vc<T>& a) {
+    mint multinomial(const vc<T>& a) {
         int n = 0;
-        Z r = 1;
+        mint r = 1;
         foreach (x, a) {
             n += x;
             r *= finv(x);
@@ -72,7 +72,7 @@ struct Comb {
         r *= fac(n);
         return r;
     }
-    Z operator()(int n, int m) { return C(n, m); }
+    mint operator()(int n, int m) { return C(n, m); }
     template <Integer T>
-    Z operator()(const vc<T>& a) { return multinomial(a); }
+    mint operator()(const vc<T>& a) { return multinomial(a); }
 };

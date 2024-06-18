@@ -3,9 +3,9 @@
 #include "all.hpp"
 #include "modint/montgomery.hpp"
 
-using Z = MMInt1000000007;
+using mint = MMInt1000000007;
 int main() {
     dR(u32, m, n);
-    print(power(Z(m), n));
+    print(power<mint>(m, n));
     return 0;
 }
