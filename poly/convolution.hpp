@@ -1,5 +1,6 @@
 #pragma once
 #include "poly/ntt.hpp"
+#include "poly/arbitrary_ntt.hpp"
 #include "poly/convolution_karatsuba.hpp"
 
 template <Modint mint>
@@ -16,7 +17,10 @@ vc<mint> convolution_ntt(const vc<mint>& a, const vc<mint>& b) {
             g[i] = b[i].val();
         memset(g + m, 0, (sz - m) << 2);
         conv<mint>(f, g, sz);
-        return {+f, f + n + m - 1};
+        vc<mint> r(n + m - 1);
+        _for (i, n + m - 1)
+            r[i] = mint::from_int(f[i]);
+        return r;
     }
 #endif
     vc<mint> f(sz), g(sz);
@@ -96,7 +100,7 @@ vc<mint> convolution(const vc<mint>& a, const vc<mint>& b) {
     if (!n || !m)
         return {};
     if (min(n, m) > 40)
-        if constexpr (StaticModint<mint> && __builtin_ctz(mint::mod() - 1) >= 20)
+        if constexpr (StaticModint<mint> && __builtin_ctzll(mint::mod() - 1) >= 20)
             return convolution_ntt(a, b);
     return min(n, m) <= 40 ? convolution_karatsuba(a, b) : convolution_garner(a, b);
 }

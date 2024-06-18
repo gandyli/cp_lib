@@ -1,6 +1,5 @@
 #pragma once
 #include "math/primitive_root_constexpr.hpp"
-#include "poly/arbitrary_ntt.hpp"
 
 template <typename mint>
 struct NTT {
@@ -106,31 +105,4 @@ void ifft4(vc<mint>& a, int k) {
         _for (j, u)
             a[j] += std::exchange(a[j + u], a[j] - a[j + u]);
     }
-}
-template <typename mint>
-void ntt(vc<mint>& a) {
-    if (len(a) <= 1)
-        return;
-    fft4(a, __builtin_ctz(len(a)));
-}
-template <typename mint>
-void intt(vc<mint>& a) {
-    if (len(a) <= 1)
-        return;
-    ifft4(a, __builtin_ctz(len(a)));
-    mint iv = mint(len(a)).inv();
-    foreach (x, a)
-        x *= iv;
-}
-template <typename mint>
-void ntt_doubling(vc<mint>& a) {
-    constexpr NTT<mint> ntt;
-    int n = len(a);
-    auto b{a};
-    intt(b);
-    mint r = 1, zeta = power(ntt.pr, (ntt.mod - 1) / (n << 1));
-    _for (i, n)
-        b[i] *= r, r *= zeta;
-    ::ntt(b);
-    a.insert(a.end(), all(b));
 }

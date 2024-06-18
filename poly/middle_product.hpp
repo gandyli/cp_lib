@@ -1,5 +1,6 @@
 #pragma once
 #include "poly/ntt.hpp"
+#include "poly/arbitrary_ntt.hpp"
 
 template <Modint mint>
 vc<mint> middle_product_naive(const vc<mint>& a, const vc<mint>& b) {
@@ -24,7 +25,10 @@ vc<mint> middle_product_ntt(const vc<mint>& a, const vc<mint>& b) {
             g[i] = b[m - i - 1].val();
         memset(g + m, 0, (sz - m) << 2);
         conv<mint>(f, g, sz);
-        return {+f + m - 1, f + n};
+        vc<mint> r(n - m + 1);
+        _for (i, n - m + 1)
+            r[i] = mint::from_int(f[i + m - 1]);
+        return r;
     }
 #endif
     vc<mint> f(sz);
