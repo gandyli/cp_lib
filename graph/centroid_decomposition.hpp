@@ -1,7 +1,7 @@
 #pragma once
 #include "graph/base.hpp"
 
-template <typename G>
+template <typename G, bool VTOE = false>
 struct Centroid_Decomposition {
     static std::pair<vi, int> find_centroid(auto& par) {
         const int n = len(par);
@@ -209,9 +209,11 @@ struct Centroid_Decomposition {
         dfs2(par1, V1, real1, f);
     }
     const G& g;
-    vi par, V;
-    Centroid_Decomposition(const G& g): g(g), par(g.n, -1), V(g.n) {
+    vi par, new_par, V, vtoe;
+    Centroid_Decomposition(const G& g): g(g), par(g.n, -1), new_par(g.n, -1), V(g.n) {
         const int n = g.n;
+        if constexpr (VTOE)
+            vtoe.resize(n);
         int l = 0, r = 0;
         V[r++] = 0;
         while (l < r) {
@@ -220,31 +222,31 @@ struct Centroid_Decomposition {
                 if (v != par[u]) {
                     V[r++] = v;
                     par[v] = u;
+                    if constexpr (VTOE)
+                        vtoe[v] = v.id;
                 }
         }
         vi new_idx(n);
         _for (i, n)
             new_idx[V[i]] = i;
-        vi tmp(n, -1);
         _for (i, 1, n)
-            tmp[new_idx[i]] = new_idx[par[i]];
-        par = std::move(tmp);
+            new_par[new_idx[i]] = new_idx[par[i]];
     }
     template <int MODE>
     void run(auto&& f) {
         if (g.n == 1)
             return;
         if constexpr (MODE == 0)
-            dfs0(par, V, f);
+            dfs0(new_par, V, f);
         else if constexpr (MODE == 1)
-            dfs1(par, V, f);
+            dfs1(new_par, V, f);
         else if constexpr (MODE == 2) {
             vcb real(g.n, 1);
-            dfs2(par, V, real, f);
+            dfs2(new_par, V, real, f);
         }
         else
             static_assert(false);
     }
 };
 template <int MODE>
-void centroid_decomposition(const auto& g, auto&& f) { Centroid_Decomposition{g}.template run<MODE>(f); }
+void centroid_decomposition(const auto& g, auto&& f) { Centroid_Decomposition<decltype(g), false>{g}.template run<MODE>(f); }
