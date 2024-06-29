@@ -22,7 +22,7 @@ void test0() {
 void test() {
     test0<MMInt998244353>();
     test0<MMInt1000000007>();
-    test0<MMInt61>();
+    test0<MInt61>();
     test0<MMInt64<909090909090909091>>();
     {
         SetBMod(u32, 998244353);

@@ -2,7 +2,7 @@
 #include "random/base.hpp"
 #include "modint/mint61.hpp"
 
-template <typename MINT = MMInt61>
+template <typename MINT = MInt61>
 struct Rollinghash_2D {
     using mint = MINT;
     static inline vc<mint> p1{1}, p2{1};

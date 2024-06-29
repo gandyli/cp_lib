@@ -3,7 +3,7 @@
 #include "modint/mint61.hpp"
 #include "math/binary_search.hpp"
 
-template <typename MINT = MMInt61>
+template <typename MINT = MInt61>
 struct Rollinghash {
     using mint = MINT;
     static vc<mint> p;

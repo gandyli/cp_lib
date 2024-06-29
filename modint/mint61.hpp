@@ -2,17 +2,17 @@
 #include "math/mod_inverse.hpp"
 #include "math/power.hpp"
 
-struct MMInt61 {
-    using mint = MMInt61;
+struct MInt61 {
+    using mint = MInt61;
     using int_type = u64;
 
-    constexpr MMInt61() = default;
-    constexpr MMInt61(Signed auto y) {
+    constexpr MInt61() = default;
+    constexpr MInt61(Signed auto y) {
         using S = std::make_signed_t<int_type>;
         S v = y % S(mod());
         x = v < 0 ? v + mod() : v;
     }
-    constexpr MMInt61(Unsigned auto y) { x = y % mod(); }
+    constexpr MInt61(Unsigned auto y) { x = y % mod(); }
     constexpr int_type val() const { return x; }
     static constexpr int_type mod() { return (1ULL << 61) - 1; }
     constexpr mint& operator++() {
