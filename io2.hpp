@@ -164,7 +164,7 @@ struct IO {
     void setprec(u32 n = 6) { prec = n; }
     template <typename... Args>
     requires (sizeof...(Args) > 1)
-    void write(Args&&... x) const { (write(FORWARD(x)), ...); }
+    void write(Args&&... x) { (write(FORWARD(x)), ...); }
     void write() const {}
     template <Signed T>
     void write(T x) const {
@@ -192,27 +192,27 @@ struct IO {
     template <typename I, typename T = std::iter_value_t<I>>
     static constexpr char default_delim = tupleLike<T> || input_range<T> ? '\n' : ' ';
     template <std::input_iterator I, std::sentinel_for<I> S>
-    void print_range(I f, S l, char d = default_delim<I>) const {
+    void print_range(I f, S l, char d = default_delim<I>) {
         if (f != l)
             for (write(*f++); f != l; write(d, *f++)) {}
     }
     template <tupleLike T>
-    void write(T&& t) const {
+    void write(T&& t) {
         std::apply([&](auto&& x, auto&&... y) { write(FORWARD(x)), (write(' ', FORWARD(y)), ...); }, FORWARD(t));
     }
     template <input_range R>
     requires (!std::same_as<range_value_t<R>, char>)
-    void write(R&& r) const { print_range(all(r)); }
+    void write(R&& r) { print_range(all(r)); }
     template <typename T>
     requires requires (T t, IO& io) { t.write(io); }
-    void write(T&& t) const { t.write(*this); }
-    void writeln(auto&&... x) const { write(FORWARD(x)...), print(); }
+    void write(T&& t) { t.write(*this); }
+    void writeln(auto&&... x) { write(FORWARD(x)...), print(); }
     void print() const { putch('\n'); }
-    void print(auto&&... x) const { write(std::forward_as_tuple(FORWARD(x)...), '\n'); }
+    void print(auto&&... x) { write(std::forward_as_tuple(FORWARD(x)...), '\n'); }
     template <std::input_iterator I, std::sentinel_for<I> S>
-    void displayArray(I f, S l, char d = default_delim<I>) const { print_range(f, l, d), print(); }
+    void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
     template <input_range R>
-    void displayArray(R&& r, char d = default_delim<iterator_t<R>>) const { displayArray(all(r), d); }
+    void displayArray(R&& r, char d = default_delim<iterator_t<R>>) { displayArray(all(r), d); }
     operator bool() const { return status; }
 } io;
 #define dR(type, ...) \
