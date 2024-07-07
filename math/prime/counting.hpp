@@ -8,17 +8,16 @@ u64 prime_counting(u64 n) {
         return 1;
     const int v = isqrt(n);
     int s = (v + 1) / 2;
-    int smalls[s];
+    int* smalls = new int[s];
     _for (i, s)
         smalls[i] = i;
-    int roughs[s];
+    int* roughs = new int[s];
     _for (i, s)
         roughs[i] = 2 * i + 1;
-    i64 larges[s];
+    i64* larges = new i64[s];
     _for (i, s)
         larges[i] = (n / (2 * i + 1) - 1) / 2;
-    bool skip[v + 1];
-    memset(skip, 0, sizeof(skip));
+    bool* skip = new bool[v + 1]{};
     int pc = 0;
     _for (p, 3, v + 1, 2)
         if (!skip[p]) {
@@ -59,5 +58,7 @@ u64 prime_counting(u64 n) {
             t += smalls[(int(f64(M) / (roughs[k])) - 1) >> 1];
         larges[0] += t - i64(e - l) * (pc + l - 1);
     }
-    return larges[0] + 1;
+    u64 ans = larges[0] + 1;
+    delete[] smalls, delete[] roughs, delete[] larges, delete[] skip;
+    return ans;
 }
