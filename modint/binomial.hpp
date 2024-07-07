@@ -1,17 +1,23 @@
 #pragma once
 #include "template.hpp"
 
-template <typename mint, bool EXTEND = true>
+#ifndef COMB_EXTEND
+#define COMB_EXTEND true
+#endif
+
+template <typename mint, bool EXTEND = COMB_EXTEND>
 struct Comb {
     vc<mint> f, g, h;
 
-    Comb() requires EXTEND
-        : f{1}, g{1}, h{1} {}
-    Comb(int n): f{1}, g{1}, h{1} { extend(n + 1); }
+    Comb() = default;
+    Comb(int n) { extend(n + 1); }
     void extend(int m = -1) {
         int n = len(f);
+        if (n == 0)
+            n = 1, f = g = h = {1};
         if (m == -1)
             m = n * 2;
+        m++;
         chkmin(m, mint::mod());
         if (m <= n)
             return;
@@ -35,7 +41,7 @@ struct Comb {
                 extend();
         return f[x];
     }
-    mint finv(int x) {
+    mint fac_inv(int x) {
         if (x < 0)
             return {};
         if constexpr (EXTEND)
@@ -54,12 +60,12 @@ struct Comb {
     mint C(int n, int m) {
         if (n < m || m < 0)
             return 0;
-        return fac(n) * finv(m) * finv(n - m);
+        return fac(n) * fac_inv(m) * fac_inv(n - m);
     }
     mint P(int n, int m) {
         if (n < m || m < 0)
             return 0;
-        return fac(n) * finv(n - m);
+        return fac(n) * fac_inv(n - m);
     }
     template <Integer T>
     mint multinomial(const vc<T>& a) {
@@ -67,7 +73,7 @@ struct Comb {
         mint r = 1;
         foreach (x, a) {
             n += x;
-            r *= finv(x);
+            r *= fac_inv(x);
         }
         r *= fac(n);
         return r;
@@ -76,3 +82,17 @@ struct Comb {
     template <Integer T>
     mint operator()(const vc<T>& a) { return multinomial(a); }
 };
+template <typename mint, bool EXTEND = COMB_EXTEND>
+Comb<mint, EXTEND> comb;
+template <typename mint>
+mint fac(int x) { return comb<mint>.fac(x); }
+template <typename mint>
+mint fac_inv(int x) { return comb<mint>.fac_inv(x); }
+template <typename mint>
+mint inv(int x) { return comb<mint>.inv(x); }
+template <typename mint>
+mint C(int n, int m) { return comb<mint>.C(n, m); }
+template <typename mint>
+mint P(int n, int m) { return comb<mint>.P(n, m); }
+template <typename mint, Integer T>
+mint multinomial(const vc<T>& a) { return comb<mint>(a); }
