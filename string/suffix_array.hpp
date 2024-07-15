@@ -1,11 +1,14 @@
 #pragma once
 #include "ds/sparse_table.hpp"
+#include "ds/static_range_product.hpp"
 #include "monoid/min.hpp"
 
+// When the i-th suffix in lexicographical order starts at the j-th character,
+// sa[i] = j, isa[j] = i
 struct Suffix_Array {
     int n;
     vi sa, isa, LCP;
-    Sparse_Table<Monoid_Min<int>> st;
+    Static_Range_Product<Sparse_Table, Monoid_Min<int>> st;
 
     Suffix_Array(std::string_view s) {
         n = len(s);
@@ -20,7 +23,7 @@ struct Suffix_Array {
     }
     void build_lcp() { st.build(LCP); }
     int lcp(int i, int j) {
-        ASSERT(!st.st.empty());
+        ASSERT(st.n);
         if (i == n || j == n)
             return 0;
         if (i == j)
@@ -30,8 +33,9 @@ struct Suffix_Array {
             swap(i, j);
         return st.prod(i, j);
     }
-    pi lcp_range(int i, int k) { // TODO
-        ASSERT(!st.st.empty());
+    // [l, r) such that lcp with s[i:] is at least k
+    pi lcp_range(int i, int k) {
+        ASSERT(st.n);
         if (i == n)
             return {0, n};
         i = isa[i];
@@ -41,9 +45,9 @@ struct Suffix_Array {
     int compare(int l0, int r0, int l1, int r1) {
         int n0 = r0 - l0, n1 = r1 - l1;
         int m = lcp(l0, l1);
-        if (m == min(n0, n1))
+        if (m >= min(n0, n1))
             return n0 - n1;
-        return isa[l0 + m] < isa[l1 + m] ? -1 : 1;
+        return isa[l0] - isa[l1];
     }
 
     static void induced_sort(const vi& a, int val_range, vi& sa, const vcb& sl,
