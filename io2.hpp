@@ -20,7 +20,7 @@ struct IO {
         return ch;
     }
     int getch_unchecked() { return getch(); }
-    int unget(int c = -1) const { return ungetc(c, in); }
+    int unget(int c = -1) { return ungetc(c, in); }
     int peek() { return unget(getch()); }
     void input(FILE* f) { in = f, set(); }
     void skipws() {
@@ -29,7 +29,7 @@ struct IO {
             ch = getch();
         unget(ch);
     }
-    void ireadstr(char* s, usize n) const { fread(s, 1, n, in); }
+    void ireadstr(char* s, usize n) { fread(s, 1, n, in); }
     void input(std::string_view s) { input(fopen(s.data(), "rb")); }
     void set(bool s = true) { status = s; }
     IO(FILE* i = stdin, FILE* o = stdout) { input(i), output(o); }
@@ -156,18 +156,18 @@ struct IO {
         return *this;
     }
     void flush() { fflush(out), set(); }
-    void putch_unchecked(char c) const { fputc(c, out); }
-    void putch(char c) const { putch_unchecked(c); }
-    void writestr(const char* s, usize n) const { fwrite(s, 1, n, out); }
+    void putch_unchecked(char c) { fputc(c, out); }
+    void putch(char c) { putch_unchecked(c); }
+    void writestr(const char* s, usize n) { fwrite(s, 1, n, out); }
     void output(std::string_view s) { output(fopen(s.data(), "wb")); }
     void output(FILE* f) { out = f; }
     void setprec(u32 n = 6) { prec = n; }
     template <typename... Args>
     requires (sizeof...(Args) > 1)
     void write(Args&&... x) { (write(FORWARD(x)), ...); }
-    void write() const {}
+    void write() {}
     template <Signed T>
-    void write(T x) const {
+    void write(T x) {
         make_unsigned_t<T> y = x;
         if (x < 0)
             write('-', y = -y);
@@ -175,7 +175,7 @@ struct IO {
             write(y);
     }
     template <Unsigned T>
-    void write(T x) const {
+    void write(T x) {
         static int s[40], t = 0;
         do
             s[t++] = x % 10, x /= 10;
@@ -183,12 +183,12 @@ struct IO {
         while (t)
             putch_unchecked(s[--t] ^ 48);
     }
-    void write(char c) const { putch(c); }
-    void write(std::floating_point auto x) const {
+    void write(char c) { putch(c); }
+    void write(std::floating_point auto x) {
         static char buf[512];
         writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, prec).ptr - buf);
     }
-    void write(std::string_view s) const { writestr(s.data(), s.size()); }
+    void write(std::string_view s) { writestr(s.data(), s.size()); }
     template <typename I, typename T = std::iter_value_t<I>>
     static constexpr char default_delim = tupleLike<T> || input_range<T> ? '\n' : ' ';
     template <std::input_iterator I, std::sentinel_for<I> S>
@@ -207,7 +207,7 @@ struct IO {
     requires requires (T t, IO& io) { t.write(io); }
     void write(T&& t) { t.write(*this); }
     void writeln(auto&&... x) { write(FORWARD(x)...), print(); }
-    void print() const { putch('\n'); }
+    void print() { putch('\n'); }
     void print(auto&&... x) { write(std::forward_as_tuple(FORWARD(x)...), '\n'); }
     template <std::input_iterator I, std::sentinel_for<I> S>
     void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
