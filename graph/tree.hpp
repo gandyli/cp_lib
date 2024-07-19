@@ -53,7 +53,7 @@ public:
           rid(n),
           dep(n),
           top(n, root),
-          fa(n, root),
+          fa(n, -1),
           id(n),
           vtoe(n) {
         if constexpr (G::is_weighted())
