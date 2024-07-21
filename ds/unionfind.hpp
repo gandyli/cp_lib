@@ -33,4 +33,10 @@ struct UnionFind {
         return true;
     }
     int size(int x) { return -a[get(x)]; }
+    vi get_all() {
+        vi ans(n);
+        _for (i, n)
+            ans[i] = get(i);
+        return ans;
+    }
 };
