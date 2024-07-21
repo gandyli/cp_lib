@@ -49,6 +49,12 @@ struct Suffix_Array {
             return n0 - n1;
         return isa[l0] - isa[l1];
     }
+    i64 count_substrings() {
+        i64 ret = i64(n) * (n + 1) / 2;
+        _for (i, n - 1)
+            ret -= LCP[i];
+        return ret;
+    }
 
     static void induced_sort(const vi& a, int val_range, vi& sa, const vcb& sl,
       const vi& lms_idx) {
@@ -119,7 +125,7 @@ struct Suffix_Array {
         induced_sort(a, val_range, sa, sl, new_lms_idx);
         return sa;
     }
-    vc<int> calc_suffix_array(std::string_view s, char first, char last) {
+    vi calc_suffix_array(std::string_view s, char first, char last) {
         vi a(len(s) + 1);
         _for (i, len(s))
             a[i] = s[i] - first + 1;
@@ -127,7 +133,7 @@ struct Suffix_Array {
         ret.erase(ret.begin());
         return ret;
     }
-    vc<int> calc_suffix_array(const vi& s) {
+    vi calc_suffix_array(const vi& s) {
         vi ss(s);
         UNIQUE(ss);
         vi a(len(s) + 1);
