@@ -1,7 +1,7 @@
 #pragma once
 #include "template.hpp"
 
-vc<str> split(const str& s, char sep = ' ') {
+vc<str> split(std::string_view s, char sep = ' ') {
     vc<str> ans{{}};
     foreach (c, s)
         if (c == sep)
@@ -11,7 +11,7 @@ vc<str> split(const str& s, char sep = ' ') {
     return ans;
 }
 
-vc<str> split(const str& s, str seps) {
+vc<str> split(std::string_view s, str seps) {
     vc<str> ans{{}};
     foreach (c, s)
         if (count(seps, c))
