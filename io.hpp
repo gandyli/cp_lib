@@ -19,7 +19,7 @@
 
 struct IO {
     static constexpr usize bufSize = 1 << 20;
-    static constexpr bool isdigit(int c) { return '0' <= c && c <= '9'; }
+    static constexpr bool isdigit(int c) { return '0' <= c; }
     static constexpr bool blank(int c) { return c <= ' '; }
 
     u32 prec = 12;
@@ -97,8 +97,12 @@ struct IO {
             v = (v * 10 + (v >> 8)) & 0xff00ff00ff00ff;
             v = (v * 100 + (v >> 16)) & 0xffff0000ffff;
             v = (v * 10000 + (v >> 32)) & 0xffffffff;
-            x = 100000000 * x + v;
             ip += 8;
+            if constexpr (sizeof(T) < 8) {
+                x = v;
+                break;
+            }
+            x = 100000000 * x + v;
         }
         {
             u32 v;
