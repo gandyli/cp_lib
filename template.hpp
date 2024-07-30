@@ -128,6 +128,10 @@ vi shift(R&& s, range_value_t<R> c) {
         a[i] = s[i] - c;
     return a;
 }
+auto concat(auto&& a, auto&&... b) {
+    (a.insert(a.end(), all(b)), ...);
+    return a;
+}
 template <typename T>
 T pop(vc<T>& q) {
     T r = std::move(q.back());

@@ -360,8 +360,8 @@ private:
             int d = min(c, 2 * k + 1);
             vi t(a.end() - d, a.end()), u = _mul(s, t);
             u.erase(u.begin(), u.begin() + d);
-            vi w(k + 1), w2 = _add(z, z);
-            w.insert(w.end(), all(w2));
+            vi w(k + 1);
+            concat(w, _add(z, z));
             z = _sub(w, u);
             z.erase(z.begin());
             k <<= 1;
