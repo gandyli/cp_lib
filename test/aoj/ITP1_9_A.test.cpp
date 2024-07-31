@@ -7,7 +7,11 @@ int main() {
     dR(str, t);
     int ans = 0;
     str line;
-    while (io.readline(line) && line != "END_OF_TEXT") {
+    loop {
+        str line;
+        io.readline(line);
+        if (line == "END_OF_TEXT")
+            break;
         foreach (s, split(line)) {
             transform(s, s.begin(), ::tolower);
             if (s == t)

@@ -46,12 +46,12 @@ struct bigint {
         _shrink(dat);
     }
 #ifdef FASTIO
-    void read(IO& io) {
+    void read(auto& io) {
         static str s;
         io.read(s);
         *this = bigint(s);
     }
-    void write(IO& io) const {
+    void write(auto& io) const {
         if (dat.empty()) {
             io.putch('0');
             return;

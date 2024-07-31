@@ -118,12 +118,12 @@ struct bitset {
         return O;
     }();
 #ifdef FASTIO
-    void read(IO& io) {
+    void read(auto& io) {
         static str s;
         io.read(s);
         *this = bitset(s);
     }
-    void write(IO& io) const {
+    void write(auto& io) const {
         _for (i, len(a) - (n & 63 ? 1 : 0))
             _for (j, 8)
                 io.writestr((const char*)&O[a[i] >> (8 * j) & 255], 8);

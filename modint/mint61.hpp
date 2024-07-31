@@ -73,12 +73,12 @@ struct MInt61 {
     }
     constexpr int_type raw() const { return x; }
 #ifdef FASTIO
-    void read(IO& io) {
+    void read(auto& io) {
         static int_type x;
         io.read(x);
         *this = x;
     }
-    void write(IO& io) const { io.write(val()); }
+    void write(auto& io) const { io.write(val()); }
 #endif
 
 private:

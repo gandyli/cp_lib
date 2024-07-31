@@ -109,14 +109,14 @@ struct Graph {
     }
 
 #ifdef FASTIO
-    void write(IO& io) const requires (!is_weighted())
+    void write(auto& io) const requires (!is_weighted())
     {
         io.print("from to id");
         _for (i, n)
             foreach (e, (*this)[i])
                 io.print(e.from, e.to, e.id);
     }
-    void write(IO& io) const requires (is_weighted())
+    void write(auto& io) const requires (is_weighted())
     {
         io.print("from to cost id");
         _for (i, n)

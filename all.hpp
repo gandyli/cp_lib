@@ -1,5 +1,5 @@
 #pragma once
-#if defined(LX_LOCAL) && !defined(CPH)
+#if defined(LX_LOCAL)
 #include <timer.hpp>
 #endif
-#include "io.hpp"
+#include "io/io.hpp"

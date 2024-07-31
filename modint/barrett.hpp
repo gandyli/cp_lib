@@ -72,12 +72,12 @@ struct BarrettModInt {
     }
     constexpr int_type raw() const { return x; }
 #ifdef FASTIO
-    void read(IO& io) {
+    void read(auto& io) {
         static int_type x;
         io.read(x);
         *this = x;
     }
-    void write(IO& io) const { io.write(val()); }
+    void write(auto& io) const { io.write(val()); }
 #endif
     static constexpr const br_type& br() { return Context::barrett_reduction(); }
 

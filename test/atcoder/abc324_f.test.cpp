@@ -9,7 +9,8 @@ int main() {
     Graph<void, true> g(n, m);
     vi B(m), C(m);
     _for (i, m) {
-        dR(int, u, v).read(B[i], C[i]), u--, v--;
+        dR(int, u, v), u--, v--;
+        io.read(B[i], C[i]);
         g.add(u, v);
     }
     g.build();

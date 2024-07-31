@@ -68,12 +68,12 @@ struct MontgomeryModInt {
     static constexpr mint from_int(int_type x) { return from_raw(mr().reduce(mr().mbase2() * int_double_t(x))); }
     constexpr int_type raw() const { return x; }
 #ifdef FASTIO
-    void read(IO& io) {
+    void read(auto& io) {
         static int_type x;
         io.read(x);
         *this = x;
     }
-    void write(IO& io) const { io.write(val()); }
+    void write(auto& io) const { io.write(val()); }
 #endif
     static constexpr const mr_type& mr() { return Context::montgomery_reduction(); }
 

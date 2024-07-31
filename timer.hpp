@@ -1,4 +1,5 @@
 #pragma once
+#ifndef CPH
 #include <cstdio>
 #include <ctime>
 
@@ -17,3 +18,4 @@ struct AutoTimer {
         fprintf(stderr, "\033[0m");
     }
 } _auto_timer;
+#endif
