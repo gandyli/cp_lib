@@ -6,7 +6,7 @@
 int main() {
     dR(int, n, m);
     dRV(int, a, n);
-    Wavelet_Matrix<int, true> wm(a);
+    Wavelet_Matrix<int> wm(a);
     _for (m) {
         dR(int, l, r, k);
         print(wm.kth(l, r, k));
