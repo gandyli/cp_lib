@@ -9,7 +9,7 @@ struct Fast_Lca_Tree: Tree<G> {
     vi pos;
     using Tree<G>::n;
     Fast_Lca_Tree(G& g, int root = 0): Tree<G>(g, root), pos(n) {
-        vi a(n << 1);
+        vi a(n * 2);
         _for (i, n) {
             int x = this->elid(i), y = this->erid(i);
             pos[i] = x;

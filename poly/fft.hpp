@@ -85,7 +85,7 @@ namespace CFFT {
                 a[j1] = t0m1 + t2m3, a[j3] = t0m1 - t2m3;
             }
             _for (jh, 1, u) {
-                C ww = w[jh].conj(), xx = w[jh << 1].conj(), yy = w[(jh << 1) + 1].conj();
+                C ww = w[jh].conj(), xx = w[jh << 1].conj(), yy = w[jh << 1 | 1].conj();
                 for (int j0 = (jh * v) << 2, j1 = j0 + v, j2 = j1 + v, j3 = j2 + v, je = j1; j0 < je; j0++, j1++, j2++, j3++) {
                     C t0 = a[j0], t1 = a[j1], t2 = a[j2], t3 = a[j3];
                     C t0p1 = t0 + t1, t2p3 = t2 + t3;

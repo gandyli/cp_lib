@@ -24,7 +24,7 @@ struct Tree_AbelGroup {
         n = tree.n;
         vc<X> a, b;
         if constexpr (path_query)
-            a.resize(n << 1);
+            a.resize(n * 2);
         if constexpr (subtree_query)
             b.resize(n);
         _for (i, n) {
