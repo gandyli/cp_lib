@@ -14,7 +14,7 @@ int ctz(T x) {
 }
 
 template <typename T, typename U>
-constexpr auto binary_gcd(T _a, U _b) {
+constexpr auto gcd(T _a, U _b) {
     using S = make_signed_t<std::common_type_t<T, U>>;
     S a = _a >= 0 ? _a : -_a, b = _b >= 0 ? _b : -_b;
     if (a == 0)

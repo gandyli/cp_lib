@@ -36,7 +36,9 @@ struct bigint {
         dat.resize(q);
         std::from_chars(s.data(), s.data() + r, dat.back());
         auto load8 = [&](auto s) {
-            u64 x = *(u64*)s ^ 0x3030303030303030;
+            u64 x;
+            memcpy(&x, s, 8);
+            x ^= 0x3030303030303030;
             x = ((x * 2561) >> 8) & 0xff00ff00ff00ff;
             x = ((x * 6553601) >> 16) & 0xffff0000ffff;
             return (x * 42949672960001) >> 32;

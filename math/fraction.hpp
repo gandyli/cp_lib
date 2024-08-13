@@ -12,8 +12,8 @@ struct FractionBase {
         if (y < 0)
             x = -x, y = -y;
         if (y != 1) {
-            T g = binary_gcd(x, y);
-            if (g)
+            T g = gcd(x, y);
+            if (g != 0)
                 x /= g, y /= g;
         }
     }
