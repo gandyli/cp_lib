@@ -23,7 +23,7 @@ int main() {
         else {
             dR(int, u);
             i64 ans = a[u];
-            foreach(p, CQ.get_indices(u))
+            foreach (p, CQ.get_indices(u))
                 ans += ft.prod(p + 1);
             print(ans);
         }

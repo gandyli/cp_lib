@@ -361,7 +361,7 @@ void conv(u32* f, u32* g, usize sz) {
 }
 template <typename mint>
 void conv(u32* f, usize sz) {
-    I256 *F = (I256*)f;
+    I256* F = (I256*)f;
     vec_dif<mint>(F, sz >> 3);
     vec_cvdt<mint>(F, F, sz >> 3);
     vec_dit<mint, true>(F, sz >> 3);

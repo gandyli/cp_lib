@@ -128,7 +128,7 @@ struct IO: Reader, Writer {
             read(a[i]...);
     }
 
-    void setprec(u32 n = 6) { prec = n; }
+    void setprec(u32 n) { prec = n; }
     template <typename... Args>
     requires (sizeof...(Args) > 1)
     void write(Args&&... x) { (write(FORWARD(x)), ...); }

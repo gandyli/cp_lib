@@ -11,7 +11,7 @@ struct Monoid_Max2 {
         if (a.first > b.first)
             return {a.first, max(a.second, b.first)};
         return {b.first, max(b.second, a.first)};
-     }
+    }
     static constexpr X from_element(auto&& x) { return {x, -inf<T>}; }
     static constexpr X unit() { return {-inf<T>, -inf<T>}; }
     static constexpr bool commute() { return true; }

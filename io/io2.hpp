@@ -1,5 +1,5 @@
 #pragma once
-#include "utility/itos_table.hpp"
+#include "template.hpp"
 
 #ifndef FASTIO
 #define FASTIO 2

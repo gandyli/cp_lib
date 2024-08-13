@@ -11,7 +11,7 @@ struct Monoid_Min2 {
         if (a.first < b.first)
             return {a.first, min(a.second, b.first)};
         return {b.first, min(b.second, a.first)};
-     }
+    }
     static constexpr X from_element(auto&& x) { return {x, inf<T>}; }
     static constexpr X unit() { return {inf<T>, inf<T>}; }
     static constexpr bool commute() { return true; }

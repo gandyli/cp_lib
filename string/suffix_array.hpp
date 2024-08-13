@@ -93,7 +93,7 @@ struct Suffix_Array {
         induced_sort(a, val_range, sa, sl, lms_idx);
         vi new_lms_idx(len(lms_idx)), lms_vec(len(lms_idx));
         int k = 0;
-        _for (i, n) 
+        _for (i, n)
             if (!sl[sa[i]] && sa[i] >= 1 && sl[sa[i] - 1])
                 new_lms_idx[k++] = sa[i];
         int cur = 0;
