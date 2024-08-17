@@ -4,9 +4,9 @@
 
 template <typename Monoid>
 struct Range_Add_Range_Sum {
-    using M = Monoid;
-    using X = M::value_type;
-    FenwickTree<Monoid_Combine<M, M>> bit;
+    using MX = Monoid;
+    using X = MX::value_type;
+    FenwickTree<Monoid_Combine<MX, MX>> bit;
     Range_Add_Range_Sum() = default;
     Range_Add_Range_Sum(int n) { build(n); }
     template <std::convertible_to<X> T>
@@ -18,18 +18,18 @@ struct Range_Add_Range_Sum {
         build(len(a), [&](int i) { return a[i]; });
     }
     void build(int n, std::invocable<int> auto&& f) {
-        bit.build(n, [&](int i) { return std::tuple{f(i), M::unit()}; });
+        bit.build(n, [&](int i) { return std::tuple{f(i), MX::unit()}; });
     }
     void apply(int l, int r, const X& x) {
-        X y = M::inverse(x);
-        bit.multiply(l, {M::power(y, l), x});
-        bit.multiply(r, {M::power(x, r), y});
+        X y = MX::inverse(x);
+        bit.multiply(l, {MX::power(y, l), x});
+        bit.multiply(r, {MX::power(x, r), y});
     }
     X prod(int l, int r) const {
         auto [a, b] = bit.prod(l);
         auto [c, d] = bit.prod(r);
-        X x = M::op(M::power(b, l), a);
-        X y = M::op(M::power(d, r), c);
-        return M::op(M::inverse(x), y);
+        X x = MX::op(MX::power(b, l), a);
+        X y = MX::op(MX::power(d, r), c);
+        return MX::op(MX::inverse(x), y);
     }
 };

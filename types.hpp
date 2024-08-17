@@ -15,14 +15,15 @@ using i64 = long long;
 using i128 = __int128;
 using f64 = double;
 using ld = long double;
-#define vc std::vector
+template <typename T>
+using vc = std::vector<T>;
 template <typename T>
 using vvc = vc<vc<T>>;
 template <typename T>
 using vvvc = vc<vvc<T>>;
 using vi = vc<int>;
-using vvi = vc<vi>;
-using vvvi = vc<vvi>;
+using vvi = vvc<int>;
+using vvvi = vvvc<int>;
 using vcb = vc<u8>;
 using pi = std::pair<int, int>;
 using str = std::string;
@@ -47,7 +48,7 @@ struct make_signed<u128> {
 template <typename T>
 using make_signed_t = make_signed<T>::type;
 template <typename T>
-concept tupleLike = requires { typename std::tuple_element_t<0, std::decay_t<T>>; } && !requires (T t) { t[0]; };
+concept TupleLike = requires { typename std::tuple_element_t<0, std::decay_t<T>>; } && !requires (T t) { t[0]; };
 template <typename T>
 concept Signed = std::signed_integral<T> || std::is_same_v<T, i128>;
 template <typename T>

@@ -3,8 +3,8 @@
 
 template <typename Monoid>
 struct Sparse_Table {
-    using M = Monoid;
-    using X = M::value_type;
+    using MX = Monoid;
+    using X = MX::value_type;
 
     int n, lg;
     vvc<X> st;
@@ -16,7 +16,7 @@ struct Sparse_Table {
     Sparse_Table(int n, std::invocable<int> auto&& f) { build(n, f); }
 
     void build(int n) {
-        build(n, [&](int) { return M::unit(); });
+        build(n, [&](int) { return MX::unit(); });
     }
     template <std::convertible_to<X> T>
     void build(const vc<T>& a) {
@@ -32,25 +32,25 @@ struct Sparse_Table {
         _for (i, lg - 1) {
             st[i + 1].resize(len(st[i]) - (1 << i));
             _for (j, len(st[i]) - (1 << i))
-                st[i + 1][j] = M::op(st[i][j], st[i][j + (1 << i)]);
+                st[i + 1][j] = MX::op(st[i][j], st[i][j + (1 << i)]);
         }
     }
     X prod(int l, int r) const {
         if (l == r)
-            return M::unit();
+            return MX::unit();
         if (l + 1 == r)
             return st[0][l];
         int k = 31 - __builtin_clz(r - l - 1);
-        return M::op(st[k][l], st[k][r - (1 << k)]);
+        return MX::op(st[k][l], st[k][r - (1 << k)]);
     }
     int max_right(auto&& check, int l) const {
-        ASSERT(0 <= l && l <= n && check(M::unit()));
+        ASSERT(0 <= l && l <= n && check(MX::unit()));
         if (l == n)
             return n;
         return bsearch([&](int r) { return check(prod(l, r)); }, l, n + 1);
     }
     int min_left(auto&& check, int r) const {
-        ASSERT(0 <= r && r <= n && check(M::unit()));
+        ASSERT(0 <= r && r <= n && check(MX::unit()));
         if (r == 0)
             return 0;
         return bsearch([&](int l) { return check(prod(l, r)); }, r, -1);

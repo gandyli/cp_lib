@@ -3,8 +3,8 @@
 
 template <typename Monoid, bool PERSISTENT, typename T = int, int N = -1>
 struct Dynamic_SegTree_Sparse {
-    using M = Monoid;
-    using X = M::value_type;
+    using MX = Monoid;
+    using X = MX::value_type;
 
     struct Node {
         T idx;
@@ -20,20 +20,20 @@ struct Dynamic_SegTree_Sparse {
     np new_node(T idx, const X& x) { return pool.new_node({idx, nullptr, nullptr, x, x}); }
     X prod(np u, T l, T r) {
         if (!u || l == r)
-            return M::unit();
-        X x = M::unit();
+            return MX::unit();
+        X x = MX::unit();
         auto dfs = [&](auto&& dfs, np u, T l, T r, T ql, T qr) {
             chkmax(ql, l), chkmin(qr, r);
             if (ql >= qr || !u)
                 return;
             if (ql == l && qr == r) {
-                x = M::op(x, u->prod);
+                x = MX::op(x, u->prod);
                 return;
             }
             T m = (l + r) >> 1;
             dfs(dfs, u->l, l, m, ql, qr);
             if (ql <= u->idx && u->idx < qr)
-                x = M::op(x, u->x);
+                x = MX::op(x, u->x);
             dfs(dfs, u->r, m, r, ql, qr);
         };
         dfs(dfs, u, L, R, l, r);
@@ -72,7 +72,7 @@ struct Dynamic_SegTree_Sparse {
                 return new_node(i, x);
             u = copy_node(u);
             if (u->idx == i) {
-                u->x = M::op(u->x, x);
+                u->x = MX::op(u->x, x);
                 update(u);
                 return u;
             }
@@ -93,12 +93,12 @@ struct Dynamic_SegTree_Sparse {
         return dfs(dfs, u, L, R, i, x);
     }
     np max_right(np u, auto&& check, T ql) {
-        X x = M::unit();
+        X x = MX::unit();
         auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u || r <= ql)
                 return R;
-            if (check(M::op(x, u->prod))) {
-                x = M::op(x, u->prod);
+            if (check(MX::op(x, u->prod))) {
+                x = MX::op(x, u->prod);
                 return R;
             }
             T m = (l + r) >> 1;
@@ -106,7 +106,7 @@ struct Dynamic_SegTree_Sparse {
             if (k != R)
                 return k;
             if (ql <= u->idx) {
-                x = M::op(x, u->x);
+                x = MX::op(x, u->x);
                 if (!check(x))
                     return u->idx;
             }
@@ -115,12 +115,12 @@ struct Dynamic_SegTree_Sparse {
         return dfs(dfs, u, L, R);
     }
     np min_left(np u, auto&& check, T qr) {
-        X x = M::unit();
+        X x = MX::unit();
         auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u || qr <= l)
                 return L;
-            if (check(M::op(u->prod, x))) {
-                x = M::op(u->prod, x);
+            if (check(MX::op(u->prod, x))) {
+                x = MX::op(u->prod, x);
                 return L;
             }
             T m = (l + r) >> 1;
@@ -128,7 +128,7 @@ struct Dynamic_SegTree_Sparse {
             if (k != L)
                 return k;
             if (u->idx < qr) {
-                x = M::op(u->x, x);
+                x = MX::op(u->x, x);
                 if (!check(x))
                     return u->idx + 1;
             }
@@ -139,9 +139,9 @@ struct Dynamic_SegTree_Sparse {
     void update(np u) {
         u->prod = u->x;
         if (u->l)
-            u->prod = M::op(u->l->prod, u->prod);
+            u->prod = MX::op(u->l->prod, u->prod);
         if (u->r)
-            u->prod = M::op(u->prod, u->r->prod);
+            u->prod = MX::op(u->prod, u->r->prod);
     }
     np copy_node(np u) {
         if (u && PERSISTENT)

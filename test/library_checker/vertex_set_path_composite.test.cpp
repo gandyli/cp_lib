@@ -8,19 +8,19 @@
 
 int main() {
     using mint = MMInt998244353;
-    using M = Monoid_Affine<mint>;
+    using Mono = Monoid_Affine<mint>;
     dR(int, n, q);
-    dRV(M::X, a, n);
+    dRV(Mono::X, a, n);
     auto g = read_tree(n, 0);
     Tree tree(g);
-    Tree_Monoid<decltype(tree), M> st(tree, a);
+    Tree_Monoid<decltype(tree), Mono> st(tree, a);
     _for (q) {
         dR(int, t, x, y, z);
         if (t == 0) {
             st.set(x, {y, z});
         }
         else {
-            print(M::eval(st.prod_path(x, y), z));
+            print(Mono::eval(st.prod_path(x, y), z));
         }
     }
     return 0;

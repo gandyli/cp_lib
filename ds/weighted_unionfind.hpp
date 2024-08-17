@@ -3,8 +3,8 @@
 
 template <typename Monoid>
 struct Weighted_UnionFind {
-    using M = Monoid;
-    using X = M::value_type;
+    using MX = Monoid;
+    using X = MX::value_type;
 
     int n, comp;
     vi a;
@@ -13,14 +13,14 @@ struct Weighted_UnionFind {
     void build(int n) {
         this->n = comp = n;
         a.assign(n, -1);
-        w.assign(n, M::unit());
+        w.assign(n, MX::unit());
     }
     std::pair<int, X> get(int x) {
-        X r = M::unit();
+        X r = MX::unit();
         while (a[x] >= 0) {
-            r = M::op(r, w[x]);
-            r = M::op(r, w[a[x]]);
-            w[x] = M::op(w[a[x]], w[x]);
+            r = MX::op(r, w[x]);
+            r = MX::op(r, w[a[x]]);
+            w[x] = MX::op(w[a[x]], w[x]);
             if (a[a[x]] < 0)
                 return {a[x], r};
             x = a[x] = a[a[x]];
@@ -38,9 +38,9 @@ struct Weighted_UnionFind {
         if (a[x0] > a[y0]) {
             swap(x0, y0);
             swap(vx, vy);
-            z = M::inverse(z);
+            z = MX::inverse(z);
         }
-        z = M::op(M::op(vx, z), M::inverse(vy));
+        z = MX::op(MX::op(vx, z), MX::inverse(vy));
         a[x0] += a[y0];
         a[y0] = x0;
         w[y0] = z;

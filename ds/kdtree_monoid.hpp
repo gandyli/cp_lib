@@ -3,9 +3,9 @@
 
 template <typename Monoid, typename T = int>
 struct KDTree_Monoid {
-    using M = Monoid;
-    using X = M::value_type;
-    static_assert(M::commute());
+    using MX = Monoid;
+    using X = MX::value_type;
+    static_assert(MX::commute());
 
     vc<std::tuple<T, T, T, T>> closed_range;
     vc<X> dat;
@@ -14,7 +14,7 @@ struct KDTree_Monoid {
     KDTree_Monoid(const vc<T>& Xs, const vc<T>& Ys, const vc<X>& Vs): n(len(Xs)) {
         lg = get_lg(n);
         closed_range.resize(1 << (lg + 1));
-        dat.assign(1 << (lg + 1), M::unit());
+        dat.assign(1 << (lg + 1), MX::unit());
         build(1, Xs, Ys, Vs);
     }
     void multiply(T x, T y, const X& v) {
@@ -23,7 +23,7 @@ struct KDTree_Monoid {
             if (!(xmin <= x && x <= xmax && ymin <= y && y <= ymax))
                 return false;
             if (xmin == xmax && ymin == ymax) {
-                dat[i] = M::op(dat[i], v);
+                dat[i] = MX::op(dat[i], v);
                 return true;
             }
             if (dfs(dfs, i << 1) || dfs(dfs, i << 1 | 1)) {
@@ -39,10 +39,10 @@ struct KDTree_Monoid {
         auto dfs = [&](auto&& dfs, int i) {
             auto&& [xmin, xmax, ymin, ymax] = closed_range[i];
             if (xr <= xmin || xmax < xl || yr <= ymin || ymax < yl)
-                return M::unit();
+                return MX::unit();
             if (xl <= xmin && xmax < xr && yl <= ymin && ymax < yr)
                 return dat[i];
-            return M::op(dfs(dfs, i << 1), dfs(dfs, i << 1 | 1));
+            return MX::op(dfs(dfs, i << 1), dfs(dfs, i << 1 | 1));
         };
         return dfs(dfs, 1);
     }
@@ -61,9 +61,9 @@ private:
             chkmax(ymax, Ys[i]);
         }
         if (xmin == xmax && ymin == ymax) {
-            X x = M::unit();
+            X x = MX::unit();
             foreach (v, Vs)
-                x = M::op(x, v);
+                x = MX::op(x, v);
             dat[i] = x;
             return;
         }
@@ -79,5 +79,5 @@ private:
         build(i << 1 | 1, {Xs.begin() + m, Xs.end()}, {Ys.begin() + m, Ys.end()}, {Vs.begin() + m, Vs.end()}, !div_x);
         update(i);
     }
-    void update(int i) { dat[i] = M::op(dat[i << 1], dat[i << 1 | 1]); }
+    void update(int i) { dat[i] = MX::op(dat[i << 1], dat[i << 1 | 1]); }
 };

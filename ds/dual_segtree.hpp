@@ -3,8 +3,8 @@
 
 template <typename Monoid>
 struct Dual_SegTree {
-    using M = Monoid;
-    using A = M::value_type;
+    using MX = Monoid;
+    using A = MX::value_type;
 
     int n, lg, sz;
     vc<A> a;
@@ -15,7 +15,7 @@ struct Dual_SegTree {
         this->n = n;
         lg = get_lg(n);
         sz = 1 << lg;
-        a.assign(sz << 1, M::unit());
+        a.assign(sz << 1, MX::unit());
     }
     A get(int i) {
         i += sz;
@@ -32,7 +32,7 @@ struct Dual_SegTree {
         if (l == r)
             return;
         l += sz, r += sz;
-        if constexpr (!M::commute())
+        if constexpr (!MX::commute())
             _for_r (i, 1, lg + 1) {
                 if (((l >> i) << i) != l)
                     push(l >> i);
@@ -49,12 +49,12 @@ struct Dual_SegTree {
     }
 
 private:
-    void apply(int i, const A& x) { a[i] = M::op(a[i], x); }
+    void apply(int i, const A& x) { a[i] = MX::op(a[i], x); }
     void push(int i) {
-        if (a[i] == M::unit())
+        if (a[i] == MX::unit())
             return;
         apply(i << 1, a[i]);
         apply(i << 1 | 1, a[i]);
-        a[i] = M::unit();
+        a[i] = MX::unit();
     }
 };

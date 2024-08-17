@@ -4,8 +4,8 @@
 
 template <typename Monoid, bool PERSISTENT, typename T = int, int N = -1, typename F = Unit_Prod<Monoid>>
 struct Dynamic_SegTree: F {
-    using M = Monoid;
-    using X = M::value_type;
+    using MX = Monoid;
+    using X = MX::value_type;
 
     struct Node {
         Node *l, *r;
@@ -34,7 +34,7 @@ struct Dynamic_SegTree: F {
                 return new_node(f(l));
             T m = (l + r) >> 1;
             np lr = dfs(dfs, l, m), rr = dfs(dfs, m, r);
-            X x = M::op(lr->x, rr->x);
+            X x = MX::op(lr->x, rr->x);
             np u = new_node(x);
             u->l = lr, u->r = rr;
             return u;
@@ -43,18 +43,18 @@ struct Dynamic_SegTree: F {
     }
     X prod(np u, T l, T r) {
         if (!u || l == r)
-            return M::unit();
-        X x = M::unit();
+            return MX::unit();
+        X x = MX::unit();
         auto dfs = [&](auto&& dfs, np u, T l, T r, T ql, T qr) -> void {
             chkmax(ql, l), chkmin(qr, r);
             if (ql >= qr)
                 return;
             if (!u) {
-                x = M::op(x, default_prod(ql, qr));
+                x = MX::op(x, default_prod(ql, qr));
                 return;
             }
             if (ql == l && qr == r) {
-                x = M::op(x, u->x);
+                x = MX::op(x, u->x);
                 return;
             }
             T m = (l + r) >> 1;
@@ -82,7 +82,7 @@ struct Dynamic_SegTree: F {
                 u->r = dfs(dfs, u->r, m, r);
             X xl = u->l ? u->l->x : default_prod(l, m);
             X xr = u->r ? u->r->x : default_prod(m, r);
-            u->x = M::op(xl, xr);
+            u->x = MX::op(xl, xr);
             return u;
         };
         return dfs(dfs, u, L, R);
@@ -94,7 +94,7 @@ struct Dynamic_SegTree: F {
             else
                 u = copy_node(u);
             if (l + 1 == r) {
-                u->x = M::op(u->x, x);
+                u->x = MX::op(u->x, x);
                 return u;
             }
             T m = (l + r) >> 1;
@@ -104,20 +104,20 @@ struct Dynamic_SegTree: F {
                 u->r = dfs(dfs, u->r, m, r);
             X xl = u->l ? u->l->x : default_prod(l, m);
             X xr = u->r ? u->r->x : default_prod(m, r);
-            u->x = M::op(xl, xr);
+            u->x = MX::op(xl, xr);
             return u;
         };
         return dfs(dfs, u, L, R);
     }
     T max_right(np u, auto&& check, T ql) {
-        X x = M::unit();
+        X x = MX::unit();
         auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u)
                 u = new_node(l, r);
             if (r <= ql)
                 return R;
-            if (ql <= l && check(M::op(x, u->x))) {
-                x = M::op(x, u->x);
+            if (ql <= l && check(MX::op(x, u->x))) {
+                x = MX::op(x, u->x);
                 return R;
             }
             if (l + 1 == r)
@@ -131,14 +131,14 @@ struct Dynamic_SegTree: F {
         return dfs(dfs, u, L, R);
     }
     T min_left(np u, auto&& check, T qr) {
-        X x = M::unit();
+        X x = MX::unit();
         auto dfs = [&](auto&& dfs, np u, T l, T r) -> T {
             if (!u)
                 u = new_node(l, r);
             if (qr <= l)
                 return L;
-            if (r <= qr && check(M::op(u->x, x))) {
-                x = M::op(u->x, x);
+            if (r <= qr && check(MX::op(u->x, x))) {
+                x = MX::op(u->x, x);
                 return L;
             }
             if (l + 1 == r)

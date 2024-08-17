@@ -3,8 +3,8 @@
 
 template <typename Monoid>
 struct Wide_SegTree {
-    using M = Monoid;
-    using X = M::value_type;
+    using MX = Monoid;
+    using X = MX::value_type;
     using V __attribute__((vector_size(32))) = X;
 
     static constexpr u32 B = 64 / sizeof(X), b = __builtin_ctz(B);
@@ -41,7 +41,7 @@ struct Wide_SegTree {
         _for (i, height)
             offset[i] = calc_offset(i, n);
         a = new (std::align_val_t(sizeof(X) * B)) X[calc_offset(height, n)]{};
-        sum = M::unit();
+        sum = MX::unit();
     }
     template <std::convertible_to<X> T>
     void build(const vc<T>& a) {
@@ -56,7 +56,7 @@ struct Wide_SegTree {
                 _for (i, B) {
                     a[cur + i] = s;
                     if (id < n)
-                        s = M::op(s, f(id));
+                        s = MX::op(s, f(id));
                     id++;
                 }
             }
@@ -66,7 +66,7 @@ struct Wide_SegTree {
                     if (id > n)
                         break;
                     a[cur + i] = s;
-                    s = M::op(s, dfs(dfs, h - 1, nxt));
+                    s = MX::op(s, dfs(dfs, h - 1, nxt));
                     nxt += B;
                 }
             }
@@ -75,19 +75,19 @@ struct Wide_SegTree {
         sum = dfs(dfs, height - 1, offset[height - 1]);
     }
     void set(int i, const X& x) {
-        multiply(i, M::inverse(get(i)));
+        multiply(i, MX::inverse(get(i)));
         multiply(i, x);
     }
     void multiply(int i, const X& x) {
-        sum = M::op(sum, x);
+        sum = MX::op(sum, x);
         V v{};
         v += x;
 #pragma GCC unroll 16
         _for (h, height) {
             auto t = (V*)&a[offset[h] + i / B * B];
             auto m = (V*)mask[i % B].data();
-            t[0] = M::op(t[0], v & m[0]);
-            t[1] = M::op(t[1], v & m[1]);
+            t[0] = MX::op(t[0], v & m[0]);
+            t[1] = MX::op(t[1], v & m[1]);
             i >>= b;
         }
     }
@@ -99,12 +99,12 @@ struct Wide_SegTree {
         return a;
     }
     X prod(int i) const {
-        X r = M::unit();
+        X r = MX::unit();
 #pragma GCC unroll 16
         _for (h, height)
-            r = M::op(r, a[offset[h] + (i >> (h * b))]);
+            r = MX::op(r, a[offset[h] + (i >> (h * b))]);
         return r;
     }
-    X prod(int l, int r) const { return M::op(prod(r), M::inverse(prod(l))); }
+    X prod(int l, int r) const { return MX::op(prod(r), MX::inverse(prod(l))); }
     X prod_all() const { return sum; }
 };

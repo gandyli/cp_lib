@@ -3,8 +3,8 @@
 
 template <typename Monoid>
 struct Dual_FenwickTree {
-    using M = Monoid;
-    using A = M::value_type;
+    using MX = Monoid;
+    using A = MX::value_type;
 
     int n;
     vc<A> a;
@@ -13,12 +13,12 @@ struct Dual_FenwickTree {
 
     void build(int n) {
         this->n = n;
-        a.assign(n, M::unit());
+        a.assign(n, MX::unit());
     }
     A get(int i) {
-        A r = M::unit();
+        A r = MX::unit();
         for (i++; i <= n; i += lowbit(i))
-            r = M::op(r, a[i - 1]);
+            r = MX::op(r, a[i - 1]);
         return r;
     }
     vc<A> get_all() {
@@ -26,18 +26,18 @@ struct Dual_FenwickTree {
         _for_r (i, 1, n + 1) {
             int j = i + lowbit(i);
             if (j <= n)
-                a[i - 1] = M::op(a[i - 1], a[j - 1]);
+                a[i - 1] = MX::op(a[i - 1], a[j - 1]);
         }
         return a;
     }
     void apply(int l, int r, const A& x) {
-        A inv = M::inverse(x);
+        A inv = MX::inverse(x);
         while (l < r) {
-            a[r - 1] = M::op(x, a[r - 1]);
+            a[r - 1] = MX::op(x, a[r - 1]);
             r -= lowbit(r);
         }
         while (r < l) {
-            a[l - 1] = M::op(inv, a[l - 1]);
+            a[l - 1] = MX::op(inv, a[l - 1]);
             l -= lowbit(l);
         }
     }

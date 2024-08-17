@@ -4,17 +4,17 @@
 template <typename TREE, typename Monoid, bool edge = false, bool path_query = true, bool subtree_query = true>
 requires path_query || subtree_query
 struct Tree_AbelGroup {
-    using M = Monoid;
-    using X = M::value_type;
+    using MX = Monoid;
+    using X = MX::value_type;
     const TREE& tree;
     int n;
-    FenwickTree<M> bit_path, bit_subtree;
+    FenwickTree<MX> bit_path, bit_subtree;
     Tree_AbelGroup(const TREE& tree): tree(tree) { build(); }
     template <std::convertible_to<X> T>
     Tree_AbelGroup(const TREE& tree, const vc<T>& a): tree(tree) { build(a); }
     Tree_AbelGroup(const TREE& tree, std::invocable<int> auto&& f): tree(tree) { build(f); }
     void build() {
-        build([&](int) { return M::unit(); });
+        build([&](int) { return MX::unit(); });
     }
     template <std::convertible_to<X> T>
     void build(const vc<T>& a) {
@@ -30,12 +30,12 @@ struct Tree_AbelGroup {
         _for (i, n) {
             X x;
             if constexpr (edge)
-                x = i ? f(tree.v_to_e(i)) : M::unit();
+                x = i ? f(tree.v_to_e(i)) : MX::unit();
             else
                 x = f(i);
             if constexpr (path_query) {
                 a[tree.elid(i)] = x;
-                a[tree.erid(i)] = M::inverse(x);
+                a[tree.erid(i)] = MX::inverse(x);
             }
             if constexpr (subtree_query)
                 b[tree.lid[i]] = x;
@@ -50,7 +50,7 @@ struct Tree_AbelGroup {
             i = tree.e_to_v(i);
         if constexpr (path_query) {
             bit_path.multiply(tree.elid(i), x);
-            bit_path.multiply(tree.erid(i), M::inverse(x));
+            bit_path.multiply(tree.erid(i), MX::inverse(x));
         }
         if constexpr (subtree_query)
             bit_subtree.multiply(tree.lid[i], x);
@@ -58,7 +58,7 @@ struct Tree_AbelGroup {
     X prod_path(int u, int v) const requires path_query
     {
         int lca = tree.lca(u, v);
-        return M::op(bit_path.prod(tree.elid(lca) + 1, tree.elid(u) + 1), bit_path.prod(tree.elid(lca) + edge, tree.elid(v) + 1));
+        return MX::op(bit_path.prod(tree.elid(lca) + 1, tree.elid(u) + 1), bit_path.prod(tree.elid(lca) + edge, tree.elid(v) + 1));
     }
     X prod_subtree(int u) const requires subtree_query
     { return bit_subtree.prod(tree.lid[u] + edge, tree.rid[u]); }

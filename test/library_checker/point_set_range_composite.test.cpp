@@ -8,8 +8,8 @@
 int main() {
     dR(int, n, q);
     using mint = MMInt998244353;
-    using M = Monoid_Affine<mint>;
-    SegTree<M> st(n, [&](int) -> std::pair<mint, mint> {
+    using Mono = Monoid_Affine<mint>;
+    SegTree<Mono> st(n, [&](int) -> Mono::X {
         dR(int, x, y);
         return {x, y};
     });
@@ -19,7 +19,7 @@ int main() {
             st.set(x, {y, z});
         }
         else {
-            print(M::eval(st.prod(x, y), z));
+            print(Mono::eval(st.prod(x, y), z));
         }
     }
     return 0;

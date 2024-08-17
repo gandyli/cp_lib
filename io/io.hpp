@@ -110,7 +110,7 @@ struct IO: Reader, Writer {
         while (ch != '\n' && ch != this->ev)
             s.push_back(ch), ch = getch();
     }
-    void read(tupleLike auto& t) {
+    void read(TupleLike auto& t) {
         std::apply([&](auto&... t) { read(t...); }, t);
     }
     void read(forward_range auto&& r) { return readArray(FORWARD(r)); }
@@ -196,13 +196,13 @@ struct IO: Reader, Writer {
     }
     void write(std::string_view s) { this->writestr(s.data(), s.size()); }
     template <typename I, typename T = std::iter_value_t<I>>
-    static constexpr char default_delim = tupleLike<T> || input_range<T> ? '\n' : ' ';
+    static constexpr char default_delim = TupleLike<T> || input_range<T> ? '\n' : ' ';
     template <std::input_iterator I, std::sentinel_for<I> S>
     void print_range(I f, S l, char d = default_delim<I>) {
         if (f != l)
             for (write(*f++); f != l; write(d, *f++)) {}
     }
-    template <tupleLike T>
+    template <TupleLike T>
     void write(T&& t) {
         std::apply([&](auto&& x, auto&&... y) { write(FORWARD(x)), (write(' ', FORWARD(y)), ...); }, FORWARD(t));
     }

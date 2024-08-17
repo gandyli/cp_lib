@@ -9,8 +9,8 @@ int main() {
     dR(u32, n, q);
     using mint = MMInt998244353;
     dRV(mint, a, n);
-    using M = Monoid_Affine<mint>;
-    Dual_SegTree<M> st(n);
+    using Mono = Monoid_Affine<mint>;
+    Dual_SegTree<Mono> st(n);
     _for (q) {
         dR(u32, t);
         if (t == 0) {

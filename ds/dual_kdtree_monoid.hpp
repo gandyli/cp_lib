@@ -3,8 +3,8 @@
 
 template <typename Monoid, typename T = int>
 struct Dual_KDTree_Monoid {
-    using M = Monoid;
-    using A = M::value_type;
+    using MX = Monoid;
+    using A = MX::value_type;
 
     vc<std::tuple<T, T, T, T>> closed_range;
     vc<A> lazy;
@@ -14,7 +14,7 @@ struct Dual_KDTree_Monoid {
     Dual_KDTree_Monoid(const vc<T>& X, const vc<T>& Y): n(len(X)) {
         lg = get_lg(n);
         closed_range.resize(1 << (lg + 1));
-        lazy.assign(1 << (lg + 1), M::unit());
+        lazy.assign(1 << (lg + 1), MX::unit());
         where.resize(n);
         vi I(n);
         iota(all(I), 0);
@@ -69,12 +69,12 @@ private:
         build(i << 1, {X.begin(), X.begin() + m}, {Y.begin(), Y.begin() + m}, {raw_idx.begin(), raw_idx.begin() + m}, !div_x);
         build(i << 1 | 1, {X.begin() + m, X.end()}, {Y.begin() + m, Y.end()}, {raw_idx.begin() + m, raw_idx.end()}, !div_x);
     }
-    void apply(int i, const A& a) { lazy[i] = M::op(lazy[i], a); }
+    void apply(int i, const A& a) { lazy[i] = MX::op(lazy[i], a); }
     void push(int i) {
-        if (lazy[i] == M::unit())
+        if (lazy[i] == MX::unit())
             return;
         apply(i << 1, lazy[i]);
         apply(i << 1 | 1, lazy[i]);
-        lazy[i] = M::unit();
+        lazy[i] = MX::unit();
     }
 };
