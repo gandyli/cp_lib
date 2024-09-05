@@ -23,9 +23,9 @@ struct MmapReader {
         memcpy(s, ip, n);
         ip += n;
     }
-    usize next_size() const {
+    usize next_size(auto&& f) const {
         char* p = ip;
-        while (*p > ' ')
+        while (!f(*p))
             p++;
         return p - ip;
     }
@@ -35,15 +35,25 @@ struct MmapReader {
     }
     void read(char* s) {
         skipws();
-        auto n = next_size();
+        auto n = next_size([](char c) { return c <= ' '; });
         ireadstr(s, n);
         s[n] = 0;
     }
     void read(str& s) {
         skipws();
-        auto n = next_size();
+        auto n = next_size([](char c) { return c <= ' '; });
         s.assign(ip, n);
         ip += n;
+    }
+    void readline(char* s) {
+        auto n = next_size([](char c) { return c == '\n' || c == ev; });
+        ireadstr(s, n), ip++;
+        s[n] = 0;
+    }
+    void readline(str& s) {
+        auto n = next_size([](char c) { return c == '\n' || c == ev; });
+        s.assign(ip, n);
+        ip += n + 1;
     }
     void readstr(char* s, usize n) {
         skipws();

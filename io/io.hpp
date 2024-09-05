@@ -86,8 +86,8 @@ struct IO: Reader, Writer {
     }
     void read(std::floating_point auto& x) {
         static str s;
-        if (read(s))
-            std::from_chars(s.begin().base(), s.end().base(), x);
+        read(s);
+        std::from_chars(s.begin().base(), s.end().base(), x);
     }
     template <typename T = int>
     T read() {
@@ -97,18 +97,6 @@ struct IO: Reader, Writer {
     void read(char& ch) {
         this->skipws();
         ch = getch();
-    }
-    void readline(char* s) {
-        int ch = getch();
-        while (ch != '\n' && ch != this->ev)
-            *s++ = ch, ch = getch();
-        *s = 0;
-    }
-    void readline(str& s) {
-        s.clear();
-        int ch = getch();
-        while (ch != '\n' && ch != this->ev)
-            s.push_back(ch), ch = getch();
     }
     void read(TupleLike auto& t) {
         std::apply([&](auto&... t) { read(t...); }, t);

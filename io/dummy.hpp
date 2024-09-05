@@ -11,6 +11,8 @@ struct DummyReader {
     void skipws();
     void read(char*);
     void read(str&);
+    void readline(char*);
+    void readline(str&);
     void readstr(char*, usize);
     void readstr(str&, usize);
     char*& raw_ip();

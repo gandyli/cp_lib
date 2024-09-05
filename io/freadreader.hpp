@@ -52,6 +52,18 @@ struct FreadReader {
         while (ch > ' ')
             s.push_back(ch), ip++, ch = peek();
     }
+    void readline(char* s) {
+        int ch = peek();
+        while (ch != '\n' && ch != this->ev)
+            *s++ = ch, ip++, ch = peek();
+        *s = 0;
+    }
+    void readline(str& s) {
+        s.clear();
+        int ch = peek();
+        while (ch != '\n' && ch != this->ev)
+            s.push_back(ch), ip++, ch = peek();
+    }
     void readstr(char* s, usize n) {
         skipws();
         ireadstr(s, n);
