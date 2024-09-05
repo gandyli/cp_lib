@@ -7,12 +7,14 @@ enum class Connectivity : u8 {
 };
 
 template <typename V>
-vvi grid_bfs(const vc<V>& g, int sx, int sy, V wall, Connectivity conn = Connectivity::Four) {
+vvi grid_bfs(const vc<V>& g, const vc<pi>& s, V wall, Connectivity conn = Connectivity::Four) {
     const int n = len(g), m = len(g[0]);
     VECI(dis, n, m, inf<int>);
-    dis[sx][sy] = 0;
     std::deque<pi> q;
-    q.eb(sx, sy);
+    foreach (sx, sy, s) {
+        dis[sx][sy] = 0;
+        q.eb(sx, sy);
+    }
     constexpr int dx[]{0, 0, -1, 1, -1, -1, 1, 1};
     constexpr int dy[]{-1, 1, 0, 0, -1, 1, -1, 1};
     while (!q.empty()) {
@@ -27,3 +29,5 @@ vvi grid_bfs(const vc<V>& g, int sx, int sy, V wall, Connectivity conn = Connect
     }
     return dis;
 }
+template <typename V>
+vvi grid_bfs(const vc<V>& g, int sx, int sy, V wall, Connectivity conn = Connectivity::Four) { return grid_bfs(g, {{sx, sy}}, wall, conn); }
