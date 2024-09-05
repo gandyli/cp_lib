@@ -116,7 +116,16 @@ struct Tree_Monoid_Base: Tree_Monoid_Base_Helper::Base<DS, Monoid, Tree_Monoid_B
         return r;
     }
     X prod_subtree(int u) const { return ds.prod(tree.lid[u] + edge, tree.rid[u]); }
-    X prod_all() const { return prod_subtree(tree.id[0]); }
+    X prod_subtree(int u, int r) const {
+        if (r == u)
+            return prod_all();
+        if (tree.in_subtree(u, r))
+            return prod_subtree(u);
+        static_assert(!edge); // TODO
+        u = tree.jump(u, r, 1);
+        return MX::op(ds.prod(0, tree.lid[u] + edge), ds.prod(tree.rid[u], n));
+    }
+    X prod_all() const { return ds.prod_all(); }
     void apply_path(int u, int v, const A& a) {
         foreach (x, y, tree.path_decomposition(u, v, edge))
             if (x <= y)
