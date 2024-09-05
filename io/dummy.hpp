@@ -9,8 +9,8 @@ struct DummyReader {
     int peek() const;
     void ireadstr(char*, usize);
     void skipws();
-    void read(char*);
-    void read(str&);
+    void rd(char*);
+    void rd(str&);
     void readline(char*);
     void readline(str&);
     void readstr(char*, usize);

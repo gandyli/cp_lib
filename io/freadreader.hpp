@@ -38,14 +38,14 @@ struct FreadReader {
         while (peek() <= ' ')
             ip++;
     }
-    void read(char* s) {
+    void rd(char* s) {
         skipws();
         int ch = peek();
         while (ch > ' ')
             *s++ = ch, ip++, ch = peek();
         *s = 0;
     }
-    void read(str& s) {
+    void rd(str& s) {
         skipws();
         s.clear();
         int ch = peek();

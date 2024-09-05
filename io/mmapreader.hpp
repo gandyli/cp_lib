@@ -33,13 +33,13 @@ struct MmapReader {
         while (*ip <= ' ')
             ip++;
     }
-    void read(char* s) {
+    void rd(char* s) {
         skipws();
         auto n = next_size([](char c) { return c <= ' '; });
         ireadstr(s, n);
         s[n] = 0;
     }
-    void read(str& s) {
+    void rd(str& s) {
         skipws();
         auto n = next_size([](char c) { return c <= ' '; });
         s.assign(ip, n);

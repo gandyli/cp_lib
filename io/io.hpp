@@ -17,10 +17,46 @@ struct IO: Reader, Writer {
     IO(FILE* i = stdin, FILE* o = stdout): Reader(i), Writer(o) {}
     ~IO() { this->flush(); }
 
-    using Reader::getch, Reader::read;
-    template <typename... Args>
-    requires (sizeof...(Args) > 1)
-    void read(Args&... x) { (read(x), ...); }
+    using Reader::getch;
+
+    void read(auto&... x) { (rd(x), ...); }
+    template <typename T = int>
+    T read() {
+        std::decay_t<T> x;
+        return rd(x), x;
+    }
+    template <std::forward_iterator I>
+    void readArray(I f, I l) {
+        while (f != l)
+            rd(*f++);
+    }
+    void readArray(forward_range auto&& r) { readArray(all(r)); }
+    void zipread(auto&&... a) {
+        _for (i, (len(a), ...))
+            read(a[i]...);
+    }
+
+    void setprec(u32 n) { prec = n; }
+    void write(auto&&... x) { (wt(FORWARD(x)), ...); }
+    void writeln(auto&&... x) { write(FORWARD(x)..., '\n'); }
+    void print() { wt('\n'); }
+    void print(auto&&... x) { write(std::forward_as_tuple(FORWARD(x)...), '\n'); }
+
+    template <typename I, typename T = std::iter_value_t<I>>
+    static constexpr char default_delim = TupleLike<T> || input_range<T> ? '\n' : ' ';
+    template <std::input_iterator I, std::sentinel_for<I> S>
+    void print_range(I f, S l, char d = default_delim<I>) {
+        if (f != l)
+            for (wt(*f++); f != l; write(d, *f++)) {}
+    }
+    template <std::input_iterator I, std::sentinel_for<I> S>
+    void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
+    template <input_range R>
+    void displayArray(R&& r, char d = default_delim<iterator_t<R>>) { displayArray(all(r), d); }
+
+private:
+    using Reader::rd;
+
     template <Unsigned T>
     void parse_int(T& x) {
         auto& ip = Reader::raw_ip();
@@ -65,7 +101,7 @@ struct IO: Reader, Writer {
             x = 10 * x + (*ip++ ^ 48);
     }
     template <Signed T>
-    void read(T& x) {
+    void rd(T& x) {
         this->skipws();
         Reader::template ensure<64>();
         make_unsigned_t<T> t{};
@@ -78,49 +114,29 @@ struct IO: Reader, Writer {
             parse_int(t);
         x = t;
     }
-    void read(Unsigned auto& x) {
+    void rd(Unsigned auto& x) {
         this->skipws();
         Reader::template ensure<64>();
         x = 0;
         parse_int(x);
     }
-    void read(std::floating_point auto& x) {
+    void rd(std::floating_point auto& x) {
         static str s;
-        read(s);
+        rd(s);
         std::from_chars(s.begin().base(), s.end().base(), x);
     }
-    template <typename T = int>
-    T read() {
-        std::decay_t<T> x;
-        return read(x), x;
-    }
-    void read(char& ch) {
+    void rd(char& c) {
         this->skipws();
-        ch = getch();
+        c = getch();
     }
-    void read(TupleLike auto& t) {
+    void rd(TupleLike auto& t) {
         std::apply([&](auto&... t) { read(t...); }, t);
     }
-    void read(forward_range auto&& r) { return readArray(FORWARD(r)); }
+    void rd(forward_range auto&& r) { return readArray(FORWARD(r)); }
     template <typename T>
-    requires requires (T t, IO& io) { t.read(io); }
-    void read(T& t) { t.read(*this); }
-    template <std::forward_iterator I>
-    void readArray(I f, I l) {
-        while (f != l)
-            read(*f++);
-    }
-    void readArray(forward_range auto&& r) { readArray(all(r)); }
-    void zipread(auto&&... a) {
-        _for (i, (len(a), ...))
-            read(a[i]...);
-    }
+    requires requires (T& t, IO& io) { t.read(io); }
+    void rd(T& t) { t.read(*this); }
 
-    void setprec(u32 n) { prec = n; }
-    template <typename... Args>
-    requires (sizeof...(Args) > 1)
-    void write(Args&&... x) { (write(FORWARD(x)), ...); }
-    void write() {}
     struct WriteInt {
         Writer& writer;
         template <int N = 4>
@@ -166,47 +182,33 @@ struct IO: Reader, Writer {
         }
     };
     template <Signed T>
-    void write(T x) {
+    void wt(T x) {
         Writer::template ensure<64>();
         make_unsigned_t<T> y = x;
         if (x < 0)
             this->putch_unchecked('-'), y = -y;
         WriteInt{*this}.write(y);
     }
-    void write(Unsigned auto x) {
+    void wt(Unsigned auto x) {
         Writer::template ensure<64>();
         WriteInt{*this}.write(x);
     }
-    void write(char c) { this->putch(c); }
-    void write(std::floating_point auto x) {
+    void wt(char c) { this->putch(c); }
+    void wt(std::floating_point auto x) {
         static char buf[512];
         this->writestr(buf, std::to_chars(buf, buf + 512, x, std::chars_format::fixed, prec).ptr - buf);
     }
-    void write(std::string_view s) { this->writestr(s.data(), s.size()); }
-    template <typename I, typename T = std::iter_value_t<I>>
-    static constexpr char default_delim = TupleLike<T> || input_range<T> ? '\n' : ' ';
-    template <std::input_iterator I, std::sentinel_for<I> S>
-    void print_range(I f, S l, char d = default_delim<I>) {
-        if (f != l)
-            for (write(*f++); f != l; write(d, *f++)) {}
-    }
+    void wt(std::string_view s) { this->writestr(s.data(), s.size()); }
     template <TupleLike T>
-    void write(T&& t) {
-        std::apply([&](auto&& x, auto&&... y) { write(FORWARD(x)), (write(' ', FORWARD(y)), ...); }, FORWARD(t));
+    void wt(T&& t) {
+        std::apply([&](auto&& x, auto&&... y) { wt(FORWARD(x)), (write(' ', FORWARD(y)), ...); }, FORWARD(t));
     }
     template <input_range R>
     requires (!std::same_as<range_value_t<R>, char>)
-    void write(R&& r) { print_range(all(r)); }
+    void wt(R&& r) { print_range(all(r)); }
     template <typename T>
-    requires requires (T t, IO& io) { t.write(io); }
-    void write(T&& t) { t.write(*this); }
-    void writeln(auto&&... x) { write(FORWARD(x)..., '\n'); }
-    void print() { write('\n'); }
-    void print(auto&&... x) { write(std::forward_as_tuple(FORWARD(x)...), '\n'); }
-    template <std::input_iterator I, std::sentinel_for<I> S>
-    void displayArray(I f, S l, char d = default_delim<I>) { print_range(f, l, d), print(); }
-    template <input_range R>
-    void displayArray(R&& r, char d = default_delim<iterator_t<R>>) { displayArray(all(r), d); }
+    requires requires (T&& t, IO& io) { FORWARD(t).write(io); }
+    void wt(T&& t) { FORWARD(t).write(*this); }
 };
 
 #if defined(__unix__) && !defined(LX_LOCAL)
@@ -233,8 +235,8 @@ void multipleTests(auto&& f) {
 }
 void writeln(auto&&... x) { io.writeln(FORWARD(x)...); }
 void print(auto&&... x) { io.print(FORWARD(x)...); }
-void YES(bool v = true) { io.write(v ? "YES\n" : "NO\n"); }
+inline void YES(bool v = true) { io.write(v ? "YES\n" : "NO\n"); }
 inline void NO(bool v = true) { YES(!v); }
-void Yes(bool v = true) { io.write(v ? "Yes\n" : "No\n"); }
+inline void Yes(bool v = true) { io.write(v ? "Yes\n" : "No\n"); }
 inline void No(bool v = true) { Yes(!v); }
-#endif
+#endif  
